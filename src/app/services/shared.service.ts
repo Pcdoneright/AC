@@ -12,7 +12,8 @@ export class SharedService {
 	// public companyVersion = 'V3.4.2';
 	public companyVersion: string;
 	menu = [];
-	private mainmenu: MainMenuComponent; 
+	private mainmenu: MainMenuComponent;
+	public animationDuration = '1500ms'; // tab=group
 
 	constructor(private $filter: PcdrFilterPipe, private cpv: CompanyVersion) {
 		this.companyVersion = cpv.companyVersion;

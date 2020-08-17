@@ -23,7 +23,6 @@
     </a>
 </nav>
 <div *ngIf='navProperties.subnavbar !== false' class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
-    <ng-content></ng-content>
     <div *ngIf='navProperties.search' fxLayout="row">
         <input type="text" class="form-control lmargin" placeholder="{{navProperties.search.placeholder}}" style="width: 200px" [(ngModel)]="parent[navProperties.search.ngModel]" (blur)='parent.onClickNav(navProperties.search)'>
         <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
@@ -31,4 +30,5 @@
     <div *ngIf='navProperties.validEntry'>
         <span fxflex="flex" *ngIf="!parent.validEntry()" class="alert-danger text-nowrap" style="padding: 10px">NO CHANGES CAN BE SAVED</span>
     </div>
+    <ng-content></ng-content>
 </div>

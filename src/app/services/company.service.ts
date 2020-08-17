@@ -51,7 +51,7 @@ export class CompanyService {
 		return dialogRef.afterClosed();
 	}
 
-	inputDialog(message: string, value = "", title = "Input Value", yes = "Continue", no = "Cancel", hideInput = false, allowKeypad = true): Observable<boolean> {
+	inputDialog(message: string, value = "", title = "Input Value", yes = "Continue", no = "Cancel", hideInput = false, allowKeypad = true, allowNo = true, enterCallback = null, parent = null): Observable<boolean> {
 		let dialogRef: MatDialogRef<InputDialog>;
 
 		dialogRef = this.dialog.open(InputDialog, {
@@ -64,6 +64,9 @@ export class CompanyService {
 		dialogRef.componentInstance.textValue = value;
 		dialogRef.componentInstance.hideInput = hideInput;
 		dialogRef.componentInstance.allowKeypad = allowKeypad;
+		dialogRef.componentInstance.allowNo = allowNo;
+		dialogRef.componentInstance.enterCallback = enterCallback;
+		dialogRef.componentInstance.parent = parent;
 
 		return dialogRef.afterClosed();
 	}

@@ -118,6 +118,8 @@ export class MainMenuComponent implements OnInit {
     }
 
     addTab(submenu) {
+        this.onSideNavToggle() // Close Side Menu after selection
+
         // If found select it
         for (var j = 0; j < this.tabs.length; j++) {
             if (submenu.id == this.tabs[j].id) {

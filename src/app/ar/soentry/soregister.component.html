@@ -1,6 +1,8 @@
 <div [hidden]="selectedTab != 0" class="tcpanel" fxLayout="row" style='padding: 5px'>
     <div fxLayout="column" fxFlex style="margin-right: 5px;">
-        <pcdrBuilder #bar01></pcdrBuilder>
+        <pcdrBuilder #bar01>
+            <span style='margin-left:45px'><h4>Last Order: {{lastordernumber}}</h4></span>
+        </pcdrBuilder>
         <!-- Form -->
         <div style="background-color: #fff">
             <form novalidate>

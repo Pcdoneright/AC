@@ -101,10 +101,10 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 {name: 'Set Pending', style: 'primary', action: 'setToPending'},
                 {name: 'Void', style: 'danger', action: 'setToVoid'},
             ],
-            spans: [
-                {text: 'Last Order:', property: 'lastordernumber', style: 'margin-left:45px'},
-                {text: 'Drawer:', property: 'totalDrawer', style: 'margin-left:15px'}
-            ],
+            // spans: [
+                // {text: 'Last Order:', property: 'lastordernumber', style: 'margin-left:45px'},
+                // {text: 'Drawer:', property: 'totalDrawer', style: 'margin-left:15px'}
+            // ],
             navButtons: [
                 {name: 'Pending List', action: 'selectedTab', val: 1}
             ],
@@ -234,12 +234,62 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.salesordersTotals();
         this.updateTotalQty();
         this.focusToScan();
+        return; // <<<<<---------
         
         // Prompt if drawer amt exceeds
         if (this.totalDrawer >= this.fcrdraweramt) {
-            console.log('exceeds')
+            this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now', 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
+                this.CompanySvc.inputDialog('Enter Code', '', 'Admin Deposit-Code', 'Continue', 'Cancel', true, true, false, 'inputDialogEnter', this).subscribe((value) => {
+                // if (value) {
+                //     this.DataSvc.serverDataGet('api/CompanyMaint/GetValidateCRDOverride', { pfposoverride: value }).subscribe((dataResponse) => {
+                //         if (dataResponse.validate) {
+                //             console.log(dataResponse)
+                //         }
+                //     });
+                // }
+                });
+            });
         }
     }
+
+    inputDialogAmount(val) {
+        console.log(val)
+        return true;
+    }
+    
+    // async inputDialogEnter(val) {
+    inputDialogEnter(val) {
+        //const result = await this.DataSvc.serverDataGet('api/CompanyMaint/GetValidateCRDOverride', { pfoverride: val }).subscribe((dataResponse) => {
+        // const result = await this.DataSvc.serverDataGet('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: val }).subscribe((dataResponse) => {
+        
+        // const result = await this.testoverrideAdmin(val);
+        // console.log('result', result)
+
+        this.getAssetTypesPromise(val);
+        console.log('returned');
+        return true;
+    }
+
+    async getAssetTypesPromise(val) {
+        console.log('before testoverrideAdmin');
+        const value = await this.testoverrideAdmin(val).toPromise();
+        console.log('value', value);
+        console.log('after testoverrideAdmin');
+    }
+
+    testoverrideAdmin(value) {
+         return Observable.create((observer) => {
+            console.log('before serverDataGet')
+            // observer.next('dataResponse');
+            // this.DataSvc.serverDataGet('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: value }).subscribe((dataResponse) => {
+            //     if (dataResponse.validate) {
+            //         console.log('dataResponse', dataResponse)
+            //         observer.next(dataResponse);
+            //     }
+            // });
+         });
+    }
+
 
     printSO(opendrawer: boolean) {
         if (!this.validEntry() || this.soCurrent.fdocnumber == -1) {
@@ -330,7 +380,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     
     overrideAdmin() {
         return Observable.create((observer) => {
-            this.CompanySvc.inputDialog('Enter Code', '', 'Admin Override Code', 'Continue', 'Cancel', true).subscribe((value) => {
+            this.CompanySvc.inputDialog('Enter Code', '', 'Admin Void-Override Code', 'Continue', 'Cancel', true).subscribe((value) => {
                 if (value) {
                     this.DataSvc.serverDataGet('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: value }).subscribe((dataResponse) => {
                         if (dataResponse.validate) {
@@ -526,6 +576,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             this.wjH.gridLoad(this.salesdetailsGrid, this.salesdetails.items, false);
             this.salesordersTotals();
             this.updateTotalQty();
+            this.setImage(null);
 
             if (this.salesdetails.items.length == 0) this.sodCurrent = {}; // Clear if no rows
         });

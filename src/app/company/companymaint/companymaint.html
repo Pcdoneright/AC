@@ -1,4 +1,4 @@
-<mat-tab-group [selectedIndex]="selectedTab" animationDuration="2000ms" class="widget-grid panel-nobox">
+<mat-tab-group [selectedIndex]="selectedTab" [animationDuration]="sharedSrvc.animationDuration" class="widget-grid panel-nobox">
     <!--Details-->
     <mat-tab>
     <!-- <div [hidden]="selectedTab != 0" layout="column" class="widget-grid panel-nobox"> -->
@@ -107,7 +107,7 @@
     <!-- </div> -->
     </mat-tab>
 
-    <!--Override-->
+    <!--Custom-->
     <mat-tab>
     <!-- <div [hidden]="selectedTab != 2" layout="column" class="widget-grid panel-nobox"> -->
         <pcdrBuilder #bar03></pcdrBuilder>
@@ -142,12 +142,6 @@
                     <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fcrdrawercode" [ngModelOptions]="{standalone: true}" required>
                 </div>
             </div>
-
-            
-
-            
-
-            
         </form>
     <!-- </div> -->
     </mat-tab>

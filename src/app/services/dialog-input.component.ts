@@ -10,10 +10,10 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
                 <label for="usr">{{ message }}:</label>
                 <input #indfld type="text" class="form-control" [(ngModel)]="textValue" [ngClass]="{'secure-font':hideInput == true}">
             </div>
-            <keypad *ngIf='allowKeypad' [keypadValue]='textValue' (keypadValueChange)="onKeypadValueChange($event)" (keypadEnter)="onYes()"></keypad>
+            <keypad *ngIf='allowKeypad' [keypadValue]='textValue' (keypadValueChange)="onKeypadValueChange($event)" (keypadEnter)="onEnter()"></keypad>
         </div>
         <div md-dialog-actions class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="dialogRef.close('')">{{ no }}</button>
+            <button *ngIf='allowNo' type="button" class="btn btn-secondary" (click)="dialogRef.close('')">{{ no }}</button>
             <button *ngIf='!allowKeypad' type="button" class="btn btn-primary" type="submit" (click)="onYes()">{{ yes }}</button>
         </div>
     `,
@@ -26,6 +26,9 @@ export class InputDialog {
     public no: string;
     public hideInput: boolean;
     public allowKeypad: boolean = true;
+    public allowNo: boolean = true;
+    public enterCallback: any;
+    public parent: any;
     textValue: string;
 
     constructor(public dialogRef: MatDialogRef<InputDialog>) {}
@@ -42,6 +45,21 @@ export class InputDialog {
         // Return only with proper value
         if (this.textValue) {
             this.dialogRef.close(this.textValue);
+        }
+    }
+    
+    onEnter() {
+        // A function will be use to evaluate
+        if (this.enterCallback) {
+            if (this.parent[this.enterCallback](this.textValue)) { // Must return true
+                this.dialogRef.close(this.textValue);
+            }
+        }
+        else {
+            // Return only with proper value
+            if (this.textValue) {
+                this.dialogRef.close(this.textValue);
+            }
         }
     }
 }
