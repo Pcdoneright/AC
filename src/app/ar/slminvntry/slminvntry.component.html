@@ -1,0 +1,19 @@
+<div [hidden]="selectedTab != 0" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <pcdrBuilder #bar01>
+        <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
+        <span class="lmargin">To:</span>
+        <wj-input-date #fsodatet [(value)]="sodatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatet)" (lostFocus)="wjH.inputLostFocus(fsodatet)"></wj-input-date>
+        <span class="lmargin">Salesman:</span>{{changeSalesmen}}
+        <select [(ngModel)]="fuserid" class="form-control lmargin" style="width: 250px;" [attr.disabled]="!changeSalesmen ? '' : null">
+            <option *ngFor="let opt of salespersons" [value]="opt.fuserid">
+                {{opt.fname}}
+            </option>
+        </select>
+        <!-- TODO <button type="button" class="btn btn-primary" (click)="listGridRefresh()"><i class="fa fa-search"></i> Search</button> -->
+    </pcdrBuilder>
+    <wj-flex-grid #g01 fxFlex></wj-flex-grid>
+</div>
+
+<div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <pcdrBuilder #bar02></pcdrBuilder>
+</div>

@@ -1,0 +1,11 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none" fxLayout="column" class="widget-grid panel-nobox" [style.height.px] = "gH01">
+    <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+        <span class="text-nowrap">Customer's Item History List</span>
+        <div fxFlex="flex"></div>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(custitemhlistg01)}}</span>
+    </nav>
+    <wj-flex-grid #custitemhlistg01 fxFlex></wj-flex-grid>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="closeDialog()">Continue</button>
+</div>

@@ -1,0 +1,185 @@
+<!--Item List Grid-->
+<div [hidden]="selectedTab != 0" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Item List</span>
+        <button type="button" class="btn btn-success" (click)="listGridDoubleClick()" matTooltip="Selected">Edit Item</button>
+        <button type="button" class="btn btn-secondary" (click)="exportToXcel()" matTooltip="Export List To Excel"><i class="fa fa-file-excel-o"></i></button>
+        <div fxFlex="flex"></div>
+        <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=1; gridRepaint('1')">Entry</button>
+        <!-- <span class="text-nowrap">Rows: {{listCustomerGrid.rowCount()}}</span> -->
+        <span class="text-nowrap">Rows: {{wjH.rowCount(itmmg01)}}</span>
+    </nav>
+    <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+        <span class="lmargin">Search:</span>
+        <mat-radio-group [(ngModel)]="ftype" style="margin-top: 5px" class="lmargin">
+            <mat-radio-button value="D">Description</mat-radio-button>
+            <mat-radio-button value="I">Item No.</mat-radio-button>
+            <mat-radio-button value="V">Vendor Item</mat-radio-button>
+            <mat-radio-button value="R">For Review</mat-radio-button>
+        </mat-radio-group>
+        <input type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listGridSearch">
+        <button type="button" class="btn btn-primary" (click)="itemListSearch()"><i class="fa fa-search"></i> Search</button>
+        <div style="margin-top: 10px;" class="lmargin">
+            <mat-checkbox [(ngModel)]="factive" class="text-nowrap">Active Only</mat-checkbox>
+        </div>
+    </div>
+    <wj-flex-grid #itmmg01 fxFlex></wj-flex-grid>
+</div>
+
+<!--Details-->
+<div [hidden]="selectedTab != 1" fxLayout="column">
+    <div fxLayout="column" class="widget-grid panel-nobox">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Item Properties</span>
+            <button type="button" class="btn btn-primary" (click)="update()" >Save</button>
+            <button type="button" class="btn btn-light" (click)="newItem()" >New Item</button>
+            <div fxFlex="flex"></div>
+            <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=0">List</button>
+            <a style="margin-right: -10px;padding-right: 0" (click)="showMoreEdit = !showMoreEdit; onResize($event)">
+                <i class='fa fa-chevron-down' [ngClass]="{'fa-rotate-180' : showMoreEdit}"></i>
+            </a>
+        </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <span class="text-nowrap lmargin">Search By:</span>
+            <mat-radio-group [(ngModel)]="itemnumberid" layout="row" layout-align="start start" class="lmargin" style="margin-top: 10px">
+                <mat-radio-button value="I" aria-label="Description" class="widget-mat-radio-button">ID</mat-radio-button>
+                <mat-radio-button value="N" aria-label="Item Number" class="widget-mat-radio-button">NUMBER</mat-radio-button>
+            </mat-radio-group>
+            <input type="text" class="form-control lmargin" placeholder="ITEM" style="width: 250px" [(ngModel)]="searchId" (blur)='searchByIdNumber()'>
+            <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            <span fxflex="flex" *ngIf="!validEntry()" class="alert-danger text-nowrap" style="padding: 10px">NO CHANGES CAN BE SAVED</span>
+        </div>
+        <!-- Form -->
+        <form>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group" style="width: 150px;" fxLayout="column">
+                    <label>ID</label>
+                    <span fxFlex class="fdocnumber">{{itmCurrent.fimid}}</span>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Description</label>
+                    <input type="text" class="form-control" [(ngModel)]="itmCurrent.fdescription" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" style="width: 180px;">
+                    <label>Sales Base Price</label>
+                    <input type="text" #fsalebaseprice pcdrAmount class="form-control" (blur)="onfsalebaseprice(fsalebaseprice.value)" value="{{itmCurrent.fsalesbase}}" required>
+                </div>
+            </div>
+            <!-- <div *ngIf="showMoreEdit" layout="row" style="padding-top: 10px; padding-bottom: 10px"> -->
+            <div layout="row" style="padding-top: 10px; padding-bottom: 10px">
+                <mat-checkbox [(ngModel)]="itmCurrent.factive" [ngModelOptions]="{standalone: true}" fxFlex="flex">Active </mat-checkbox>
+                <mat-checkbox [(ngModel)]="itmCurrent.fistaxable" [ngModelOptions]="{standalone: true}" fxFlex="flex">Taxable</mat-checkbox>
+                <mat-checkbox [(ngModel)]="itmCurrent.fnonresaleable" [ngModelOptions]="{standalone: true}" fxFlex="flex">Non-Resaleable </mat-checkbox>
+                <mat-checkbox [(ngModel)]="itmCurrent.fallowtfoodstamp" [ngModelOptions]="{standalone: true}" fxFlex="flex">Allow Food Stamp </mat-checkbox>
+                <mat-checkbox [(ngModel)]="itmCurrent.freview" [ngModelOptions]="{standalone: true}" fxFlex="flex">For Review </mat-checkbox>
+            </div>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Category</label>
+                    <select [(ngModel)]="itmCurrent.fcategory" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                        <option *ngFor="let opt of listCategory" [value]="opt.fid">
+                            {{opt.fid}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Sub Category</label>
+                    <select [(ngModel)]="itmCurrent.fsubcategory" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                        <option *ngFor="let opt of listSubcategory" [value]="opt.fid">
+                            {{opt.fid}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Type</label>
+                    <select [(ngModel)]="itmCurrent.ftype" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                        <option *ngFor="let opt of listType" [value]="opt.fid">
+                            {{opt.fdescription}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div *ngIf="showMoreEdit" fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Reorder Point</label>
+                    <input type="text" pcdrQty class="form-control" [(ngModel)]="itmCurrent.freorderpoint" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Reorder Qty</label>
+                    <input type="text" pcdrQty class="form-control" [(ngModel)]="itmCurrent.freorderqty" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>ABC</label>
+                    <select [(ngModel)]="itmCurrent.fabc" [ngModelOptions]="{standalone: true}" class="form-control">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+            </div>
+            <div *ngIf="showMoreEdit" fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Notes</label>
+                    <input type="text" class="form-control" [(ngModel)]="itmCurrent.fnotes" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="33">
+                    <label>Last Update</label>
+                    <input type="text" class="form-control" disabled
+                        value="{{itmCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{itmCurrent.fusername}}"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div fxLayout="column" class="widget-grid panel-nobox">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Inventory List</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap">Rows: {{wjH.rowCount(itmmg02)}}</span>
+            <a class="lmargin" style="margin-right: -10px;padding-right: 0" (click)="showInventoryGrid = !showInventoryGrid; onResize($event); gridRepaint('1');">
+                <i class='fa fa-chevron-down' [ngClass]="{'fa-rotate-180' : showInventoryGrid}"></i>
+            </a>
+        </nav>
+        <wj-flex-grid [hidden]="!showInventoryGrid" #itmmg02 style="height: 132px;"></wj-flex-grid>
+    </div>
+
+    <div fxLayout="column" class="widget-grid panel-nobox">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Item Units</span>
+            <button type="button" class="btn btn-success" (click)="itemunitsAdd(false)"><i class="fa fa-plus"></i> Add</button>
+            <button type="button" class="btn btn-danger" (click)="itemunitsRemove()"><i class="fa fa-minus"></i> Remove</button>
+            <button type="button" class="btn btn-light" (click)="itemunitsCopy()" matTooltip="Selected Item">Copy</button>
+            <button type="button" class="btn btn-primary" (click)="viewCustomerPrice()" matTooltip="View Customer Pricing">Customer Pricing</button>
+            <input type="file" hidden='true' #fileupload (change)="fileChange($event)" placeholder="Upload file" accept=".jpg">
+            <button type="button" class="btn btn-secondary" (click)="allowUpload(fileupload)" matTooltip="Selected Item">Upload Image</button>
+            <span class="lmargin" *ngIf="fileuploadinfo.progress > 0">{{fileuploadinfo.progress}}%</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap">Rows: {{wjH.rowCount(itmmg03)}}</span>
+        </nav>
+        <div fxLayout="row" [style.height.px] = "gH03">
+            <wj-flex-grid #itmmg03
+                (keydown)='wjH.onGridKeyPress(itmmg03, $event)' 
+                (gotFocus)='wjH.onGridGotFocus(itmmg03, $event)'
+                (selectionChanged)='wjH.onGridSelectionChanged(itmmg03, $event)'>
+            </wj-flex-grid>
+            <div style="height:250px; width:250px; margin:5px 0 0 5px">
+            <img [src]="itemunitsImgCurrent" onError="this.src='./images/250x250.png';" style="width:100%; height:100%;">
+            </div>
+        </div>
+    </div>
+
+    <div layout="column" class="widget-grid panel-nobox">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Prefered Vendors</span>
+            <button type="button" class="btn btn-success" (click)="itemvendorsAdd()"><i class="fa fa-plus"></i> Add</button>
+            <button type="button" class="btn btn-danger" (click)="itemvendorsRemove()"><i class="fa fa-minus"></i> Remove</button>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap">Rows: {{wjH.rowCount(itmmg04)}}</span>
+        </nav>
+        <wj-flex-grid #itmmg04 style="height: 150px;"
+            (keydown)='wjH.onGridKeyPress(itmmg04, $event)' 
+            (gotFocus)='wjH.onGridGotFocus(itmmg04, $event)'
+            (selectionChanged)='wjH.onGridSelectionChanged(itmmg04, $event)'>
+        </wj-flex-grid>
+    </div>
+</div>

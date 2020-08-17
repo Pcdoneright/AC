@@ -1,0 +1,19 @@
+.amount1 {
+    font-size: 30px !important;
+    height: 2.5rem;
+}
+
+.amount2 {
+    font-size: 22px !important;
+}
+
+.numPad {
+    margin-top: 10px;
+    height: 3.2rem !important;
+    min-width: 88px !important;
+}
+
+/* Allow mat-dialog to show properly */
+/* .cdk-overlay-pane {
+    max-width: 100vw !important;
+} */

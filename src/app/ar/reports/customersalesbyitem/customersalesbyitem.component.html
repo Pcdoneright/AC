@@ -1,0 +1,36 @@
+<div layout="column" class="widget-grid panel-nobox">
+   <pcdrBuilder #bar01>
+        <span class="lmargin">Search:</span>
+        <mat-radio-group [(ngModel)]="ftype" style="margin-top: 5px" class="lmargin">
+            <mat-radio-button value="N">Customer Name</mat-radio-button>
+            <mat-radio-button value="C">Contact Name</mat-radio-button>
+            <mat-radio-button value="A">All Customers</mat-radio-button>
+        </mat-radio-group>
+        <input *ngIf="ftype != 'A'" type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listGridSearch">
+        <button *ngIf="ftype == 'A'" type="button" class="btn btn-primary" (click)="listSearch()"><i class="fa fa-search"></i> Search</button>
+        <div style="margin-top: 10px;" class="lmargin">
+            <mat-checkbox [(ngModel)]="factive" class="text-nowrap">Active Only</mat-checkbox>
+        </div>
+    </pcdrBuilder>
+    <wj-flex-grid #custsalesbyitemg01 [style.height.px] = "400"></wj-flex-grid>
+    <form>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatef">Date From</label>
+                <!-- <input type="date" class="form-control" id="hrfdatef" [ngModel]="fdatef | date:'yyyy-MM-dd'" (ngModelChange)="fdatef = $event" [ngModelOptions]="{standalone: true}"> -->
+                <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatet">Date To</label>
+                <!-- <input type="date" class="form-control" id="hrfdatet" [ngModel]="fdatet | date:'yyyy-MM-dd'" (ngModelChange)="fdatet = $event" [ngModelOptions]="{standalone: true}"> -->
+                <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+            </div>
+            <div class="lmargin" style="margin-top: 40px;">
+                <mat-checkbox [(ngModel)]="fdetails" [ngModelOptions]="{standalone: true}" class="text-nowrap" Xstyle="margin-top: 10px">Show Details</mat-checkbox>
+            </div>
+            <div class="lmargin" style="margin-top: 40px;">
+                <mat-checkbox [(ngModel)]="fexcel" [ngModelOptions]="{standalone: true}" class="text-nowrap">Excel Sheet</mat-checkbox>
+            </div>
+        </div>
+    </form>
+</div>

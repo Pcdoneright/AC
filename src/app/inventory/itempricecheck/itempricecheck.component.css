@@ -1,0 +1,34 @@
+.amount1 {
+    font-size: 30px !important;
+    /* height: 2.5rem; */
+}
+
+.font2 {
+    font-size: 20px !important;
+}
+
+.mh1 {
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.1;
+    font-size: 2.5rem;
+}
+
+/* .sorclass .wj-cell:not(.wj-state-selected):not(.wj-state-multi-selected) { */
+.ipckclass .wj-cell {
+    border: none;
+    font-weight: 400;
+    line-height: 1.1;
+    font-size: 1.25rem;
+    padding: 12px 3px;
+}
+
+.ipckclass .wj-state-multi-selected {
+    background-color: #0275d8;
+    color: #fff;
+}
+
+.ipckclass .wj-state-selected {
+    background-color: #0275d8;
+    color: #fff;
+}

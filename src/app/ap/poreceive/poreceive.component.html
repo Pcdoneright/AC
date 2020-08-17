@@ -1,0 +1,124 @@
+<div [hidden]="selectedTab != 0" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Purchase Order List</span>
+        <button type="button" class="btn btn-success lmargin" (click)="listPOGridEdit()">Edit Selected</button>
+        <div fxFlex="flex"></div>
+        <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=1; focusToScan()">Entry</button>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(listPOGrid)}}</span>
+    </nav>
+    <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+        <span class="lmargin">Location:</span>
+        <select [(ngModel)]="fshipto" class="form-control lmargin" style="width: 350px;">
+            <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                {{opt.fname}}
+            </option>
+        </select>
+        <button type="button" class="btn btn-primary" (click)="listPOGridRefresh()"><i class="fa fa-search"></i> Search</button>
+    </div>
+    <wj-flex-grid #listPOGrid fxFlex></wj-flex-grid>
+</div>
+
+<div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Properties</span>
+            <button type="button" class="btn btn-primary" (click)="update()" >Complete</button>
+            <button type="button" class="btn btn-light" (click)="printPO()"><i class="fa fa-print"></i> Receipt</button>
+            <div fxFlex="flex"></div>
+            <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=0">List</button>
+            <a class="lmargin" style="margin-right: -10px;padding-right: 0" (click)="showMoreEdit = !showMoreEdit; onResize($event); gridRepaint();">
+                <i class='fa fa-chevron-down' [ngClass]="{'fa-rotate-180' : showMoreEdit}"></i>
+            </a>
+        </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <input type="text" class="form-control lmargin" placeholder="PO Number" style="width: 150px" [(ngModel)]="searchId" (blur)='searchPONumber()'>
+            <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            <span fxflex="flex" *ngIf="!validEntry()" class="alert-danger text-nowrap" style="padding: 10px">NO CHANGES CAN BE SAVED</span>
+        </div>
+        <div fxLayout="row">
+            <!-- Form -->
+            <form fxFlex>
+                <div fxLayout="row" class="rmargin">
+                    <div fxFlex>
+                        <div class="form-group" fxFlex>
+                            <label>Vendor</label>
+                            <input type="text" class="form-control" value="{{poCurrent.cfvid}}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group lmargin" fxFlex>
+                        <label>Deliver By</label>
+                        <input type="text" class="form-control" value="{{poCurrent.fdeliverydate | date:'MM/dd/yyyy'}}" disabled>
+                    </div>
+                    <div class="form-group lmargin" fxFlex>
+                        <label>PO Date</label>
+                        <input type="text" class="form-control" value="{{poCurrent.fdate | date:'MM/dd/yyyy'}}" disabled>
+                    </div>
+                </div>
+                <div [hidden]='!showMoreEdit' fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex>
+                        <label>Reference</label>
+                        <input type="text" class="form-control" name="freference" value="{{poCurrent.freference}}" maxlength="50" disabled>
+                    </div>
+                    <div class="form-group lmargin" fxFlex>
+                        <label>Customer ID</label>
+                        <input type="text" class="form-control" value="{{poCurrent.cfcustomerid}}" disabled>
+                    </div>
+                    <div class="form-group lmargin" fxFlex>
+                        <label>Ship To</label>
+                        <select name="fshipto" [(ngModel)]="poCurrent.fshipto" class="form-control" disabled>
+                            <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                                {{opt.fname}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div [hidden]='!showMoreEdit' fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Notes</label>
+                        <input type="text" class="form-control" name="fnotes" [(ngModel)]="poCurrent.fnotes" maxlength="400">
+                    </div>
+                    <div class="form-group lmargin" fxFlex="33">
+                        <label>Last Update</label>
+                        <input type="text" class="form-control" disabled
+                            value="{{poCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{poCurrent.fusername}}"/>
+                    </div>
+                </div>
+                    
+            </form>
+            <!-- Totals -->
+            <div class="panel" fxLayout="column" style="width: 280px">
+                <div class="mform-control-row">
+                    <label class="col-form-label" fxFlex='40'>PO Number</label>
+                    <span fxFlex class="fdocnumber">{{poCurrent.fponumber}}</span>
+                </div>
+                <div [hidden]='!showMoreEdit'>
+                    <div class="mform-control-row">
+                        <label class="col-form-label" fxFlex='40'>Receive Date</label>
+                        <input fxFlex type="text" class="form-control" value="{{poCurrent.freceivedate | date:'MM/dd/yyyy'}}" disabled>
+                    </div>
+                    <div class="mform-control-row">
+                        <label class="col-form-label" fxFlex='40'>Status</label>
+                        <select fxFlex name="fstatus" [(ngModel)]="poCurrent.fstatus" class="form-control" disabled>
+                            <option *ngFor="let opt of orderstatus" [value]="opt.fid">
+                                {{opt.fdescription}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Details</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap">Rows: {{wjH.rowCount(purchasedetailsGrid)}}</span>
+        </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <input type="text" class="form-control lmargin" placeholder="Scan Item To Receive" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+        </div>
+        <wj-flex-grid #purchasedetailsGrid fxFlex
+            (keydown)='wjH.onGridKeyPress(purchasedetailsGrid, $event)' 
+            (gotFocus)='wjH.onGridGotFocus(purchasedetailsGrid, $event)'
+            (selectionChanged)='wjH.onGridSelectionChanged(purchasedetailsGrid, $event)'>
+        </wj-flex-grid>
+</div>

@@ -1,0 +1,22 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none" fxLayout="column" class="widget-grid panel-nobox" [style.height.px] = "gH01">
+    <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+        <span class="text-nowrap">Customer List</span>
+        <div fxFlex="flex"></div>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(custlistg01)}}</span>
+    </nav>
+    <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+        <span class="lmargin">Search By:</span>
+        <mat-radio-group [(ngModel)]="searchType" style="margin-top: 5px" class="lmargin">
+            <mat-radio-button value="N">Name</mat-radio-button>
+            <mat-radio-button value="C">Contact Name</mat-radio-button>
+            <mat-radio-button value="A">All Customers</mat-radio-button>
+        </mat-radio-group>
+        <input *ngIf="searchType != 'A'" cdkFocusInitial type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listGridSearch">
+        <button *ngIf="searchType == 'A'" type="button" class="btn btn-primary" (click)="listSearch()"><i class="fa fa-search"></i> Search</button>
+    </div>
+    <wj-flex-grid #custlistg01 fxFlex></wj-flex-grid>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogRef.close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="closeDialog()">Continue</button>
+</div>

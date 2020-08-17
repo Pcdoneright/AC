@@ -1,0 +1,75 @@
+<!-- Customer List -->
+<div [hidden]="selectedTab != 0" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <as-split direction="vertical" (dragEnd)="gridRepaint()">
+        <as-split-area size="60" fxLayout="column">
+            <pcdrBuilder #bar01>
+                <span class="lmargin">Search:</span>
+                <mat-radio-group [(ngModel)]="ctype" style="margin-top: 5px" class="lmargin">
+                    <mat-radio-button value="N">Name</mat-radio-button>
+                    <mat-radio-button value="C">Contact Name</mat-radio-button>
+                    <mat-radio-button value="A">All Customers</mat-radio-button>
+                </mat-radio-group>
+                <input *ngIf="ctype != 'A'" type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listCustomerGridSearch">
+                <button *ngIf="ctype == 'A'" type="button" class="btn btn-primary" (click)="listCustomerGridRefresh()"><i class="fa fa-search"></i> Search</button>
+                <div style="margin-top: 10px;" class="lmargin">
+                    <mat-checkbox [(ngModel)]="factive" class="text-nowrap">Active Only</mat-checkbox>
+                </div>
+            </pcdrBuilder>
+            <wj-flex-grid #soeg01 fxFlex></wj-flex-grid>
+        </as-split-area>
+
+        <as-split-area size="40" fxLayout="column">
+            <pcdrBuilder #bar02>
+                <mat-radio-group [(ngModel)]="sotype" style="margin-top: 5px" class="lmargin">
+                    <mat-radio-button value="C" matTooltip="For Selected Customer">Customer</mat-radio-button>
+                    <mat-radio-button value="D">Dates From:</mat-radio-button>
+                </mat-radio-group>
+                <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
+                <span class="lmargin">To:</span>
+                <wj-input-date #fsodatet [(value)]="sodatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatet)" (lostFocus)="wjH.inputLostFocus(fsodatet)"></wj-input-date>
+                <span class="lmargin">Status:</span>
+                <select [(ngModel)]="sostatus" class="form-control lmargin" style="width: 150px;">
+                    <option *ngFor="let opt of orderstatus" [value]="opt.fid">
+                        {{opt.fdescription}}
+                    </option>
+                </select>
+                <button type="button" class="btn btn-primary" (click)="listSOGridRefresh()"><i class="fa fa-search"></i> Search</button>
+            </pcdrBuilder>
+            <wj-flex-grid #soeg02 fxFlex Xstyle="height:250px"></wj-flex-grid>
+        </as-split-area>
+    </as-split>
+</div>
+
+<!-- Properties -->
+<div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <pcdrBuilder #bar03></pcdrBuilder>
+    
+    <!-- SO Properties form -->
+    <soproperties #soproperties01></soproperties>
+
+    <pcdrBuilder #bar04>
+        <input type="text" class="form-control lmargin" placeholder="Scan Item To Add" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+        <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+    </pcdrBuilder>
+    <wj-flex-grid #soeg03 fxFlex
+        (keydown)='wjH.onGridKeyPress(soeg03, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(soeg03, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(soeg03, $event)'>
+    </wj-flex-grid>
+</div>
+
+<!-- <div [hidden]="selectedTab != 2" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Payments</span>
+        <button type="button" class="btn btn-success lmargin" (click)="salespaymentsAdd()"><i class="fa fa-plus"></i> Add</button>
+        <button type="button" class="btn btn-danger" (click)="salespaymentsRemove()"><i class="fa fa-minus"></i> Remove</button>
+        <div fxFlex="flex"></div>
+        <button type="button" class="btn btn-outline-primary" (click)="selectedTab=1; gridRepaint()">Entry</button>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(soeg04)}}</span>
+    </nav>
+    <wj-flex-grid #soeg04 fxFlex
+        (keydown)='wjH.onGridKeyPress(soeg04, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(soeg04, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(soeg04, $event)'>
+    </wj-flex-grid>
+</div> -->

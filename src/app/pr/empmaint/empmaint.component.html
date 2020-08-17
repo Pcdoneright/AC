@@ -1,0 +1,161 @@
+<!-- <mat-tab-group [selectedIndex]="selectedTab">
+    <mat-tab label="List"> -->
+    <div [hidden]="selectedTab != 0">
+            <div layout="column" class="widget-grid panel-nobox">
+                    <div class="split-pane-content-primary">
+                        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+                            <span class="text-nowrap">Employee List</span>
+                            <button type="button" class="btn btn-success" (click)="listEdit()" matTooltip="For Selected Employee">Edit</button>
+                            <div fxFlex="flex"></div>
+                            <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=1; gridRepaint('1')">Entry</button>
+                            <!-- <span class="text-nowrap">Rows: {{listCustomerGrid.rowCount()}}</span> -->
+                            <span class="text-nowrap">Rows: {{wjH.rowCount(empmntg01)}}</span>
+                        </nav>
+                        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+                            <span class="lmargin">Search By:</span>
+                            <mat-radio-group [(ngModel)]="ctype" style="margin-top: 5px" class="lmargin">
+                                <mat-radio-button value="N" (click)="listCustomerGridSearch.setValue('')">Last Name</mat-radio-button>
+                                <mat-radio-button value="A">All Employees</mat-radio-button>
+                            </mat-radio-group>
+                            <!-- <button *ngIf="ctype=='A'" type="button" class="btn btn-primary" (click)="listCustomerGridSearch.valueChanges.next()"><i class="fa fa-search"></i> Search</button> -->
+                            <button *ngIf="ctype=='A'" type="button" class="btn btn-primary" (click)="empListSearch()"><i class="fa fa-search"></i> Search</button>
+                            <input *ngIf="ctype!='A'" type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listCustomerGridSearch">
+                            <div style="margin-top: 10px;" class="lmargin">
+                                <mat-checkbox [(ngModel)]="empActive" class="text-nowrap">Active Only</mat-checkbox>
+                            </div>
+                        </div>
+                        <!-- <ag-grid-angular #oemGrid01 [gridOptions]="listCustomerGrid" style="width: 100%;" class="ag-fresh" [style.height.px]="gH01"></ag-grid-angular> -->
+                        <wj-flex-grid #empmntg01 [style.height.px] = "gH01"></wj-flex-grid>
+                    </div>
+            </div>
+    </div>
+    <!-- </mat-tab>
+    <mat-tab label="Contacts"> -->
+    <div [hidden]="selectedTab != 1">
+        <div class="widget-grid panel-nobox">
+            <nav class="navbar navbar-expand-md mbg-info">
+                <span class="text-nowrap">Properties</span>
+                <button *ngIf="fadmin || fupdate" type="button" class="btn btn-primary" (click)="update()"><i class="fa fa-save"></i> Save</button>
+                <button type="button" class="btn btn-success" (click)="createEmp()">New Employee</button>
+                <button type="button" class="btn btn-light" (click)="printrpt()"><i class="fa fa-print"></i> Active List</button>
+                <div fxFlex="flex"></div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary mbtn-outline-primary nobutton" (click)="selectedTab=0; gridRepaint('0')">List</button>
+                </div>
+            </nav>
+            <form>
+                <div fxLayout="row" class="rmargin">
+                    <div class="form-group" style="width: 150px;" fxLayout="column">
+                        <label>ID</label>
+                        <span fxFlex class="fdocnumber">{{empCurrent.empid}}</span>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" [(ngModel)]="empCurrent.firstname" [ngModelOptions]="{standalone: true}" required>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" [(ngModel)]="empCurrent.lastname" [ngModelOptions]="{standalone: true}" required>
+                    </div>
+                    <!-- <div style="height: 110px;" class="lmargin" fxLayout="row" fxLayoutAlign="center center"> -->
+                    <div style="margin-top: 40px;" class="lmargin">
+                        <mat-checkbox [(ngModel)]="empCurrent.active" [ngModelOptions]="{standalone: true}" class="text-nowrap">Active</mat-checkbox>
+                    </div>
+                </div>
+                <div fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Pin Number</label>
+                        <input type="text" class="form-control" [(ngModel)]="empCurrent.pinnumber" [ngModelOptions]="{standalone: true}" required>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>SSN# (NO DASH/SPACE)</label>
+                        <input type="text" pcdrSSN class="form-control" [(ngModel)]="empCurrent.ssn" [ngModelOptions]="{standalone: true}" required>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>Paytype</label>
+                        <select [(ngModel)]="empCurrent.paytype" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                            <option value="H">Hourly</option>
+                            <option value="S">Salary</option>
+                        </select>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>In/Out</label>
+                        <select [(ngModel)]="empCurrent.finout" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                                <option value="I">In</option>
+                                <option value="O">Out</option>
+                        </select>
+                    </div>
+                </div>
+                <div fxLayout="row" class="rmargin">
+                        <div class="form-group" fxFlex="flex">
+                            <label>Phone (NO DASH/SPACE/DOT)</label>
+                            <input type="text" pcdrPhone class="form-control" [(ngModel)]="empCurrent.fphone" [ngModelOptions]="{standalone: true}">
+                        </div>
+                        <div class="form-group lmargin" fxFlex="flex">
+                            <label>Phone 2 (NO DASH/SPACE/DOT)</label>
+                            <input type="text" class="form-control" [(ngModel)]="empCurrent.fphone2" [ngModelOptions]="{standalone: true}">
+                        </div>
+                        <div class="form-group lmargin" fxFlex="flex">
+                            <label>Start Date</label>
+                            <wj-input-date #fstartdate [(value)]="empCurrent.fstartdate" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fstartdate)" (lostFocus)="wjH.inputLostFocus(fstartdate)"></wj-input-date>
+                        </div>
+                    </div>
+                <div fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Address</label>
+                        <input type="text" class="form-control" [(ngModel)]="empCurrent.faddress" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>Address 2</label>
+                        <input type="text" class="form-control" [(ngModel)]="empCurrent.faddress2" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>City</label>
+                        <input type="text" class="form-control" [(ngModel)]="empCurrent.fcity" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex" fxLayout="row">
+                        <div class="form-group lmargin" style="width: 80px">
+                            <label>State</label>
+                            <input type="text" class="form-control" [(ngModel)]="empCurrent.fstate" [ngModelOptions]="{standalone: true}">
+                        </div>
+                        <div class="form-group lmargin" fxFlex="flex">
+                            <label>Zip</label>
+                            <input type="text" class="form-control" [(ngModel)]="empCurrent.fzip" [ngModelOptions]="{standalone: true}">
+                        </div>
+                    </div>
+                </div>
+                <div fxLayout="row" class="rmargin">
+                        <div class="form-group" fxFlex="flex">
+                            <label>Notes</label>
+                            <input type="text" class="form-control" [(ngModel)]="empCurrent.fnotes" [ngModelOptions]="{standalone: true}">
+                        </div>
+                        <div class="form-group lmargin" fxFlex="33">
+                            <label>Last Update</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{empCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{empCurrent.fusername}}"/>
+                        </div>
+                    </div>
+
+            </form>
+            <nav class="navbar navbar-expand-md mbg-info">
+                <span class="text-nowrap">Hours</span>
+                <button type="button" class="btn btn-success" (click)="hoursAdd()"><i class="fa fa-plus"></i> Add</button>
+                <button type="button" class="btn btn-danger" (click)="hoursRemove()"><i class="fa fa-minus"></i> Remove</button>
+                <button type="button" class="btn btn-light" (click)="hoursCalculate()" matTooltip="Selected Contact">Calculate Hours</button>
+                <span class="lmargin">Show:</span>
+                <mat-radio-group [(ngModel)]="hrslimit" style="margin-top: 5px" class="lmargin" fxLayout="row">
+                    <mat-radio-button value="Y">Top 50 Rows</mat-radio-button>
+                    <mat-radio-button value="N" class="lmargin">All Rows</mat-radio-button>
+                </mat-radio-group>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap lmargin">Rows: {{wjH.rowCount(empmntg02)}}</span>
+            </nav>
+            <wj-flex-grid #empmntg02 [style.height.px] = "gH02"
+                (keydown)='wjH.onGridKeyPress(empmntg02, $event)' 
+                (gotFocus)='wjH.onGridGotFocus(empmntg02, $event)'
+                (selectionChanged)='wjH.onGridSelectionChanged(empmntg02, $event)'>
+            </wj-flex-grid>
+        </div>
+    </div>
+    <!-- </mat-tab>
+</mat-tab-group> -->

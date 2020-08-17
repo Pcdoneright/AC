@@ -1,0 +1,15 @@
+<div fxLayout="column" class="widget-grid panel-nobox" [style.height.px]="wH">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span>Salesmen</span>
+        <button type="button" class="btn btn-primary" (click)="update()"><i class="fa fa-save"></i> Save</button>
+        <button type="button" class="btn btn-success" (click)="add()"><i class="fa fa-plus"></i> Add</button>
+        <button type="button" class="btn btn-danger" (click)="remove()"><i class="fa fa-minus"></i> Remove</button>
+        <div class="container"></div>
+        <span style="white-space: nowrap;">Rows: {{wjH.rowCount(g01)}}</span>
+    </nav>
+    <wj-flex-grid #g01 fxFlex
+        (keydown)='wjH.onGridKeyPress(g01, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(g01, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(g01, $event)'>
+    </wj-flex-grid>
+</div>

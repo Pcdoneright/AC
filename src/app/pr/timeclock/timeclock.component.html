@@ -1,0 +1,32 @@
+<div fxLayout="row" class="widget-grid panel-nobox tcpanel">
+    <div layout="column" style="width: 370px;">
+        <nav class="navbar navbar-expand-md mbg-info">
+            <span class="text-nowrap">Employee List</span>
+            <button type="button" class="btn btn-primary" (click)="listEmployeeRefresh()">
+                <i class="fa fa-recycle"></i> Refresh</button>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap">Rows: {{wjH.rowCount(lEmployeeg01)}}</span>
+        </nav>
+        <wj-flex-grid #lEmployeeg01 [style.height.px]="gHeight"></wj-flex-grid>
+    </div>
+
+    <div fxLayout="column" class="widget-grid widget-grid-edit panel-form" style="padding-left: 5px; margin-top: 20px" fxFlex>
+        <!-- <form> -->
+            <div fxLayout="column" layout-align="start center">
+                <div fxLayout="row" fxLayoutAlign="center start">
+                    <div class="form-group row" style="width: 400px">
+                        <label for="inputPassword" class="col-sm-3 col-form-label text-nowrap">PIN Number</label>
+                        <div class="col-sm-9">
+                            <input type="text" [(ngModel)]="pinnumber" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" class="secure-font form-control" />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" (click)="clockInOut()">Clock In/Out</button>
+                    <button type="button" class="btn btn-secondary" (click)="viewHours($event)">View Hours</button>
+                </div>
+                <span style="font-size: 42px" align="center">{{fcurrTime}}</span>
+                <span style="font-size: 36px" align="center">{{fcurrDate}}</span>
+            </div>
+        <!-- </form> -->
+        <keypad [keypadValue]='pinnumber' (keypadValueChange)="onKeypadValueChange($event)" (keypadEnter)="clockInOut()"></keypad>
+    </div>
+</div>

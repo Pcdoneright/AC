@@ -1,0 +1,129 @@
+<div [hidden]="selectedTab != 0" class="tcpanel" fxLayout="row" style='padding: 5px'>
+    <div fxLayout="column" fxFlex style="margin-right: 5px;">
+        <pcdrBuilder #bar01></pcdrBuilder>
+        <!-- Form -->
+        <div style="background-color: #fff">
+            <form novalidate>
+                <div fxLayout="row" class="rmargin">
+                    <div class="form-group" style="width: 220px;" fxLayout="column">
+                        <label>Order #</label>
+                        <span *ngIf="soCurrent.fdocnumber != -1" class="fdocnumber">{{soCurrent.fdocnumber}}</span>
+                        <span *ngIf="soCurrent.fdocnumber == -1" class="fdocnumber">NEW</span>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>Name</label>
+                        <input type="text" class="form-control" value="{{soCurrent.cfcid}}" disabled>
+                    </div>
+                    <button type="button" (click)="assignCustomer()" style='height:38px;margin-top:32px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
+                    <div class="form-group" fxFlex="33">
+                        <label>PO Number</label>
+                        <input type="text" class="form-control" name="fponumber" [(ngModel)]="soCurrent.fponumber">
+                    </div>
+                    <button type="button" (click)="viewOrder()" style='height:38px;margin-top:32px'matTooltip="View Order Info" class="btn btn-primary"><i class="fa fa-cog"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Item Scan -->
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" style='margin-top:5px'>
+            <span class="text-nowrap">Details</span>
+            <button type="button" class="btn btn-success lmargin" (click)="salesdetailsAdd()"><i class="fa fa-search"></i> Find Item</button>
+            <button type="button" class="btn btn-danger" (click)="salesdetailsRemove()"><i class="fa fa-minus"></i> Remove</button>
+            <button type="button" class="btn btn-primary" (click)="itemOptions()" matTooltip="View Selected Item Alternatives">Item Options</button>
+            <button type="button" class="btn btn-primary" (click)="editItem()" matTooltip="Edit Selected Item">Edit</button>
+            <div fxFlex="flex"></div>
+            <mat-slide-toggle [(ngModel)]='printMobile'>Print Mobile</mat-slide-toggle>
+        </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <input type="text" class="form-control lmargin" placeholder="Scan Item To Add" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+        </div>
+
+        <div fxFlex style="background-color: #fff">
+            <!-- Item Display -->
+            <div class="widget-grid panel-nobox" style="margin-top:25px">
+                <div fxLayout="row" [ngClass]="{'alert-row' : (sodCurrent.cfmarkup < minMarkup)}">
+                    <span class='mh1 text-uppercase' fxFlex='flex'>{{sodCurrent.fqty}} {{sodCurrent.fdescription}}</span>
+                    <span><h1>{{sodCurrent.cextended | currency: 'USD'}}</h1></span>
+                </div>
+                <div fxLayout="row" class="text-nowrap" *ngIf='sodCurrent.fitem'>
+                    <span><h3>
+                        {{sodCurrent.fprice | currency: 'USD'}} {{sodCurrent.cfitem}}, @{{sodCurrent.fprice/sodCurrent.funits | currency: 'USD'}}/unit, {{sodCurrent.cweight | number: ''}} lbs.
+                    </h3></span>
+                    <span *ngIf='!sodCurrent.fistaxable' style='margin-top:6px'><h5>&ensp;(Non-Taxable)</h5></span>
+                </div>
+                <div fxLayout="row" class="text-nowrap">
+                    <span><h2>{{sodCurrent.fitem}}</h2></span>
+                </div>
+                
+            </div>
+
+            <div fxLayout="row">
+                <!-- Images -->
+                <div style="height:250px; margin:5px 0 0 5px">
+                    <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+                </div>
+                
+                <div style='width:100%' fxLayoutAlign="center center">
+                    <button style="width:250px;" type="button" class="btn btn-primary btn-payment" (click)="payment()" >Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Item Grid -->
+    <div fxLayout="column" style="width: 460px" [style.height.px] = "gH01">
+        <div class="subnavbar font2" fxLayout="row" fxLayoutAlign=" center">
+            <i class="fa fa-shopping-cart fa-2x"></i>
+            <span class="text-nowrap lmargin">{{totalQty | number: ''}} items</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap lmargin">{{totalWght | number: ''}} lbs.</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap rmargin">Rows: {{wjH.rowCount(soeg01)}}</span>
+        </div>
+        <wj-flex-grid #soeg01 fxFlex class='sorclass' style='border:none'></wj-flex-grid>
+        <!-- Totals -->
+        <div style="background-color: #e3f2fd; padding-left: 5px; padding-right:5px; border-top:1px solid rgba(0,0,0,.2)">
+            <div *ngIf='soCurrent.fdiscountp != 0' fxLayout='row' class="font2">
+                <span>Discount</span>
+                <div fxFlex='flex'></div>
+                <span>{{soCurrent.fdiscount | currency:'USD'}}</span>
+            </div>
+            <div fxLayout='row'>
+                <span><h5>Total</h5></span>
+                <div fxFlex='flex'></div>
+                <span><h5>{{soCurrent.ftotal | currency:'USD'}}</h5></span>
+            </div>
+            <div fxLayout='row' class="font2">
+                <span>Change</span>
+                <div fxFlex='flex'></div>
+                <span>{{soCurrent.fchange | currency:'USD'}}</span>
+            </div>
+            <!-- <div fxLayout='row' class="amount1" style="background-color: #000; color: #fff; padding: 0 5px 0 5px">
+                <span style="margin-top: -2px;">Due</span>
+                <div fxFlex='flex'></div>
+                <span style="color: #00fd01;margin-top: -2px;">{{soCurrent.fbalance | currency:'USD'}}</span>
+            </div> -->
+            <!-- <div fxLayout='row' class="amount1" style="background-color:#5cb85c; color:#fff ;padding: 0 5px 0 5px">
+                <span style="margin-top: -3px;">Due</span>
+                <div fxFlex='flex'></div>
+                <span style="margin-top: -3px;">{{soCurrent.fbalance | currency:'USD'}}</span>
+            </div> -->
+        </div>
+        <div fxLayout='row' xclass="amount1" style="background-color:#5cb85c; color:#fff ;padding: 0 5px 0 5px">
+            <span ><h1>Due</h1></span>
+            <div fxFlex='flex'></div>
+            <span><h1>{{soCurrent.fbalance | currency:'USD'}}</h1></span>
+        </div>
+    </div>
+</div>
+
+<div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Pending List</span>
+        <button type="button" class="btn btn-success lmargin" (click)="restorePending()">Restore</button>
+        <div fxFlex></div>
+        <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=0; gridRepaint(); focusToScan()">Entry</button>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(soeg02)}}</span>
+    </nav>
+    <wj-flex-grid #soeg02 fxFlex></wj-flex-grid>
+</div>

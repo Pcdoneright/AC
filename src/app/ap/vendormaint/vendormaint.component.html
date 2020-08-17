@@ -1,0 +1,143 @@
+<!--Vendor List Grid-->
+<div [hidden]="selectedTab != 0" layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01>
+        <span class="lmargin">Search:</span>
+        <mat-radio-group [(ngModel)]="ftype" style="margin-top: 5px" class="lmargin">
+            <mat-radio-button value="N">Vendor Name</mat-radio-button>
+            <mat-radio-button value="C">Contact Name</mat-radio-button>
+            <mat-radio-button value="A">All Vendors</mat-radio-button>
+        </mat-radio-group>
+        <input *ngIf="ftype != 'A'" type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listGridSearch">
+        <button *ngIf="ftype == 'A'" type="button" class="btn btn-primary" (click)="listSearch()"><i class="fa fa-search"></i> Search</button>
+        <div style="margin-top: 10px;" class="lmargin">
+            <mat-checkbox [(ngModel)]="factive" class="text-nowrap">Active Only</mat-checkbox>
+        </div>
+    </pcdrBuilder>
+    <wj-flex-grid #vendmg01 [style.height.px] = "gH01"></wj-flex-grid>
+</div>
+
+<!--Details-->
+<div [hidden]="selectedTab != 1" layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar02></pcdrBuilder>
+    <!-- Form -->
+    <form>
+        <!-- Line 1 -->
+        <div fxLayout="row" class="rmargin">
+            <div fxLayout="row" class="lmargin" fxFlex="flex">
+                <div class="form-group" style="width: 150px;" fxLayout="column">
+                    <label>ID</label>
+                    <span fxFlex class="fdocnumber">{{vndCurrent.fvid}}</span>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="vndCurrent.fname" [ngModelOptions]="{standalone: true}" required>
+                </div>
+            </div>
+            <div fxLayout="row" class="lmargin" fxFlex="flex" style="padding-top: 40px">
+                <div fxLayout="column" class="lmargin" fxFlex="flex" xstyle="padding-top: 10px">
+                    <mat-checkbox [(ngModel)]="vndCurrent.factive" [ngModelOptions]="{standalone: true}" fxFlex="flex">Active </mat-checkbox>
+                </div>
+                <div fxLayout="column" class="lmargin" fxFlex="flex" xstyle="padding-top: 10px">
+                    <mat-checkbox [(ngModel)]="vndCurrent.fis1099" [ngModelOptions]="{standalone: true}" fxFlex="flex">1099</mat-checkbox>
+                </div>
+            </div>
+        </div>
+        <!-- Line 2 -->
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Terms</label>
+                <select [(ngModel)]="vndCurrent.fvtid" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listVendorterms" [value]="opt.fvtid">
+                        {{opt.fdescription }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Type</label>
+                <select [(ngModel)]="vndCurrent.ftype" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listTypes" [value]="opt.fid">
+                        {{opt.fdescription }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Payment Type</label>
+                <select [(ngModel)]="vndCurrent.fpaymentmethod" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listPaymentmethod" [value]="opt.fid">
+                        {{opt.fdescription}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!-- Line 3 -->
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Tax ID</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.ftaxid" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Credit Limit</label>
+                <input type="text" pcdrAmount class="form-control" [(ngModel)]="vndCurrent.fcreditlimit" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Customer ID</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.fcustomerid" [ngModelOptions]="{standalone: true}">
+            </div>
+        </div>
+        <!-- Line 4 -->
+        <div *ngIf='showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Address 1</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.faddress1" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Address 2</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.faddress2" [ngModelOptions]="{standalone: true}">
+            </div>
+        </div>
+        <!-- Line 5 -->
+        <div *ngIf='showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>City</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.fcity" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>State</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.fstate" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Zip Code</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.fzip" [ngModelOptions]="{standalone: true}">
+            </div>
+        </div>
+        <!-- Line 6 -->
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Notes</label>
+                <input type="text" class="form-control" [(ngModel)]="vndCurrent.fnotes" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="33">
+                <label>Last Update</label>
+                <input type="text" class="form-control" disabled
+                    value="{{vndCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{vndCurrent.fusername}}"/>
+            </div>
+        </div>
+    </form>
+    <!-- Grid -->
+    <pcdrBuilder #bar03></pcdrBuilder>
+    <wj-flex-grid #vendmg02 [style.height.px] = "gH02"
+        (keydown)='wjH.onGridKeyPress(vendmg02, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(vendmg02, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(vendmg02, $event)'>
+    </wj-flex-grid>
+</div>
+
+<!-- Contacts -->
+<div [hidden]="selectedTab != 2" layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar04></pcdrBuilder>
+    <wj-flex-grid #vendmg03 [style.height.px] = "gH03"
+        (keydown)='wjH.onGridKeyPress(vendmg03, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(vendmg03, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(vendmg03, $event)'>
+    </wj-flex-grid>
+</div>

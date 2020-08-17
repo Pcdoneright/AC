@@ -1,0 +1,32 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none" fxLayout="column" class="widget-grid panel-nobox" [style.height.px] = "gH01">
+    <as-split direction="vertical" (dragEnd)="gridRepaint()">
+        <as-split-area size="70" fxLayout="column">
+            <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+                <span class="text-nowrap">Item List</span>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap">Rows: {{wjH.rowCount(itemlistg01)}}</span>
+            </nav>
+            <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+                <span class="lmargin">Search By:</span>
+                <mat-radio-group [(ngModel)]="searchItemType" style="margin-top: 5px" class="lmargin">
+                    <mat-radio-button value="I">Item</mat-radio-button>
+                    <mat-radio-button value="D">Description</mat-radio-button>
+                </mat-radio-group>
+                <input cdkFocusInitial type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listGridSearch">
+            </div>
+            <wj-flex-grid #itemlistg01 fxFlex></wj-flex-grid>
+        </as-split-area>
+        <as-split-area size="30" fxLayout="column">
+            <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+                <span class="text-nowrap">Related Items</span>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap">Rows: {{wjH.rowCount(itemlistg02)}}</span>
+            </nav>
+            <wj-flex-grid #itemlistg02 fxFlex></wj-flex-grid>
+        </as-split-area>
+    </as-split>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogRef.close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="closeDialog()">Continue</button>
+</div>

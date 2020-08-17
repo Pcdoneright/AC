@@ -1,0 +1,31 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Cash Register Test</span>
+        <button type="button" class="btn btn-primary" (click)="print()">Tender</button>
+        <button type="button" class="btn btn-primary" (click)="void()">Welcome</button>
+        <button type="button" class="btn btn-primary" (click)="message()">Show Message</button>
+   </nav>
+    <form>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="qcfdatef">Date From</label>
+                <input type="date" class="form-control" id="qcfdatef" [ngModel]="fdatef | date:'yyyy-MM-dd'" (ngModelChange)="fdatef = $event" [ngModelOptions]="{standalone: true}"> 
+                <!-- <p-calendar id="qcfdatef" styleClass="form-control" inputStyleClass="form-control ui-inputtext-pcdr" [(ngModel)]="fdatef" [ngModelOptions]="{standalone: true}"></p-calendar> -->
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="qcfdatet">Date To</label>
+                <input type="date" class="form-control" id="qcfdatet" [ngModel]="fdatet | date:'yyyy-MM-dd'" (ngModelChange)="fdatet = $event" [ngModelOptions]="{standalone: true}"> 
+                <!-- <p-calendar id="qcfdatef" styleClass="form-control" inputStyleClass="form-control ui-inputtext-pcdr" [(ngModel)]="fdatet" [ngModelOptions]="{standalone: true}"></p-calendar> -->
+            </div>
+            <!-- <div class="form-group lmargin" fxFlex="flex">
+                <label for="qcfuser">User</label>
+                <select class="form-control" id="qcfuser" [(ngModel)]="fuser" [ngModelOptions]="{standalone: true}" [disabled]="!fadmin">
+                     <option *ngFor="let x of users" [value]="x.ffirst">{{x.ffirst}}</option> 
+                </select>
+            </div> -->
+        </div>
+        <wj-flex-grid [itemsSource]='gridata'></wj-flex-grid>
+
+
+    </form>
+</div>

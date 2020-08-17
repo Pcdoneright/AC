@@ -1,0 +1,155 @@
+<div fxLayout="row">
+    <!-- Form -->
+    <form fxFlex #formsop01>
+        <div fxLayout="row" class="rmargin">
+            <div fxFlex>
+                <div class="form-group" fxFlex>
+                    <label>Name</label>
+                    <input type="text" class="form-control" value="{{parent.soCurrent.cfcid}}" disabled>
+                </div>
+                <button type="button" (click)="parent.assignCustomer()" style='height:38px;margin-top:30px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
+            </div>
+            <div class="form-group lmargin" fxFlex>
+                <label>Ship Date</label>
+                <wj-input-date #fshipdate class="mwj-form-control form-control" [(value)]="parent.soCurrent.fshipdate" (gotFocus)="parent.wjH.inputGotFocus(fshipdate)" (lostFocus)="parent.wjH.inputLostFocus(fshipdate)" [isRequired]="false"></wj-input-date>
+            </div>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>PO Number</label>
+                <input type="text" class="form-control" name="fponumber" [(ngModel)]="parent.soCurrent.fponumber" required>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Discount Percent</label>
+                <input type="text" pcdrQty class="form-control" (blur)="parent.onfdiscountp($event)" name="fdiscountp" value="{{parent.soCurrent.fdiscountp}}">
+            </div>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Contact</label>
+                <select name="fccid" [(ngModel)]="parent.soCurrent.fccid" class="form-control">
+                    <option *ngFor="let opt of parent.customercontacts" [value]="opt.fccid">
+                        {{opt.fname}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Bill To</label>
+                <select name="fcbtid" [(ngModel)]="parent.soCurrent.fcbtid" class="form-control">
+                    <option *ngFor="let opt of parent.customerbilltos" [value]="opt.fcbtid">
+                        {{opt.faddress1}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Ship To</label>
+                <select name="fcstid" [(ngModel)]="parent.soCurrent.fcstid" class="form-control">
+                    <option *ngFor="let opt of parent.customershiptos" [value]="opt.fcstid">
+                        {{opt.faddress1}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div [hidden]='!parent.showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Terms</label>
+                <select name="fctid" [(ngModel)]="parent.soCurrent.fctid" class="form-control">
+                    <option *ngFor="let opt of parent.customerterms" [value]="opt.fctid">
+                        {{opt.fdescription}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Department</label>
+                <select name="frid" [(ngModel)]="parent.soCurrent.frid" class="form-control">
+                    <option *ngFor="let opt of parent.representatives" [value]="opt.frid">
+                        {{opt.fname}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Location</label>
+                <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control" [attr.disabled]="parent.soCurrent.fdocnumber !== -1" >
+                    <option *ngFor="let opt of parent.companylocations" [value]="opt.fcmplid">
+                        {{opt.fname}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div *ngIf='parent.showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Packing Notes</label>
+                <input type="text" class="form-control" name="fpackingnotes" [(ngModel)]="parent.soCurrent.fpackingnotes">
+            </div>
+        </div>
+        <div *ngIf='parent.showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Sales Notes</label>
+                <input type="text" class="form-control" name="fnotes" [(ngModel)]="parent.soCurrent.fnotes">
+            </div>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Invoice Notes</label>
+                <input type="text" class="form-control" name="finvoicenotes" [(ngModel)]="parent.soCurrent.finvoicenotes">
+            </div>
+            <div class="form-group lmargin" fxFlex="33">
+                <label>Last Update</label>
+                <input type="text" class="form-control" disabled
+                    value="{{parent.soCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{parent.soCurrent.fusername}}"/>
+            </div>
+        </div>
+            
+    </form>
+    <!-- Totals -->
+    <div class="panel" fxLayout="column" style="width: 290px">
+        <div class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Order #</label>
+            <span fxFlex class="fdocnumber">{{parent.soCurrent.fdocnumber}}</span>
+        </div>
+        <div class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Order Date</label>
+            <input fxFlex type="text" class="form-control" value="{{parent.soCurrent.fdate | date:'MM/dd/yyyy'}}" disabled>
+        </div>
+        <div [hidden]='!parent.showMoreEdit' class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Invoice Date</label>
+            <wj-input-date #finvoice_date class="mwj-form-control form-control" [(value)]="parent.soCurrent.finvoice_date" (gotFocus)="parent.wjH.inputGotFocus(finvoice_date)" (lostFocus)="parent.wjH.inputLostFocus(finvoice_date)" [isRequired]="false"></wj-input-date>
+        </div>
+        <div class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Status</label>
+            <select fxFlex name="fstatus" [(ngModel)]="parent.soCurrent.fstatus" class="form-control" disabled>
+                <option *ngFor="let opt of parent.orderstatus" [value]="opt.fid">
+                    {{opt.fdescription}}
+                </option>
+            </select>
+        </div>
+        <div [hidden]='!parent.showMoreEdit' class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Sub Total</label>
+            <input fxFlex type="text" class="form-control text-right" value="{{parent.soCurrent.ftaxabletotal | currency:'USD'}}" disabled>
+        </div>
+        <div [hidden]='!parent.showMoreEdit' class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Tax</label>
+            <input fxFlex type="text" class="form-control text-right" value="{{parent.soCurrent.ftax | currency:'USD'}}" disabled>
+        </div>
+        <div [hidden]='!parent.showMoreEdit' class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>SubT. No-Tax</label>
+            <input fxFlex type="text" class="form-control text-right" value="{{parent.soCurrent.fnontaxabletotal | currency:'USD'}}" disabled>
+        </div>
+        <div [hidden]='!parent.showMoreEdit' class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Discount</label>
+            <input fxFlex type="text" class="form-control text-right" value="{{parent.soCurrent.fdiscount | currency:'USD'}}" disabled>
+        </div>
+        <div class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Total</label>
+            <input fxFlex type="text" class="form-control text-right" value="{{parent.soCurrent.ftotal | currency:'USD'}}" disabled>
+        </div>
+        <div class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Balance</label>
+            <input fxFlex type="text" class="form-control text-right amount" value="{{parent.soCurrent.fbalance | currency:'USD'}}" disabled>
+        </div>
+        <div class="mform-control-row">
+            <label class="col-form-label" fxFlex='40'>Change</label>
+            <input fxFlex type="text" class="form-control text-right" value="{{parent.soCurrent.fchange | currency:'USD'}}" disabled>
+        </div>
+    </div>
+</div>

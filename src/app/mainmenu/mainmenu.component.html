@@ -1,0 +1,87 @@
+<!--<nav class="navbar navbar-toggleable-md navbar-light Xbg-faded bg-primary navbar-inverse" Xstyle="background-color: #e3f2fd;">-->
+<nav class="navbar navbar-expand-md mbg-primary" fxLayout="row">    
+    <i class="fa fa-navicon" style="cursor:pointer" (click)="onSideNavToggle()"></i>
+    <span class="text-nowrap lmargin">{{sharedSrvc.companyName}} {{sharedSrvc.companyVersion}}</span>
+    <div fxFlex="fxFill" fxLayoutAlign="center center" >
+        <span class="text-nowrap" *ngIf="tabs.length > 0">{{tabs[selectedIndex].title}}</span>
+    </div>
+    <menutillities></menutillities>
+    <span class="text-nowrap lmargin">{{serverDate | date:'MMM d, y, h:mm a'}}</span>
+    <span class="text-nowrap lmargin">{{fname}}</span>
+    <a href="#"><i class="fa fa-lock" style="cursor:pointer;margin-left: 10px"></i></a>
+</nav>
+    
+
+<!-- <nav class="navbar navbar-expand-md mbg-primary">
+    <i class="fa fa-navicon" style="cursor:pointer" (click)="onSideNavToggle()"></i>
+    <div class="container text-xs-center">
+        <span class="text-center">{{sharedSrvc.companyName}} {{sharedSrvc.companyVersion}}</span>
+    </div>
+    <div class="container text-xs-center">
+        <span class="text-center" *ngIf="tabs.length > 0">{{tabs[selectedIndex].title}}</span>
+    </div>
+    <menutillities></menutillities>
+    <div class="nav navbar-nav pull-xs-right">
+        <span class="text-center">{{fname}}</span>
+    </div>
+    <a href="#"><i class="fa fa-lock" style="cursor:pointer;margin-left: 10px"></i></a>
+</nav> -->
+
+<mat-sidenav-container class="example-container" fullscreen style="top: 39.32px !important;">
+    <mat-sidenav mode="over" [(opened)]="sideNavClassToggled" class="pcdr-sidenav">
+        <ul class="sidebar-nav">
+            <!--Active Tabs-->
+            <div *ngIf="tabs.length > 0">
+                <li>
+                    <div style='cursor: pointer'>
+                        Active Tasks
+                    </div>
+                    <div *ngFor="let tabA of tabs" style='cursor: pointer' class="sub-menu" (click)="addTab({prog:tabA.title, id:tabA.id})">
+                        {{tabA.title}}
+                        <!--<div class="pull-xs-right">-->
+                        <i class="fa fa-times-circle" (click)='removeTab(tabA)' style="padding-left: 5px;"></i>
+                        <!--</div>-->
+                    </div>
+                </li>
+            </div>
+            <!--Menu Items-->
+            <li *ngFor="let menu of menus">
+                <div style='cursor: pointer' (click)="toggleSelectSection(menu.index)">
+                    {{menu.groupname}}
+                    <!--<i class="fa fa-chevron-down pull-xs-right" [ngClass]="{'toggled' : isSectionSelected(menu.index)}"></i>-->
+                    <!--<i class="fa fa-chevron-down pull-xs-right"></i>-->
+                </div>
+                <!--Sub Menu Items-->
+                <div *ngIf="isSectionSelected(menu.index)" class="menu-toggle-list">
+                    <!--<md-button ng-click="mm.addTab(submenu)">-->
+                    <!-- <div *ngFor="let submenu of menu.submenu | orderBy: seq" style='cursor: pointer' class="sub-menu" (click)="addTab(submenu)">{{submenu.prog}}</div> -->
+                    <div *ngFor="let submenu of menu.submenu | orderBy: seq" style='cursor: pointer' class="sub-menu" (click)="addTab(submenu)">{{submenu.prog}}</div>
+                </div>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+            <!-- <div style="margin: 20px 10px;">
+                <button (click)="previous()" class="btn btn-default">Previous</button>
+                <button (click)="next()" class="btn btn-default">Next</button>
+            </div>
+        
+            <div [@slider]="selectedIndexA" class="slider-container" style="margin: 20px 10px;">
+                <div class="slide" *ngFor="let image of images"> <img [src]="image" /> </div>
+            </div> -->
+
+        <!-- Page Content. Need to implement transition -->
+        <div *ngFor="let tab of tabs; let i = index" [hidden]="!showTab(i)" @fade [@tabActive]="showTab(i)">
+            <ng-container *ngComponentOutlet="ofGetComponent(tab.id)"></ng-container>
+        </div>
+
+        <!-- material tabs no longer used. -->
+        <!-- <div id="page-content-wrapper">
+            <mat-tab-group [(selectedIndex)]="selectedIndex">
+                <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}" id="{{tab.id}}">
+                    <ng-container *ngComponentOutlet="ofGetComponent(tab.id)"></ng-container>
+                </mat-tab>
+            </mat-tab-group>
+        </div> -->
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,31 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Employee Hours Report</span>
+        <button type="button" class="btn btn-primary" (click)="print()"><i class="fa fa-print"></i> Report</button>
+   </nav>
+    <form>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatef">Date From</label>
+                <!-- <input type="date" class="form-control" id="hrfdatef" [ngModel]="fdatef | date:'yyyy-MM-dd'" (ngModelChange)="fdatef = $event" [ngModelOptions]="{standalone: true}"> -->
+                <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatet">Date To</label>
+                <!-- <input type="date" class="form-control" id="hrfdatet" [ngModel]="fdatet | date:'yyyy-MM-dd'" (ngModelChange)="fdatet = $event" [ngModelOptions]="{standalone: true}"> -->
+                <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfemployee">Employee</label>
+                <select class="form-control" id="hrfemployee" [(ngModel)]="femployee" [ngModelOptions]="{standalone: true}" required>
+                    <option *ngFor="let x of employees" [value]="x.empid">{{x.name}}</option>
+                </select>
+            </div>
+            <div class="lmargin" style="margin-top: 40px;">
+                <mat-checkbox [(ngModel)]="fdetails" [ngModelOptions]="{standalone: true}" class="text-nowrap" Xstyle="margin-top: 10px">Show Details</mat-checkbox>
+            </div>
+        </div>
+
+
+    </form>
+</div>

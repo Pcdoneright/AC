@@ -1,0 +1,48 @@
+<pcdrBuilder #bar01></pcdrBuilder>
+
+<form>
+    <div fxLayout="row">
+        <div class="form-group" fxFlex="flex">
+            <div class="form-group lmargin" xstyle="width: 350px;">
+                <label>Customer ID</label>
+                <input type="text" class="form-control" style="width: 150px;" placeholder="All Customers" [(ngModel)]="fcid" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fcidOnChange()">
+            </div>
+            <button type="button" style='height:38px;margin-top:32px' (click)="lookupcust()" matTooltip="Customer List" class="btn btn-primary"><i class="fa fa-user"></i></button>
+            <div class="form-group" fxFlex="flex">
+                <label>Name</label>
+                <input type="text" class="form-control" placeholder="All Customers" [(ngModel)]="fdescription" [ngModelOptions]="{standalone: true}" (ngModelChange)="fcidOnChange()" disabled>
+            </div>
+        </div>
+        
+        
+        <div class="form-group lmargin" fxFlex="flex">
+            <label for="hrfdatef">Date From</label>
+            <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+        </div>
+        <div class="form-group lmargin" fxFlex="flex">
+            <label for="hrfdatet">Date To</label>
+            <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+        </div>
+    </div> 
+    <div fxLayout="row">
+        <div class="form-group lmargin" fxFlex="flex">
+            <label>Department</label>
+            <select name="frid" [(ngModel)]="frid" class="form-control">
+                <option *ngFor="let opt of representatives" [value]="opt.frid">
+                    {{opt.fname}}
+                </option>
+            </select>
+        </div>
+        <div class="form-check lmargin" fxFlex="flex">
+            <label>Report Type By</label>
+            <mat-radio-group [(ngModel)]="rtype" [ngModelOptions]="{standalone: true}" class="form-check-input">
+                <mat-radio-button value="C">Customer</mat-radio-button>
+                <mat-radio-button value="D">Department</mat-radio-button>
+                <mat-radio-button value="DD">Department Daily</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div class="form-group lmargin" style="margin-top: 40px;" fxFlex="flex">
+            <mat-checkbox [(ngModel)]="fdetails" [ngModelOptions]="{standalone: true}" class="text-nowrap">Show Details</mat-checkbox>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,15 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <nav class="navbar navbar-expand-md mbg-info">
+        <span class="text-nowrap">Pay Period</span>
+        <button type="button" class="btn btn-primary" (click)="update()"><i class="fa fa-save"></i> Save</button>
+        <button type="button"class="btn btn-success" (click)="payperiodAdd()"><i class="fa fa-plus"></i> Add</button>
+        <button type="button" class="btn btn-danger" (click)="payperiodRemove()"><i class="fa fa-minus"></i> Remove</button>
+        <div fxFlex="flex"></div>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(ppmgrid01)}}</span>
+    </nav>
+    <wj-flex-grid #ppmgrid01 [style.height.px] = "gH01"
+        (keydown)='wjH.onGridKeyPress(ppmgrid01, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(ppmgrid01, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(ppmgrid01, $event)'>
+    </wj-flex-grid>
+</div>

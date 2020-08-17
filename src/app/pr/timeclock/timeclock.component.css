@@ -1,0 +1,13 @@
+.secure-font {
+    -webkit-text-security: disc;
+}
+
+.inRow:not(.wj-state-selected):not(.wj-state-multi-selected) {
+    background-color:#5cb85c !important;
+    color: #fff;
+}
+
+.tcpanel {
+    /* background-color: bisque; */
+    background-color: #D9E9FF;
+}

@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ng10",
+            "outputPath": "../pcdr",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -24,9 +24,14 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/wijmo/pcdr-wijmo.css",
+              "node_modules/@grapecity/wijmo.styles/wijmo.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/assets/jszip2.5/jszip.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -88,6 +93,9 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/wijmo/wijmo.min.css",
+              "src/assets/wijmo/pcdr-wijmo.css",
+              "src/assets/pcdr-bootstrap.css",
               "src/styles.css"
             ],
             "scripts": []

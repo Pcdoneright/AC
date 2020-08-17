@@ -1,0 +1,182 @@
+<!--Customer List Grid-->
+<div [hidden]="selectedTab != 0" layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01>
+        <span class="lmargin">Search:</span>
+        <mat-radio-group [(ngModel)]="ftype" style="margin-top: 5px" class="lmargin">
+            <mat-radio-button value="N">Customer Name</mat-radio-button>
+            <mat-radio-button value="C">Contact Name</mat-radio-button>
+            <mat-radio-button value="A">All Customers</mat-radio-button>
+        </mat-radio-group>
+        <input *ngIf="ftype != 'A'" type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listGridSearch">
+        <button *ngIf="ftype == 'A'" type="button" class="btn btn-primary" (click)="listSearch()"><i class="fa fa-search"></i> Search</button>
+        <div style="margin-top: 10px;" class="lmargin">
+            <mat-checkbox [(ngModel)]="factive" class="text-nowrap">Active Only</mat-checkbox>
+        </div>
+    </pcdrBuilder>
+    <wj-flex-grid #custmg01 [style.height.px] = "gH01"></wj-flex-grid>
+</div>
+
+<!--Details-->
+<div [hidden]="selectedTab != 1" layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar02></pcdrBuilder>
+
+    <!-- Form -->
+    <form>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" style="width: 150px;" fxLayout="column">
+                <label>ID</label>
+                <span fxFlex class="fdocnumber">{{cstCurrent.fcid}}</span>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Name</label>
+                <input type="text" class="form-control" [(ngModel)]="cstCurrent.fname" [ngModelOptions]="{standalone: true}" required>
+            </div>
+            <div fxLayout="row" class="lmargin" fxFlex="flex">
+                <div class="form-group" fxFlex="flex">
+                    <label>Discount Percent</label>
+                    <input type="text" pcdrQty class="form-control" [(ngModel)]="cstCurrent.fdiscountp" [ngModelOptions]="{standalone: true}">
+                </div>
+            
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Payment Type</label>
+                    <select [(ngModel)]="cstCurrent.fpaymentmethod" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                        <option *ngFor="let opt of listPaymentmethod" [value]="opt.fid">
+                            {{opt.fdescription}}
+                        </option>
+                    </select>
+                </div>
+                <div fxLayout="column" class="lmargin" fxFlex="flex" style="padding-top: 10px">
+                    <mat-checkbox [(ngModel)]="cstCurrent.factive" [ngModelOptions]="{standalone: true}" fxFlex="flex">Active </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="cstCurrent.fistaxexcempt" [ngModelOptions]="{standalone: true}" fxFlex="flex">Tax Exempt</mat-checkbox>
+                </div>
+            </div>
+        </div>
+
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Terms</label>
+                <select [(ngModel)]="cstCurrent.fctid" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listCustomerterms" [value]="opt.fctid">
+                        {{opt.fdescription }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Tax Rate</label>
+                <select [(ngModel)]="cstCurrent.ftrid" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listTaxrates" [value]="opt.ftrid">
+                        {{opt.fdescription}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Representative</label>
+                <select [(ngModel)]="cstCurrent.frid" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listRepresentatives" [value]="opt.frid">
+                        {{opt.fname}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Type</label>
+                <select [(ngModel)]="cstCurrent.ftype" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                    <option *ngFor="let opt of listTypes" [value]="opt.fid">
+                        {{opt.fdescription }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Resale Certificate</label>
+                <input type="text" class="form-control" [(ngModel)]="cstCurrent.fresalecertificate" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Credit Limit</label>
+                <input type="text" pcdrAmount class="form-control" [(ngModel)]="cstCurrent.fcreditlimit" [ngModelOptions]="{standalone: true}">
+            </div>
+        </div>
+
+        <div *ngIf='showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>CC Number</label>
+                <input type="text" class="form-control" [(ngModel)]="cstCurrent.fccnumber" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>CC Name</label>
+                <select [(ngModel)]="cstCurrent.fccname" [ngModelOptions]="{standalone: true}" class="form-control">
+                    <option *ngFor="let opt of listCC" [value]="opt.fid">
+                        {{opt.fdescription }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>CC Address</label>
+                <input type="text" class="form-control" [(ngModel)]="cstCurrent.fccaddress" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div fxLayout="row" class="lmargin" fxFlex="flex">
+                <div class="form-group" fxFlex="flex">
+                    <label>CC Month</label>
+                    <input type="text" pcdrQty class="form-control" [(ngModel)]="cstCurrent.fccmonth" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>CC Year</label>
+                    <input type="text" pcdrQty class="form-control" [(ngModel)]="cstCurrent.fccyear" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>CC Zip</label>
+                    <input type="text" pcdrQty class="form-control" [(ngModel)]="cstCurrent.fcczip" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf='showMoreEdit' fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Notes</label>
+                <input type="text" class="form-control" [(ngModel)]="cstCurrent.fnotes" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="form-group lmargin" fxFlex="33">
+                <label>Last Update</label>
+                <input type="text" class="form-control" disabled
+                    value="{{cstCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{cstCurrent.fusername}}"/>
+            </div>
+        </div>
+    </form>
+
+    <pcdrBuilder #bar03>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <input type="text" class="form-control lmargin" placeholder="Scan Item To Add" style="width: 250px" [(ngModel)]="searchItem" (blur)='fitemOnChange()'>
+            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+        </div>
+    </pcdrBuilder>
+    <wj-flex-grid #custmg02 [style.height.px] = "gH02"
+        (keydown)='wjH.onGridKeyPress(custmg02, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(custmg02, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(custmg02, $event)'>
+    </wj-flex-grid>
+</div>
+
+<!-- Contacts -->
+<div [hidden]="selectedTab != 2" layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar04></pcdrBuilder>
+    <wj-flex-grid #custmg03 style="height:200px"
+        (keydown)='wjH.onGridKeyPress(custmg03, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(custmg03, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(custmg03, $event)'>
+    </wj-flex-grid>
+
+    <pcdrBuilder #bar05></pcdrBuilder>
+    <wj-flex-grid #custmg04 style="height:200px"
+        (keydown)='wjH.onGridKeyPress(custmg04, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(custmg04, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(custmg04, $event)'>
+    </wj-flex-grid>
+
+    <pcdrBuilder #bar06></pcdrBuilder>
+    <wj-flex-grid #custmg05 [style.height.px] = "gH05"
+        (keydown)='wjH.onGridKeyPress(custmg05, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(custmg05, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(custmg05, $event)'>
+    </wj-flex-grid>
+</div>

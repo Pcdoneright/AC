@@ -1,0 +1,62 @@
+<div layout="column" class="widget-grid panel-nobox">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap"></span>
+            <button type="button" class="btn btn-primary" (click)="print()"><i class="fa fa-print"></i> Report</button>
+        </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <input type="text" class="form-control lmargin" placeholder="Scan Item" style="width: 250px" [(ngModel)]="fitem" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fitemOnChange()">
+            <button type="button" class="btn btn-primary" (click)="lookupitem()">Lookup List</button>
+            <div class="lmargin">{{fdescription}}</div>
+        </div>
+        <form>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label for="hrfdatef">Date From</label>
+                    <!-- <input type="date" class="form-control" id="hrfdatef" [ngModel]="fdatef | date:'yyyy-MM-dd'" (ngModelChange)="fdatef = $event" [ngModelOptions]="{standalone: true}"> -->
+                    <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label for="hrfdatet">Date To</label>
+                    <!-- <input type="date" class="form-control" id="hrfdatet" [ngModel]="fdatet | date:'yyyy-MM-dd'" (ngModelChange)="fdatet = $event" [ngModelOptions]="{standalone: true}"> -->
+                    <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label for="category">Category</label>
+                    <select class="form-control" id="category" [(ngModel)]="fctid" [ngModelOptions]="{standalone: true}" required>
+                        <option *ngFor="let x of fcategory" [value]="x.fid">{{x.fid}}</option>
+                    </select>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label for="scategory">Subcategory</label>
+                    <select class="form-control" id="scategory" [(ngModel)]="fsctid" [ngModelOptions]="{standalone: true}" required>
+                        <option *ngFor="let x of fsubcategory" [value]="x.fid">{{x.fid}}</option>
+                    </select>
+                </div>
+            </div>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group lmargin" fxLayout="column" fxFlex="flex">
+                    <label>Display Order</label>
+                    <mat-radio-group [(ngModel)]="forder" [ngModelOptions]="{standalone: true}">
+                        <mat-radio-button value="cmovement">Movement</mat-radio-button>
+                        <mat-radio-button value="ctotal">Total</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <!-- <div class="form-group lmargin" fxLayout="column" fxFlex="flex">
+                    <label>Report</label>
+                    <mat-radio-group [(ngModel)]="freport" [ngModelOptions]="{standalone: true}" >
+                        <mat-radio-button value="S">Sales</mat-radio-button>
+                        <mat-radio-button value="P">Purchase</mat-radio-button>
+                    </mat-radio-group>
+                </div> -->
+                <div class="form-group lmargin" fxLayout="column" fxFlex="flex">
+                    <label>Report Type</label>
+                    <mat-radio-group [(ngModel)]="fexcel" [ngModelOptions]="{standalone: true}" >
+                        <mat-radio-button value='0'>Report</mat-radio-button>
+                        <mat-radio-button value='1'>Excel Sheet</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div fxFlex="flex"></div>
+                <div fxFlex="flex"></div>
+            </div>
+        </form>
+     </div>

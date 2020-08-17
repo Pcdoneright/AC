@@ -1,0 +1,154 @@
+<mat-tab-group [selectedIndex]="selectedTab" animationDuration="2000ms" class="widget-grid panel-nobox">
+    <!--Details-->
+    <mat-tab>
+    <!-- <div [hidden]="selectedTab != 0" layout="column" class="widget-grid panel-nobox"> -->
+        <pcdrBuilder #bar01></pcdrBuilder>
+        <!-- Form -->
+        <form>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.FNAME" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Website</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fwebsite" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Email</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.femail" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Last Update</label>
+                    <input type="text" class="form-control" disabled
+                        value="{{cpyCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{cpyCurrent.fusername}}"/>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Address 1</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.faddress1" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Address 2</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.faddress2" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>City</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fcity" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="lmargin" fxFlex="flex">
+                    <div class="form-group" fxFlex="flex">
+                        <label>State</label>
+                        <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fstate" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>Zip Code</label>
+                        <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fzip" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+            </div>
+
+            <div  fxLayout="row" class="rmargin">
+                <div fxFlex="flex">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Phone</label>
+                        <wj-input-mask #iffax class="mwj-form-control form-control" [(rawValue)]="cpyCurrent.fphone" [mask]="'(999) 000-0000'" (gotFocus)="wjH.inputGotFocus(iffax, 'input-mask')" (lostFocus)="wjH.inputLostFocus(iffax, 'input-mask')"></wj-input-mask>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label for="iffax">Fax</label>
+                        <wj-input-mask #iffax class="mwj-form-control form-control" [(rawValue)]="cpyCurrent.ffax" [mask]="'(999) 000-0000'" (gotFocus)="wjH.inputGotFocus(iffax, 'input-mask')" (lostFocus)="wjH.inputLostFocus(iffax, 'input-mask')"></wj-input-mask>
+                    </div>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Report Server</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.freportserver" [ngModelOptions]="{standalone: true}" maxlength="100">
+                </div>
+            </div>
+
+            <div  fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Sales Order Note</label>
+                    <textarea type="text" cdkTextareaAutosize class="form-control" [(ngModel)]="cpyCurrent.fsalesbottom" [ngModelOptions]="{standalone: true}" rows="4" maxlength="400"></textarea>
+                </div>
+            </div>
+            <div  fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Packing List Note</label>
+                    <textarea type="text" class="form-control" [(ngModel)]="cpyCurrent.fpickbottom" [ngModelOptions]="{standalone: true}" rows="4" maxlength="400"></textarea>
+                </div>
+            </div>
+            <div  fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Cash Register Note</label>
+                    <textarea type="text" class="form-control" [(ngModel)]="cpyCurrent.fposbottom" [ngModelOptions]="{standalone: true}" rows="4" maxlength="400"></textarea>
+                </div>
+            </div>
+            <div  fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Purchase Order Note</label>
+                    <textarea type="text" class="form-control" [(ngModel)]="cpyCurrent.fpobottom" [ngModelOptions]="{standalone: true}" rows="4" maxlength="400"></textarea>
+                </div>
+            </div>
+        </form>
+    <!-- </div> -->
+    </mat-tab>
+
+    <!-- Locations -->
+    <mat-tab>
+    <!-- <div [hidden]="selectedTab != 1" layout="column" class="widget-grid panel-nobox"> -->
+        <pcdrBuilder #bar02></pcdrBuilder>
+        <wj-flex-grid #cmpnyg01 [style.height.px] = "gH01"
+            (keydown)='wjH.onGridKeyPress(cmpnyg01, $event)' 
+            (gotFocus)='wjH.onGridGotFocus(cmpnyg01, $event)'
+            (selectionChanged)='wjH.onGridSelectionChanged(cmpnyg01, $event)'>
+        </wj-flex-grid>
+    <!-- </div> -->
+    </mat-tab>
+
+    <!--Override-->
+    <mat-tab>
+    <!-- <div [hidden]="selectedTab != 2" layout="column" class="widget-grid panel-nobox"> -->
+        <pcdrBuilder #bar03></pcdrBuilder>
+        <!-- Form -->
+        <form>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Cash Register Customer ID</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fpos_cid" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Salesman Order Customer ID</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fsmodcid" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Overtime Code</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fovertime" [ngModelOptions]="{standalone: true}" required>
+                </div>
+            </div>
+            <div fxLayout="row" class="rmargin">
+                <div class="form-group" fxFlex="flex">
+                    <label>Cash Register Void Code</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fposoverride" [ngModelOptions]="{standalone: true}" required>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>CR Max Cash Drawer</label>
+                    <!-- <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fcrdraweramt" [ngModelOptions]="{standalone: true}" required> -->
+                    <wj-input-number #ifcrdraweramt class="mwj-form-control form-control" [(value)]="cpyCurrent.fcrdraweramt" format='c2' (gotFocus)="wjH.inputGotFocus(ifcrdraweramt, 'input-mask')" (lostFocus)="wjH.inputLostFocus(ifcrdraweramt, 'input-mask')"></wj-input-number>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>CR Drawer Deposit Code</label>
+                    <input type="text" class="form-control" [(ngModel)]="cpyCurrent.fcrdrawercode" [ngModelOptions]="{standalone: true}" required>
+                </div>
+            </div>
+
+            
+
+            
+
+            
+        </form>
+    <!-- </div> -->
+    </mat-tab>
+</mat-tab-group>

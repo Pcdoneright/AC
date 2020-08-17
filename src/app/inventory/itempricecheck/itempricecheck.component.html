@@ -1,0 +1,55 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none;" fxLayout="row" class="widget-grid panel-nobox">
+    <div fxLayout="column" style="min-width:450px">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" Xstyle='margin-top:5px'>
+            <span class="text-nowrap">Price Check</span>
+            <div fxFlex="flex"></div>
+            <input type="file" hidden='true' #fileupload (change)="fileChange($event)" placeholder="Upload file" accept=".jpg">
+            <button type="button" class="btn btn-success" (click)="allowUpload(fileupload)" matTooltip="Selected Item">Upload Image</button>
+        </nav>
+        <div fxLayout="column" fxFlex>
+            <!-- Item Scan -->
+            <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+                <input type="text" cdkFocusInitial class="form-control lmargin" placeholder="Scan Item" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+                <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+            </div>
+
+            <!-- Item Display -->
+            <div fxFlex style="background-color: #fff">
+                <div class="widget-grid panel-nobox" style="margin-top:25px">
+                    <!-- <div fxLayout="row" [ngClass]="{'alert-row' : (itemCurrent.cfmarkup < minMarkup)}"> -->
+                    <div fxLayout="row">
+                        <span class='mh1 text-uppercase' fxFlex='flex'>{{itemCurrent.fdescription}}&nbsp;</span>
+                        <span><h1>{{itemCurrent.fsaleprice | currency: 'USD'}}</h1></span>
+                    </div>
+                    <div fxLayout="row" class="text-nowrap" *ngIf='itemCurrent.fitem'>
+                        <span><h3>
+                            <!-- {{itemCurrent.fuomdescription}} @{{itemCurrent.fsaleprice | currency: 'USD'}} each, {{itemCurrent.fweight | number: ''}} lbs. -->
+                            {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit, {{itemCurrent.fweight | number: ''}} lbs.
+                        </h3></span>
+                        <span *ngIf='!itemCurrent.fistaxable' style='margin-top:6px'><h5>&ensp;(Non-Taxable)</h5></span>
+                    </div>
+                    <div fxLayout="row" class="text-nowrap">
+                        <span><h2>{{itemCurrent.fitem}}</h2></span>
+                    </div>
+                    <!-- Images -->
+                    <div style="height:250px; margin:5px 0 0 5px">
+                        <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div fxLayout="column" style="width:350px; height:350px">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+            <span class="text-nowrap">Related Items</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap rmargin">Rows: {{wjH.rowCount(ipckg01)}}</span>
+        </nav>
+        <wj-flex-grid #ipckg01 fxFlex class='ipckclass' style='border:none;'></wj-flex-grid>
+    </div>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="clearForm()">Clear</button>
+    <button type="button" class="btn btn-primary" (click)="dialogRef.close()">Continue</button>
+</div>

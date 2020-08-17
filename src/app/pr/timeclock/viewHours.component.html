@@ -1,0 +1,22 @@
+<div mat-dialog-content>    
+    <div layout="column" class="widget-grid" Xstyle="margin: 5px 5px 0 5px">
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
+            <span class="text-nowrap">Employee Hours for : {{employeeRow.firstname}} {{employeeRow.lastname}}</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap">Rows: {{wjH.rowCount(vhrsg01)}}</span>
+        </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <span class="lmargin">Period:</span>
+            <select [(ngModel)]="currpayperiod" class="form-control lmargin" style="width: 240px;"
+                (ngModelChange)="viewHoursGetHours()">
+                <option *ngFor="let opt of payperiods" [value]="opt.ppid">
+                    {{opt.fdisplayperiod}}
+                </option>
+            </select>
+        </div>
+        <wj-flex-grid #vhrsg01 style="height: 430px"></wj-flex-grid>
+    </div>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-primary" type="submit" (click)="onYes()">Continue</button>
+</div>

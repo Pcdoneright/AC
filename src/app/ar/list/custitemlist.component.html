@@ -1,0 +1,16 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none" fxLayout="column" class="widget-grid panel-nobox" [style.height.px] = "gH01">
+    <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+        <span class="text-nowrap">Customer's Favorite Item List</span>
+        <div fxFlex="flex"></div>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(custitemlistg01)}}</span>
+    </nav>
+    <wj-flex-grid #custitemlistg01 fxFlex
+        (keydown)='wjH.onGridKeyPress(custitemlistg01, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(custitemlistg01, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(custitemlistg01, $event)'>
+    </wj-flex-grid>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogRef.close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="closeDialog()">Continue</button>
+</div>

@@ -1,0 +1,52 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="overflow: hidden;" fxLayout="column" class="widget-grid panel-nobox">
+    <div fxLayout="row">
+        <div fxLayout="column">
+            <!-- <input #ftenderamt type="text" pcdrAmount [(ngModel)]="tenderamt" [ngModelOptions]="{updateOn: 'blur'}" class="form-control amount1" /> -->
+            <input #ftenderamt type="text" pcdrAmount [(ngModel)]="tenderamt" class="form-control amount1" />
+            
+            <keypad [keypadValue]='tenderamt' [keypadAppend]='false' [keypadEnterLabel]="completeButton" [keypadEnterClass]="'btn-warning btn-payment'" (keypadValueChange)="onKeypadValueChange($event)" (keypadEnter)="dialogRef.close(true)"></keypad>
+        </div>
+
+        <!-- Payment Types -->
+        <div fxLayout="column">
+            <button type="button" class="btn btn-primary" *ngFor="let payment of paymentTypes | orderBy: 'forder'" style="margin: 0 10px 10px 10px" (click)="addPayment(payment)">
+                <i ngClass="fa fa-{{payment.fopt1}}"></i>
+                {{payment.fdescription}}
+            </button>
+        </div>
+
+        <div fxLayout="column" style='width: 430px'>
+            <div layout="row" style="background-color: #000; color: #fff; padding-left: 10px">
+                <label class="amount1">Due: </label>
+                <span fxFlex="flex" class="text-right" style="color: #00fd01; padding-right: 10px">
+                    <label class="amount1">{{oeC.purchaseorders.items[0].fbalance | currency:'USD'}}</label>
+                </span>
+            </div>
+            <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+                <span class="text-nowrap">Payments</span>
+                <button type="button" class="btn btn-danger lmargin" (click)="purchaseorderpaymentsRemove()">
+                    <i class="fa fa-minus"></i> Remove</button>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap">Rows: {{wjH.rowCount(oepymnt01)}}</span>
+            </nav>
+            <wj-flex-grid #oepymnt01 style='height: 250px' (keydown)='wjH.onGridKeyPress(oepymnt01, $event)' (gotFocus)='wjH.onGridGotFocus(oepymnt01, $event)'
+                (selectionChanged)='wjH.onGridSelectionChanged(oepymnt01, $event)'>
+            </wj-flex-grid>
+            <!-- <div layout="row" style="background-color: #000; color: #fff; padding-left: 10px">
+                <label class="amount2">Change: </label>
+                <span fxFlex="flex" class="text-right" style="color: #00fd01; padding-right: 10px">
+                    <label class="amount2">{{oeC.purchaseorders.items[0].fchange | currency:'USD'}}</label>
+                </span>
+            </div> -->
+        </div>
+    </div>
+    <!--Quick Cash-->
+    <!-- <div layout="row" class="panel-nobox" layout-wrap style="width: 860px">
+        <button class="btn btn-success amount1 numPad" *ngFor="let payment of quickCashList | orderBy: 'forder'" (click)="quickCash(payment)">{{payment.fdescription}}
+        </button>
+    </div> -->
+</div>
+
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogRef.close()">Go Back</button>
+</div>

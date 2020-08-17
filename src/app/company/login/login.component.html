@@ -1,0 +1,25 @@
+<div class="container-fluid main">
+  <div class="col">
+    <div class="main-content main-box">
+      <div class="form-header bg-primary text-white">
+        <h1 class="text-center ">{{sharedSrvc.companyName}}</h1>
+      </div>
+
+      <form class="form-signin" (ngSubmit)="onSubmit()">
+        <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-user"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="User ID" [(ngModel)]="userid" [ngModelOptions]="{standalone: true}" required autofocus>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-lock"></i></span>
+            </div>
+            <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" required>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

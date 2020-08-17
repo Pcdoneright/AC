@@ -1,0 +1,18 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none" fxLayout="column" class="widget-grid panel-nobox" [style.height.px] = "gH01">
+    <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+        <span class="text-nowrap">Related Items</span>
+        <div fxFlex="flex"></div>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(itemrelg01)}}</span>
+    </nav>
+
+    <div fxLayout="row">
+        <wj-flex-grid #itemrelg01 fxFlex></wj-flex-grid>
+        <!-- <div style="height:250px; margin:5px 0 0 5px">
+            <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+        </div> -->
+    </div>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogRef.close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="closeDialog()">Continue</button>
+</div>

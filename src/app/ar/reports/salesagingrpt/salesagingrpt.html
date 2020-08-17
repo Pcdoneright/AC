@@ -1,0 +1,27 @@
+<pcdrBuilder #bar01></pcdrBuilder>
+<!-- <div fxLayout="row" fxLayoutAlign=" center">
+    <span class="lmargin">Customer ID:</span>
+    <input type="text" class="form-control lmargin" placeholder="All Customers" style="width: 150px" [(ngModel)]="fcid" [ngModelOptions]="{updateOn: 'blur'}" (ngModelChange)="fcidOnChange()">
+    <button type="button" xstyle='height:38px;margin-top:32px' (click)="lookupcust()" matTooltip="Customer List" class="btn btn-primary"><i class="fa fa-user"></i></button>
+    <span class="lmargin">{{fdescription}}</span>
+    <div style="margin-top: 10px;" class="lmargin">
+        <mat-checkbox [(ngModel)]="fdetails" class="text-nowrap">Show Details</mat-checkbox>
+    </div>
+</div> -->
+
+<form>
+    <div fxLayout="row">
+        <div class="form-group lmargin" style="width: 300px;">
+            <label>Customer ID</label>
+            <input type="text" class="form-control" placeholder="All Customers" [(ngModel)]="fcid" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fcidOnChange()">
+        </div>
+        <button type="button" style='height:38px;margin-top:32px' (click)="lookupcust()" matTooltip="Customer List" class="btn btn-primary"><i class="fa fa-user"></i></button>
+        <div class="form-group lmargin" fxFlex="flex">
+            <label>Name</label>
+            <input type="text" class="form-control" placeholder="All Customers" [(ngModel)]="fdescription" [ngModelOptions]="{standalone: true}" (ngModelChange)="fcidOnChange()" disabled>
+        </div>
+        <div class="form-group lmargin" style="margin-top: 40px;" fxFlex="flex">
+            <mat-checkbox [(ngModel)]="fdetails" [ngModelOptions]="{standalone: true}" class="text-nowrap">Show Details</mat-checkbox>
+        </div>
+    </div> 
+</form>

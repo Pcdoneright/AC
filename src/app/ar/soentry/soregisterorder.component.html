@@ -1,0 +1,89 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none;" fxLayout="column" class="widget-grid panel-nobox">
+    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <span class="text-nowrap">Order Properties</span>
+        <div fxFlex="flex"></div>
+        <span></span>
+    </nav>
+    <form fxFlex>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" style="width: 220px;" fxLayout="column">
+                <label>Order #</label>
+                <span fxFlex class="fdocnumber">{{soR.soCurrent.fdocnumber}}</span>
+            </div>
+            <div class="form-group" fxFlex="flex">
+                <label>Name</label>
+                <input type="text" class="form-control" value="{{soR.soCurrent.cfcid}}" disabled>
+            </div>
+            <div fxFlex="flex">
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Order Date</label>
+                    <input type="text" class="form-control" value="{{soR.soCurrent.fdate | date:'MM/dd/yyyy'}}" disabled>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Invoice Date</label>
+                    <input type="text" class="form-control" value="{{soR.soCurrent.finvoice_date | date:'MM/dd/yyyy'}}" disabled>
+                </div>
+            </div>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Status</label>
+                <select name="fstatus" [(ngModel)]="soR.soCurrent.fstatus" class="form-control" disabled>
+                    <option *ngFor="let opt of soR.orderstatus" [value]="opt.fid">
+                        {{opt.fdescription}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>PO Number</label>
+                <input type="text" class="form-control" name="fponumber" [(ngModel)]="soR.soCurrent.fponumber">
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Discount Percent</label>
+                <input type="text" pcdrQty class="form-control" value="{{soR.soCurrent.fdiscountp}}" disabled>
+            </div>
+            <button type="button" (click)='soR.discountAssign()' style='height:38px;margin-top:32px' matTooltip="Change Discount" class="btn btn-primary"><i class="fa fa-lock"></i></button>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Contact</label>
+                <select name="fccid" [(ngModel)]="soR.soCurrent.fccid" class="form-control">
+                    <option *ngFor="let opt of soR.customercontacts" [value]="opt.fccid">
+                        {{opt.fname}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Bill To</label>
+                <select name="fcbtid" [(ngModel)]="soR.soCurrent.fcbtid"  class="form-control">
+                    <option *ngFor="let opt of soR.customerbilltos" [value]="opt.fcbtid">
+                        {{opt.faddress1}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Ship To</label>
+                <select name="fcstid" [(ngModel)]="soR.soCurrent.fcstid" class="form-control">
+                    <option *ngFor="let opt of soR.customershiptos" [value]="opt.fcstid">
+                        {{opt.faddress1}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" fxFlex="flex">
+                <label>Invoice Notes</label>
+                <input type="text" class="form-control" name="finvoicenotes" [(ngModel)]="soR.soCurrent.finvoicenotes">
+            </div>
+            <div class="form-group lmargin" fxFlex="33">
+                <label>Last Update</label>
+                <input type="text" class="form-control" disabled value="{{soR.soCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{soR.soCurrent.fusername}}"
+                />
+            </div>
+        </div>
+
+    </form>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="dialogRef.close()">Continue</button>
+</div>

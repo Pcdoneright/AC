@@ -1,0 +1,11 @@
+<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none" fxLayout="column" class="widget-grid panel-nobox" [style.height.px] = "gH01">
+    <nav class="navbar navbar-expand-md bg-primary" fxLayout="row">
+        <span class="text-nowrap">Item Prefered Vendors</span>
+        <div fxFlex="flex"></div>
+        <span class="text-nowrap">Rows: {{wjH.rowCount(itemrelg01)}}</span>
+    </nav>
+    <wj-flex-grid #itemrelg01 fxFlex></wj-flex-grid>
+</div>
+<div mat-dialog-actions class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="dialogRef.close()">Continue</button>
+</div>

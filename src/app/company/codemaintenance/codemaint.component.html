@@ -1,0 +1,27 @@
+<div Layout="column" class="widget-grid panel-nobox" [style.height.px]="wH">
+    <as-split direction="vertical" (dragEnd)="gridRepaint()">
+        <as-split-area size="50" fxLayout="column">
+            <nav class="navbar navbar-expand-md mbg-info">
+                <span>Master</span>
+                <button type="button" class="btn btn-primary" (click)="update()"><i class="fa fa-save"></i> Save</button>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap">Rows: {{wjH.rowCount(cdmGrid01)}}</span>
+            </nav>
+            <wj-flex-grid #cdmGrid01 (selectionChanged)='wjH.onGridSelectionChanged(cdmGrid01, $event)' fxFlex></wj-flex-grid>
+        </as-split-area>
+        <as-split-area size="50" fxLayout="column">
+            <nav class="navbar navbar-expand-md mbg-info">
+                <span>Details</span>
+                <button type="button" class="btn btn-success" (click)="codeAdd()"><i class="fa fa-plus"></i> Add</button>
+                <button type="button" class="btn btn-danger" (click)="codeRemove()"><i class="fa fa-minus"></i> Remove</button>
+                <div class="container"></div>
+                <span style="white-space: nowrap;">Rows: {{wjH.rowCount(cdmGrid02)}}</span>
+            </nav>
+            <wj-flex-grid #cdmGrid02 fxFlex
+                (keydown)='wjH.onGridKeyPress(cdmGrid02, $event)' 
+                (gotFocus)='wjH.onGridGotFocus(cdmGrid02, $event)'
+                (selectionChanged)='wjH.onGridSelectionChanged(cdmGrid02, $event)'>
+            </wj-flex-grid>
+        </as-split-area>
+    </as-split>
+</div>

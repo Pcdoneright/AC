@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+    <span class="text-nowrap">{{navProperties.title}}</span>
+    <!-- buttons -->
+    <ng-container *ngFor='let button of navProperties.buttons'>
+        <button *ngIf=button.show type="button" class="btn btn-{{button.style}}" [ngClass]="{lmargin: index > 0}" matTooltip="{{button.tooltip}}" (click)="parent.onClickNav(button)" ><i class="fa fa-{{button.icon}}"></i> {{button.name}}</button>
+    </ng-container>
+    <!-- spans -->
+    <ng-container *ngFor='let span of navProperties.spans'>
+        <div fxLayout="row" *ngIf='parent[span.property]' style="{{span.style}}">
+            <span class='text-nowrap'><h4>{{span.text}}</h4></span>
+            <span class="lmargin" ><h4>{{parent[span.property]}}</h4></span>
+        </div>
+    </ng-container>
+    <div fxFlex="flex"></div>
+    <!-- navButtons -->
+    <div class="btn-group" role="group">
+        <button *ngFor='let navButton of navProperties.navButtons' type="button" class="btn btn-outline-primary mbtn-outline-primary nobutton" (click)='parent.onClickNav(navButton)'>{{navButton.name}}</button>
+    </div>
+    <span *ngIf='navProperties.rows' class="text-nowrap lmargin">Rows: {{parent.wjH.rowCount(parent[navProperties.rows.grid])}}</span>
+    <!-- chebron -->
+    <a *ngIf='navProperties.chevron' class="lmargin" style="margin-right: -10px;padding-right: 0" (click)="parent.onClickNav(navProperties.chevron)">
+        <i class='fa fa-chevron-down' [ngClass]="{'fa-rotate-180' : parent[navProperties.chevron.show]}"></i>
+    </a>
+</nav>
+<div *ngIf='navProperties.subnavbar !== false' class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+    <ng-content></ng-content>
+    <div *ngIf='navProperties.search' fxLayout="row">
+        <input type="text" class="form-control lmargin" placeholder="{{navProperties.search.placeholder}}" style="width: 200px" [(ngModel)]="parent[navProperties.search.ngModel]" (blur)='parent.onClickNav(navProperties.search)'>
+        <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+    </div>
+    <div *ngIf='navProperties.validEntry'>
+        <span fxflex="flex" *ngIf="!parent.validEntry()" class="alert-danger text-nowrap" style="padding: 10px">NO CHANGES CAN BE SAVED</span>
+    </div>
+</div>

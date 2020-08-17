@@ -1,1 +1,189 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/font-awesome/css/font-awesome.css";
+@import '../node_modules/ngx-toastr/toastr.css';
+@import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body {
+    display: flex;
+    flex-direction: column;
+    /*font-family: Roboto, Arial, sans-serif;*/
+    margin: 0;
+    height: 100%;
+}
+
+#myHourGlass {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color:grey;
+    opacity: .5;
+}
+
+.mySpinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size:48px;
+    /*position: absolute;*/
+    /*left: 10%;*/
+    /*top: 10%;*/
+    /*margin-left: -32px;*/
+    /*-1 *image width / 2 margin-top : - 32 px;*/
+    /*-1 *image height / 2 display : block;*/
+}
+
+/*Angular 2 input elements*/
+.ng-invalid:not(form) {
+    border-left: 5px solid#a94442; /* red */
+}
+
+.fdocnumber {
+    font-weight: bold;
+    font-size: 24px
+}
+
+.amount {
+    background-color: #000 !important;
+    color: #00fd01 !important;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+/* Used to alert problems on grid rows (wj-grid) */
+/* .alert-row:not(.wj-state-selected):not(.wj-state-multi-selected) { */
+.alert-row {
+    background-color: #f2dede !important;
+    color: #000 !important;
+}
+
+/* Hide input */
+.secure-font {
+    -webkit-text-security: disc;
+}
+
+.mform-control-row {
+    margin-top: 15px;
+    flex-direction: row;
+}
+
+/*-------------------------------------*/
+/* widget-grid
+/*-------------------------------------*/
+/*.widget-grid.widget-grid header, .widget-toolbar {*/
+    /*color: #fff;*/
+    /*background-color: #008eec;*/
+    /*!*background-color: #3f51b4;*!*/
+    /*font-weight: bold;*/
+    /*padding: 0 10px 0 10px;*/
+/*}*/
+
+/*.widget-grid > header > div {*/
+    /*min-height: 29px;*/
+/*}*/
+
+/*.widget-toolbar {*/
+    /*padding: 0;*/
+/*}*/
+
+/*ng2*/
+.widget-grid.widget-grid nav {
+    /*background-color: #d7e3f1;*/
+    padding-left: 10px;
+    height: 50px;
+}
+
+.subnavbar {
+    background-color: #e3f2fd!important;
+    color: black;
+    /*color: rgba(0,0,0,.9)!important;*/
+    /*padding-left: 10px;*/
+    /*align-items: center;*/
+    /*position: relative;*/
+    height: 50px;
+}
+
+.lmargin {
+    margin-left: 10px;
+}
+.rmargin {
+    /* margin-right: 10px; */
+    margin-right: 5px;
+}
+
+form {
+    margin: 5px 0 5px 5px;
+}
+
+.panel, .panel-nobox {
+    background-color: #fff;
+    margin: 5px 5px 0px 5px;
+}
+
+.panel {
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+    margin-bottom: 5px;
+}
+
+.panel-nobox {
+    /*margin: 5px 10px 0px 10px;*/
+    -webkit-transition: .25s ease-out;
+    -moz-transition: .25s ease-out;
+    transition: .25s ease-out;
+    position: relative;
+}
+
+/* CompanySvc.alert message style */
+.alertmessage {
+    font-weight: 700;
+    font-size: 55px;
+    color: royalblue;
+    text-align: center;
+}
+
+/* Hide Inpu Upload */
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+/* Bootstrap override colors */
+.mbg-primary {
+    background-color: #0275d8;
+}
+
+.mbg-info {
+    background-color: #45526e;
+}
+
+.mbtn-outline-primary {
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* Material Design */
+.mat-radio-label-content {
+    padding-right: 5px !important;    
+}
+
+/* Extend bootstrap */
+.form-check {
+    padding-left: 0px !important;
+}
+
+.form-check-input {
+    margin-top: 40px;
+    margin-left: -105px;
+}

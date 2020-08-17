@@ -1,0 +1,45 @@
+<div class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <as-split direction="vertical" (dragEnd)="gridRepaint()">
+        <as-split-area size="40" fxLayout="column">
+            <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+                <span class="text-nowrap">Vendor List</span>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap">Rows: {{wjH.rowCount(poeG01)}}</span>
+            </nav>
+            <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+                <span class="lmargin">Search:</span>
+                <mat-radio-group [(ngModel)]="vtype" style="margin-top: 5px" class="lmargin">
+                    <mat-radio-button value="V">Name</mat-radio-button>
+                    <mat-radio-button value="C">Contact Name</mat-radio-button>
+                    <mat-radio-button value="A">All Vendors</mat-radio-button>
+                </mat-radio-group>
+                <input *ngIf="vtype != 'A'" type="text" class="form-control lmargin" placeholder="(Min 3 Characters)" style="width: 250px" [formControl]="listVendorGridSearch">
+                <button *ngIf="vtype == 'A'" type="button" class="btn btn-primary" (click)="listVendorGridRefresh()"><i class="fa fa-search"></i> Search</button>
+                <div style="margin-top: 10px;" class="lmargin">
+                    <mat-checkbox [(ngModel)]="factive" class="text-nowrap">Active Only</mat-checkbox>
+                </div>
+            </div>
+            <wj-flex-grid #poeG01 fxFlex></wj-flex-grid>
+        </as-split-area>
+
+        <as-split-area size="60" fxLayout="column">
+            <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+                <span class="text-nowrap">Payment List</span>
+                <button type="button" class="btn btn-secondary" (click)="exportToXcel()" matTooltip="Export List To Excel"><i class="fa fa-file-excel-o"></i></button>
+                <div fxFlex="flex"></div>
+                <span class="text-nowrap">Rows: {{wjH.rowCount(poeG02)}}</span>
+            </nav>
+            <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+                <mat-radio-group [(ngModel)]="potype" style="margin-top: 5px" class="lmargin">
+                    <mat-radio-button value="V" matTooltip="For Selected Vendor">Vendor</mat-radio-button>
+                    <mat-radio-button value="D">Dates From:</mat-radio-button>
+                </mat-radio-group>
+                <wj-input-date #fpodatef [(value)]="podatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fpodatef)" (lostFocus)="wjH.inputLostFocus(fpodatef)"></wj-input-date>
+                <span class="lmargin">To:</span>
+                <wj-input-date #fpodatet [(value)]="podatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fpodatet)" (lostFocus)="wjH.inputLostFocus(fpodatet)"></wj-input-date>
+                <button type="button" class="btn btn-primary" (click)="listPOGridRefresh()"><i class="fa fa-search"></i> Search</button>
+            </div>
+            <wj-flex-grid #poeG02 fxFlex></wj-flex-grid>
+        </as-split-area>
+    </as-split>
+</div>

@@ -1,0 +1,28 @@
+<div fxLayoutAlign="center center">
+    <div fxLayout="column">
+        <div fxLayout="row" fxFlex="flex">
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('1')">1</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('2')">2</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('3')">3</button>
+        </div>
+        <div fxLayout="row" fxFlex="flex">
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('4')">4</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('5')">5</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('6')">6</button>
+        </div>
+        <div fxLayout="row" fxFlex="flex">
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('7')">7</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('8')">8</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('9')">9</button>
+        </div>
+        <div fxLayout="row" fxFlex="flex">
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('.')">.</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('0')">0</button>
+            <button type="button" class="btn btn-dark btn-numPad" (click)="pinEntry('B')"><i class="fa fa-arrow-left"></i></button>
+        </div>
+        <div fxLayout="row" fxFlex="flex">
+            <button fxFlex="flex" type="button" [ngClass]='keypadEnterClass' class="btn btn-success btn-numPad" (click)="pinEnter()">{{keypadEnterLabel}}</button>
+            <button fxFlex="flex" type="button" class="btn btn-primary btn-numPad" (click)="pinEntry('C')">Clear</button>
+        </div>
+    </div>
+</div>
