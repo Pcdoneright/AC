@@ -83,6 +83,7 @@ import { VendormaintComponent } from './ap/vendormaint/vendormaint.component';
 //INV
 import { ItemList } from './inventory/itemlist/itemlist.component';
 import { itemmaintComponent, DialogItemNumber, ViewCustomerPricing } from './inventory/itemmaint/itemmaint.component';
+import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { ItemRelatedList } from './inventory/itemlist/itemrelatedlist.component';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { Itemvendorcost } from './inventory/itemlist/itemvendorcost.component';
@@ -159,7 +160,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     soProperties,
     itemmovement,
     itemsalesrpt,
-    companymaint
+    companymaint,
+    itemreassign
   ],
   imports: [
     BrowserModule,
@@ -246,7 +248,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     cashregistersales,
     itemmovement,
     itemsalesrpt,
-    companymaint
+    companymaint,
+    itemreassign
   ],
   bootstrap: [AppComponent]
 })

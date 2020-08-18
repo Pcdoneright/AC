@@ -350,7 +350,7 @@ export class VendormaintComponent implements AfterViewInit {
             var height = (this.showMoreEdit) ? 720 : 555; // Edit
             
             this.gH02 = Math.max(window.innerHeight - (height), 100);
-            this.gH03 = Math.max(window.innerHeight - 100);
+            this.gH03 = Math.max(window.innerHeight - 101);
         }, 100);
     };
 

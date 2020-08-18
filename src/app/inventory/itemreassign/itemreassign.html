@@ -1,0 +1,29 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01>
+        <span class='lmargin'>
+            This process will transfer a particular <b>ITEM NUMBER</b> to be incorporated under the <b>ITEM ID</b> specified.<br>
+        </span>
+    </pcdrBuilder>
+    <form>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" style="width: 350px">
+                <label>Item Number</label>
+                <input type="text" class="form-control" [(ngModel)]="fitem" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fitemOnChange()" required>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Description</label>
+                <input type="text" class="form-control" [(ngModel)]="fdescription" [ngModelOptions]="{standalone: true}" readonly>
+            </div>
+        </div>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group" style="width: 350px">
+                <label>Item ID</label>
+                <input type="text" class="form-control" [(ngModel)]="fimid" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fidOnChange()" required>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Description</label>
+                <input type="text" class="form-control" [(ngModel)]="fiddescription" [ngModelOptions]="{standalone: true}" readonly>
+            </div>
+        </div>
+    </form>
+ </div>

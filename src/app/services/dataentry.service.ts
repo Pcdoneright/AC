@@ -113,7 +113,7 @@ export class DataEntryService {
     }
 
     // Update Stores with Server
-    update(api: string, pShowSuccess = true, pParms?, fprepareUpdate?) : Observable<any> {
+    update(api: string, pShowSuccess = true, pParms?, fprepareUpdateCallback?) : Observable<any> {
         var mData = []; // Server Data
 
         for (var i = 0; i < this.updateStores.length; i++) {
@@ -127,7 +127,7 @@ export class DataEntryService {
         return Observable.create(observer => {
             // Send Array
             if (mData.length > 0) {
-                if (fprepareUpdate) fprepareUpdate(mData); // Custom data prepare function
+                if (fprepareUpdateCallback) fprepareUpdateCallback(mData); // Custom data prepare function
                 
                 this.DataSvc.serverDataPost(api, mData, pParms).subscribe(
                     (dataResponse) => {

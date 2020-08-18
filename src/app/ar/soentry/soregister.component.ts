@@ -62,7 +62,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     salespaymentspending:any[] = [];
 
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService, toastr: ToastrService, sharedSrvc: SharedService, 
-        dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService) {
+        dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe) {
         super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules);
         this.sharedSrvc.setProgramRights(this, 'soentrytouch'); // sets fupdate, fadmin
         window.onresize = (e) => this.onResize(e); // Capture resize event
@@ -97,9 +97,10 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             buttons: [
                 {name: 'New Order', style: 'success', action: 'newSO'},
                 {name: ' Receipt', style: 'light', icon: 'print', action: 'printSO', val: false},
-                {name: 'Drawer', style: 'light', action: 'openDrawer'},
+                {name: 'Drawer', style: 'light', tooltip: 'Open Drawer', action: 'openDrawer'},
                 {name: 'Set Pending', style: 'primary', action: 'setToPending'},
                 {name: 'Void', style: 'danger', action: 'setToVoid'},
+                {name: 'Drawer Report', style: 'secondary', action: 'drawerReport'},
             ],
             // spans: [
                 // {text: 'Last Order:', property: 'lastordernumber', style: 'margin-left:45px'},
@@ -187,7 +188,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         
         // Save totalDrawer
         this.getCashTotal();
-        this.DataSvc.serverDataPost('api/CashRegister/PostDrawerTotal', [{pfuserid: this.sharedSrvc.user.fuid, pfdrawer: this.totalDrawer}]).subscribe();
+        this.depositDrawerTotal();
 
         // Display Change Amount
         if (this.soCurrent.fchange !== 0) {
@@ -202,12 +203,16 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         }
     }
 
+    depositDrawerTotal() {
+        console.log('PostDrawerTotal', this.totalDrawer);
+        this.DataSvc.serverDataPost('api/CashRegister/PostDrawerTotal', [{pfuserid: this.sharedSrvc.user.fuid, pfdrawer: this.totalDrawer}]).subscribe();
+    }
+
     getCashTotal() {
         let items = this.$filter.transform(this.salespayments.items, {ftype: 'CSH'});
         let total = this.dESrvc.getSumValue(items, 'famount');
         this.totalDrawer += total - this.salesorders.items[0].fchange;
         this.totalDrawer = this.CompanySvc.r2d(this.totalDrawer);
-        // console.log('total', this.totalDrawer);
     }
    
     // Extend to Fill grid with data
@@ -234,62 +239,70 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.salesordersTotals();
         this.updateTotalQty();
         this.focusToScan();
-        return; // <<<<<---------
+        // return; // <<<<<---------
         
+        console.log('totalDrawer', this.totalDrawer);
         // Prompt if drawer amt exceeds
         if (this.totalDrawer >= this.fcrdraweramt) {
+            this.openDrawer(); // Allow to take money out
             this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now', 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
-                this.CompanySvc.inputDialog('Enter Code', '', 'Admin Deposit-Code', 'Continue', 'Cancel', true, true, false, 'inputDialogEnter', this).subscribe((value) => {
-                // if (value) {
-                //     this.DataSvc.serverDataGet('api/CompanyMaint/GetValidateCRDOverride', { pfposoverride: value }).subscribe((dataResponse) => {
-                //         if (dataResponse.validate) {
-                //             console.log(dataResponse)
-                //         }
-                //     });
-                // }
-                });
+                this.cashDrawerOverride(this.CompanySvc.validNumber(ret, 2));
             });
         }
     }
 
+    cashDrawerOverride(amtToDeposit: number) {
+        this.CompanySvc.inputDialog('Enter Code', '', 'Admin Deposit-Code', 'Continue', 'Cancel', true, true, false).subscribe((value) => {
+            this.DataSvc.serverDataGet('api/CompanyMaint/GetValidateCROverride', { fcrdrawercode: value }).subscribe((dataResponse) => {
+                if (!dataResponse.validate) {
+                    this.toastr.warning('Invalid Override Code');
+                    setTimeout(()=> {this.cashDrawerOverride(amtToDeposit)}, 0);
+                }
+                else {
+                    // Post Deposits, and new drawer total
+                    this.totalDrawer -= amtToDeposit;
+                    this.totalDrawer = this.CompanySvc.r2d(this.totalDrawer);
+                    console.log('deposit', amtToDeposit);
+                    
+                    this.DataSvc.serverDataPost('api/CashRegister/PostDrawerDeposit', [{pfuserid: this.sharedSrvc.user.fuid, pfdrawer: amtToDeposit}]).subscribe();
+                    this.depositDrawerTotal();
+                }
+            });
+        });
+    }
+
     inputDialogAmount(val) {
         console.log(val)
+        if (!this.CompanySvc.validNumber(val, 2)) {
+            this.toastr.warning('Invalid Amount!');
+            return false
+        }
         return true;
     }
-    
+
     // async inputDialogEnter(val) {
-    inputDialogEnter(val) {
-        //const result = await this.DataSvc.serverDataGet('api/CompanyMaint/GetValidateCRDOverride', { pfoverride: val }).subscribe((dataResponse) => {
-        // const result = await this.DataSvc.serverDataGet('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: val }).subscribe((dataResponse) => {
-        
-        // const result = await this.testoverrideAdmin(val);
-        // console.log('result', result)
+    // async XinputDialogEnter(val) {
+    //     const data = await this.DataSvc.serverDataGetAsync('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: val });
+    //     console.log('returned data', data);
+    //     if (data) {
+    //         //await this.getAssetTypesPromise(val);
+    //         // console.log('data', data['validate']);
+    //         if (!data['validate']) {
+    //             this.toastr.warning('Invalid Override Code');
+    //             return false;
+    //         }
+    //         return true;
+    //     }
+    //     // When Error
+    //     return false;
+    // }
 
-        this.getAssetTypesPromise(val);
-        console.log('returned');
-        return true;
-    }
-
-    async getAssetTypesPromise(val) {
-        console.log('before testoverrideAdmin');
-        const value = await this.testoverrideAdmin(val).toPromise();
-        console.log('value', value);
-        console.log('after testoverrideAdmin');
-    }
-
-    testoverrideAdmin(value) {
-         return Observable.create((observer) => {
-            console.log('before serverDataGet')
-            // observer.next('dataResponse');
-            // this.DataSvc.serverDataGet('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: value }).subscribe((dataResponse) => {
-            //     if (dataResponse.validate) {
-            //         console.log('dataResponse', dataResponse)
-            //         observer.next(dataResponse);
-            //     }
-            // });
-         });
-    }
-
+    // async getAssetTypesPromise(val) {
+    //     console.log('before testoverrideAdmin');
+    //     const data = await this.http.get('api/CompanyMaint/GetValidatePOSOverride', {params: {pfposoverride: val}}).toPromise();
+    //     console.log("Data: " + JSON.stringify(data)); 
+    //     console.log('after testoverrideAdmin');
+    // }
 
     printSO(opendrawer: boolean) {
         if (!this.validEntry() || this.soCurrent.fdocnumber == -1) {
@@ -315,6 +328,27 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                     else {
                         window.location.href = 'pcdrprintpdfv3:' + filename + ':' + opendrawer; // open drawer option
                     }
+                    this.focusToScan();
+                });
+            }, 1000);
+        });
+    }
+
+    drawerReport() {
+        this.CompanySvc.ofHourGlass(true);
+        let fdate = new Date(); // Use todays date
+        
+        var mParms = 'pfuserid=' + this.sharedSrvc.user.fuid +
+            "&pfdatef=" + this.datePipe.transform(fdate, 'yyyy-MM-dd') + 
+            "&pfdatet=" + this.datePipe.transform(fdate, 'yyyy-MM-dd')
+
+        this.CompanySvc.ofCreateJasperReport('CashDrawer.pdf', mParms).subscribe((pResponse) => {
+            var filename = pResponse.ffilename;
+            // Send to printer
+            setTimeout(() => {
+                this.CompanySvc.ofCheckServerFile(pResponse.data, () => {
+                    // this.CompanySvc.ofOpenServerFile(pResponse.data);
+                    window.location.href = 'pcdrprintpdfv3:' + filename + ':false';
                     this.focusToScan();
                 });
             }, 1000);

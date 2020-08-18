@@ -25,6 +25,7 @@ import { itemmaintComponent } from './inventory/itemmaint/itemmaint.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
+import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { Injectable } from "@angular/core";
 
 @Injectable()
@@ -85,6 +86,8 @@ export class CustomModule {
                 return itemsalesrpt;
             case 'companymaint':
                 return companymaint;
+            case 'itemreassign':
+                return itemreassign;
         }
         return '';
     }

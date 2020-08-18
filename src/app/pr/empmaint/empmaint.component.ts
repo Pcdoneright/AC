@@ -118,7 +118,7 @@ export class EmpMaintComponent implements AfterViewInit {
 
         this.CompanySvc.ofHourGlass(true);
         // Send to Server
-        this.dESrvc.update('api/EmployeeMaint/Postupdate', true, this.prepareUpdate).finally(() => {
+        this.dESrvc.update('api/EmployeeMaint/Postupdate', true, '', this.prepareUpdate).finally(() => {
             this.CompanySvc.ofHourGlass(false)
         }).subscribe();
     }
