@@ -242,10 +242,11 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         // return; // <<<<<---------
         
         console.log('totalDrawer', this.totalDrawer);
+        console.log('fcrdraweramt', this.fcrdraweramt);
         // Prompt if drawer amt exceeds
-        if (this.totalDrawer >= this.fcrdraweramt) {
+        if (this.totalDrawer >= this.fcrdraweramt && this.totalDrawer > 0) {
             this.openDrawer(); // Allow to take money out
-            this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now', 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
+            this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
                 this.cashDrawerOverride(this.CompanySvc.validNumber(ret, 2));
             });
         }
@@ -264,7 +265,9 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                     this.totalDrawer = this.CompanySvc.r2d(this.totalDrawer);
                     console.log('deposit', amtToDeposit);
                     
-                    this.DataSvc.serverDataPost('api/CashRegister/PostDrawerDeposit', [{pfuserid: this.sharedSrvc.user.fuid, pfdrawer: amtToDeposit}]).subscribe();
+                    this.DataSvc.serverDataPost('api/CashRegister/PostDrawerDeposit', [{pfuserid: this.sharedSrvc.user.fuid, pfdrawer: amtToDeposit}]).subscribe(() => {
+                        this.generateReport('CashDrawerLastDeposit.pdf', 'pfuserid=' + this.sharedSrvc.user.fuid); // Print receipt after every deposit
+                    });
                     this.depositDrawerTotal();
                 }
             });
@@ -273,8 +276,14 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
     inputDialogAmount(val) {
         console.log(val)
-        if (!this.CompanySvc.validNumber(val, 2)) {
+        let amt = this.CompanySvc.validNumber(val, 2);
+        if (!amt) {
             this.toastr.warning('Invalid Amount!');
+            return false
+        }
+        // Value must be same or less
+        if (amt > this.totalDrawer) {
+            this.toastr.error('Amount cannot be greater than $' + this.totalDrawer.toString());
             return false
         }
         return true;
@@ -335,20 +344,26 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     }
 
     drawerReport() {
-        this.CompanySvc.ofHourGlass(true);
         let fdate = new Date(); // Use todays date
         
         var mParms = 'pfuserid=' + this.sharedSrvc.user.fuid +
             "&pfdatef=" + this.datePipe.transform(fdate, 'yyyy-MM-dd') + 
             "&pfdatet=" + this.datePipe.transform(fdate, 'yyyy-MM-dd')
 
-        this.CompanySvc.ofCreateJasperReport('CashDrawer.pdf', mParms).subscribe((pResponse) => {
+        this.generateReport('CashDrawer.pdf', mParms);
+    }
+
+    // Generic report routine
+    generateReport(pRptname: string, pParms: string) {
+        this.CompanySvc.ofHourGlass(true);
+
+        this.CompanySvc.ofCreateJasperReport(pRptname, pParms).subscribe((pResponse) => {
             var filename = pResponse.ffilename;
             // Send to printer
             setTimeout(() => {
                 this.CompanySvc.ofCheckServerFile(pResponse.data, () => {
-                    // this.CompanySvc.ofOpenServerFile(pResponse.data);
-                    window.location.href = 'pcdrprintpdfv3:' + filename + ':false';
+                    // this.CompanySvc.ofOpenServerFile(pResponse.data); // Display for testing
+                    window.location.href = 'pcdrprintpdfv3:' + filename + ':false'; // Send to pos-prt
                     this.focusToScan();
                 });
             }, 1000);

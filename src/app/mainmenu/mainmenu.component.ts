@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { SharedService } from '../services/shared.service';
 import { CustomModule } from '../appcustom.module';
 import { DataService } from '../services/data.service';
+import { Router } from '@angular/router';
 import { trigger, transition, query, style, animate, group, state } from '@angular/animations';
 declare var $: any;
 
@@ -90,9 +91,14 @@ export class MainMenuComponent implements OnInit {
 //     // this.selectedIndexA = Math.min(this.selectedIndexA + 1, this._images.length - 1);
 //   }
 
-    constructor(private customModule: CustomModule, public sharedSrvc: SharedService, private DataSvc: DataService) {
+    constructor(private customModule: CustomModule, public sharedSrvc: SharedService, private DataSvc: DataService, private router: Router) {
         this.currentTime();
         setInterval(this.currentTime, 60000);
+
+        // Return to login if invalid (refresh from mainmenu)
+        if (!this.sharedSrvc.user) {
+            this.router.navigateByUrl('/login');
+        }
     }
 
     currentTime = () => {

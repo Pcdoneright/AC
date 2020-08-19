@@ -35,6 +35,7 @@ import { CompanyVersion } from './services/companyversion';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
 import { MenUtillitiesComponent } from "./services/menutillities.component";
 import { ItemPriceCheck } from './inventory/itempricecheck/itempricecheck.component';
+import { pricecheckmain } from './inventory/itempricecheck/pricecheckmain';
 import { wjHelperService } from './services/wjHelper.service';
 import { CompanyService } from './services/company.service';
 import { ConfirmDialog } from './services/confirm-dialog.component';
@@ -161,7 +162,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     itemmovement,
     itemsalesrpt,
     companymaint,
-    itemreassign
+    itemreassign,
+    pricecheckmain
   ],
   imports: [
     BrowserModule,
@@ -249,7 +251,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     itemmovement,
     itemsalesrpt,
     companymaint,
-    itemreassign
+    itemreassign,
+    pricecheckmain
   ],
   bootstrap: [AppComponent]
 })

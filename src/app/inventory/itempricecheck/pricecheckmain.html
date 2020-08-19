@@ -1,0 +1,62 @@
+<div fxLayout="row" class="widget-grid panel-nobox" (click)="focusToScan()">
+    <div style="height:150px; margin:5px 0 0 5px">
+        <img src="./logo.png" style="height:100%;">
+    </div>
+    <div>
+        <span style="zoom: 4.5;font-weight: bold;color: red; margin-left: 30px;">WELCOME TO ALAMO CANDY CO.</span><br>
+        <span style="zoom: 2.8;font-weight: bold;margin-left: 40px;">SCAN YOUR PRODUCT TO FIND ITS PRICE AND OPTIONS</span>
+    </div>
+</div>
+<div fxLayout="row" class="widget-grid panel-nobox">
+    <div fxLayout="column" fxFlex style='zoom: 1.3'>
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" (click)="focusToScan()">
+            <span class="text-nowrap">Price Check</span>
+            <div fxFlex="flex"></div>
+            <button type="button" class="btn btn-primary" (click)="clearForm()">Clear Form</button>
+            <!-- <input type="file" hidden='true' #fileupload (change)="fileChange($event)" placeholder="Upload file" accept=".jpg">
+            <button type="button" class="btn btn-success" (click)="allowUpload(fileupload)" matTooltip="Selected Item">Upload Image</button> -->
+        </nav>
+        <div fxLayout="column" fxFlex>
+            <!-- Item Scan -->
+            <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+                <input type="text" cdkFocusInitial class="form-control lmargin" placeholder="Scan Item Here" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+                <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+            </div>
+
+            <!-- Item Display -->
+            <div fxFlex style="background-color: #fff; zoom: 1.3" (click)="focusToScan()">
+                <div class="widget-grid panel-nobox" style="margin-top:25px">
+                    <!-- <div fxLayout="row" [ngClass]="{'alert-row' : (itemCurrent.cfmarkup < minMarkup)}"> -->
+                    <div fxLayout="row">
+                        <span class='mh1 text-uppercase' fxFlex='flex'>{{itemCurrent.fdescription}}&nbsp;</span>
+                        <span><h1>{{itemCurrent.fsaleprice | currency: 'USD'}}</h1></span>
+                    </div>
+                    <div fxLayout="row" class="text-nowrap" *ngIf='itemCurrent.fitem'>
+                        <span><h3>
+                            <!-- {{itemCurrent.fuomdescription}} @{{itemCurrent.fsaleprice | currency: 'USD'}} each, {{itemCurrent.fweight | number: ''}} lbs. -->
+                            {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit, {{itemCurrent.fweight | number: ''}} lbs.
+                        </h3></span>
+                        <span *ngIf='!itemCurrent.fistaxable' style='margin-top:6px'><h5>&ensp;(Non-Taxable)</h5></span>
+                    </div>
+                    <div fxLayout="row" class="text-nowrap">
+                        <span><h2>{{itemCurrent.fitem}}</h2></span>
+                    </div>
+                    <!-- Images -->
+                    <div style="height:250px; margin:5px 0 0 5px">
+                        <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div fxLayout="column" style="width:350px; height:350px"> -->
+    <div fxLayout="column" style="width:450px;">
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" style='zoom: 1.3'>
+            <span class="text-nowrap">More Options</span>
+            <div fxFlex="flex"></div>
+            <span class="text-nowrap rmargin">Rows: {{wjH.rowCount(ipckg01)}}</span>
+        </nav>
+        <wj-flex-grid #ipckg01 xfxFlex  class='ipckclass' [style.height.px] = "gH01" style='zoom: 1.1'></wj-flex-grid>
+    </div>
+</div>
