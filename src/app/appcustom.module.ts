@@ -7,6 +7,7 @@ import { CustmaintComponent } from './ar/custmaint/custmaint.component';
 import { SoentryComponent } from './ar/soentry/soentry.component';
 import { SoRegisterComponent } from './ar/soentry/soregister.component';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
+import { crdrawersmaint } from './ar/crdrawersmaint/crdrawersmaint';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
 import { salesagingrpt } from './ar/reports/salesagingrpt/salesagingrpt';
 import { salesordersrpt } from './ar/reports/salesordersrpt/salesordersrpt';
@@ -88,6 +89,8 @@ export class CustomModule {
                 return companymaint;
             case 'itemreassign':
                 return itemreassign;
+            case 'crdrawersmaint':
+                return crdrawersmaint;
         }
         return '';
     }

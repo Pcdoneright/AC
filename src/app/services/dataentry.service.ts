@@ -27,8 +27,9 @@ export class DataEntryService {
     }
 
     // Create data stores
-    newDataStore(tableName: string, arrayId: string[], updateAble: boolean, arrayValidate:string[]) {
-        var dstore = new DataStore(this.CompanySvc, tableName, arrayId, arrayValidate); // Data Store Service
+    newDataStore(tableName: string, arrayIdNOTUSED: string[], updateAble: boolean, arrayValidate:string[]) {
+        // var dstore = new DataStore(this.CompanySvc, tableName, arrayIdNN, arrayValidate); // Data Store Service
+        var dstore = new DataStore(this.CompanySvc, tableName, arrayValidate); // Data Store Service
         if (updateAble) this.updateStores.push(dstore); // Add to updateable array
         return dstore;
     }
@@ -203,7 +204,8 @@ export class DataStore {
 
     // Create ds
     // constructor(public $filter: Ng2FilterPipe, private CompanySvc: CompanyService, public tableName: string, public arrayId) {
-    constructor(private CompanySvc: CompanyService, public tableName: string, public arrayId, public arrayValidate) {
+    // constructor(private CompanySvc: CompanyService, public tableName: string, public arrayId, public arrayValidate) {
+    constructor(private CompanySvc: CompanyService, public tableName: string, public arrayValidate) {
         //this.counter++;
         //console.log("DataStoreSvc:" + this.counter);
         // console.log("DataStoreSvc->constructor");
@@ -213,6 +215,11 @@ export class DataStore {
     loadData(data: any[]) {
         this.clearData();
         this.items = data;
+        // 2020/08/20 Create Unique Key for each row, this is how we can guarantee finding the row
+        for (var i = 0; i < this.items.length; i++) {
+            this.items[i]['_pcdrkey'] = this.getUniqueKey(); // add unique key
+        }
+
         this._orgData = this.CompanySvc.deepCopy(data);
         // this._orgData = angular.copy(data);
 
@@ -231,6 +238,7 @@ export class DataStore {
 
     // Add Row
     addRow(data, addToTop = false) {
+        data['_pcdrkey'] = this.getUniqueKey(); // add unique key
         return (addToTop) ? this.items.unshift(data) : this.items.push(data); // Append to end
     }
 
@@ -278,8 +286,10 @@ export class DataStore {
 
     // 2018-08-19 Update existing row
     updateRow(row) {
-        var keys = this.createKeyProperty(row); // Use for finding row by its keys
-        var results = this.$filter.transform(this.items, keys, true);
+        //xx var keys = this.createKeyProperty(row); // Use for finding row by its keys
+        //xx var results = this.$filter.transform(this.items, keys, true);
+        var results = this.$filter.transform(this.items, { _pcdrkey: row['_pcdrkey'] }, true);
+
         // if Found update fields
         if (results.length > 0) {
             for (var key in row) {
@@ -291,18 +301,19 @@ export class DataStore {
 
     // Check if row is new
     isNew(row) {
-        var keys = this.createKeyProperty(row); // Use for finding row by its keys
-        var results = this.$filter.transform(this._orgData, keys, true);
-        // var results = this.$filter('filter')(this._orgData, keys, true);
+        //xx var keys = this.createKeyProperty(row); // Use for finding row by its keys
+        //xx var results = this.$filter.transform(this._orgData, keys, true);
+        var results = this.$filter.transform(this._orgData, { _pcdrkey: row['_pcdrkey'] }, true);
 
         return (results.length == 0); // Does not exist, newly created.
     }
 
     // Must be called when an item is removed
     _removeRow(item) {
-        var keys = this.createKeyProperty(item); // Use for finding row by its keys
-        var results = this.$filter.transform(this._orgData, keys, true);
-        // var results = this.$filter('filter')(this._orgData, keys, true);
+        //xx var keys = this.createKeyProperty(item); // Use for finding row by its keys
+        //xx var results = this.$filter.transform(this._orgData, keys, true);
+        var results = this.$filter.transform(this._orgData, { _pcdrkey: item['_pcdrkey'] }, true);
+        
         // if Found in orgData add it to _deleted rows
         if (results.length > 0) {
             //results = this.$filter('filter')(this._deleted, keys, true); // Find it again in the _deleted rows in case same key was created and removed
@@ -315,23 +326,31 @@ export class DataStore {
         }
 
         // Now remove it from items
-        results = this.$filter.transform(this.items, keys, true);
+        //xx results = this.$filter.transform(this.items, keys, true);
+        results = this.$filter.transform(this.items, { _pcdrkey: item['_pcdrkey'] }, true);
         if (results.length > 0) this.items.splice(this.items.indexOf(results[0]), 1);
+    }
+
+    //2020/08/18
+    getUniqueKey() {
+        return Math.floor(Math.random() * 10000); // Good up to 10000 unique ids;
     }
 
     // Populate _arrays with changes
     getChanges() {
-        var keys = {};
+        // var keys = {};
         var items = [];
         this._modified = []; // reset
         this._inserted = []; // reset
 
         // For each item
         for (var i = 0; i < this.items.length; i++) {
-            keys = this.createKeyProperty(this.items[i]); // Use for finding row by its keys
-// debugger;
-            items = this.$filter.transform(this._orgData, keys, true);
-            // items = this.$filter('filter')(this._orgData, keys, true);
+            //xx keys = this.createKeyProperty(this.items[i]); // Use for finding row by its keys
+            //xx items = this.$filter.transform(this._orgData, keys, true);
+            items = this.$filter.transform(this._orgData, { _pcdrkey: this.items[i]['_pcdrkey'] }, true);
+            // console.log('getchanges', items);
+
+
             if (items.length > 0) {
                 if (!this.compareOrg(items[0], this.items[i]))
                     this._modified.push(this.CompanySvc.deepCopy(this.items[i])); // Add row to modified it it changed
@@ -357,16 +376,17 @@ export class DataStore {
         }
     }
 
-    createKeyProperty(item) {
-        var mProperty = {};
+    // 2020/08/18 Deprecated since using _pcdrkey
+    // createKeyProperty(item) {
+    //     var mProperty = {};
 
-        // For each index field
-        for (var f = 0; f < this.arrayId.length; f++) {
-            mProperty[this.arrayId[f]] = item[this.arrayId[f]];
-        }
+    //     // For each index field
+    //     for (var f = 0; f < this.arrayId.length; f++) {
+    //         mProperty[this.arrayId[f]] = item[this.arrayId[f]];
+    //     }
 
-        return mProperty;
-    }
+    //     return mProperty;
+    // }
 
     // Compare each field from original since new may have new 'properties' added
     compareOrg(orgData, newData) {
@@ -376,14 +396,23 @@ export class DataStore {
             if (orgData[key] instanceof Date)
                 if (newData[key] == null) // Null Dates cannot become string
                     found = (orgData[key] === newData[key]);
-                else
+                else {
                     found = (orgData[key].toString() === newData[key].toString());
+                }
             else {
                 if (key !== 'w2ui') // w2ui grid attaches this property to the row that must be ignored
                     found = (orgData[key] === newData[key]);
             }
 
-            if (!found) break; // exit as soon as something is different
+            if (!found) {
+                // Debug only
+                // console.log('orgData', orgData);
+                // console.log('newData', newData);
+                // console.log('orgData[key]', orgData[key]);
+                // console.log('newData[key]', newData[key]);
+
+                break; // exit as soon as something is different
+            }
         }
 
         return found;

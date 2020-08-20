@@ -173,6 +173,20 @@ export class wjHelperService {
         return null;
     }
 
+    gridSelectNextRow(pGrid: WjFlexGrid) {
+        if (pGrid.rows.length == 0) return;
+        if (pGrid.selection.row >= 0) {
+            pGrid.select(new wjGrid.CellRange(pGrid.selection.row + 1));
+        }
+    }
+    
+    gridSelectPrevRow(pGrid: WjFlexGrid) {
+        if (pGrid.rows.length == 0) return;
+        if (pGrid.selection.row > 0) {
+            pGrid.select(new wjGrid.CellRange(pGrid.selection.row - 1));
+        }
+    }
+
     gridSelectChanged(pGrid, row) {
         // Create new property to save prev row
         if (pGrid.mPrevRow !== row) {

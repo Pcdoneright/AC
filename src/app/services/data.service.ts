@@ -16,61 +16,40 @@ export class DataService {
 	    // console.log('DataService -> constructor()');
     }
 
-	async serverDataGetAsync(pUrl, pParms?, pConvert = true) {
-		// Create proper parameters
-		// let params: URLSearchParams = new URLSearchParams();
-		let retryCounter = 0;
-		let params = new HttpParams();
-		if (pParms) {
-			// Before sending to server convert date(only not datetime) to string to have current values instead of zulu
-			this.convertDateDatesToString(pParms);
 
-			for (var key in pParms) {
-				if (!pParms.hasOwnProperty(key)) continue;
-				params = params.set(key, pParms[key]);
-			}
-		}
+	// async serverDataGetAsync(pUrl, pParms?, pConvert = true) {
+	// 	// Create proper parameters
+	// 	// let params: URLSearchParams = new URLSearchParams();
+	// 	let retryCounter = 0;
+	// 	let params = new HttpParams();
+	// 	if (pParms) {
+	// 		// Before sending to server convert date(only not datetime) to string to have current values instead of zulu
+	// 		this.convertDateDatesToString(pParms);
 
-		// return Observable.create(observer => {
-		try {
-			const data = await this.http.get(pUrl, { params: params }).toPromise();
-			if (data) {
-				//console.log('serverdataget', data);
-				// Before receiving date from server convert string to date
-				if (pConvert) this.convertStringToDate(data);
-			}
-			return data;
-		}
-		catch(err) {
-			this.toastr.error('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText);
-			this.sharedSrvc.ofHourGlass(false);
-			return null;
-		}
-		// err => {
-		// 	switch(err.status) {
-		// 		case 0:
-		// 			retryCounter ++;
-		// 			if (retryCounter < 16) {
-		// 				this.toastr.info('Reconnecting to server...');
-		// 			} else {
-		// 				this.toastr.error('Unable to connect to server using: ' + pUrl + '. Please try again');
-		// 				this.sharedSrvc.ofHourGlass(false);
-		// 				observer.complete(); // This will trigger finally()
-		// 			}
-		// 			// console.log(retryCounter);
-		// 			break;
-		// 		default:
-		// 			this.toastr.error('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText);
-		// 			this.sharedSrvc.ofHourGlass(false);
-		// 			observer.complete(); // This will trigger finally()
-		// 			break;
-		// 	}
-		// 	observer.error(err); // 2018/10/13 forward error
-		// }
-		// }).retryWhen(errors => errors.delay(500).take(15))
-	}
+	// 		for (var key in pParms) {
+	// 			if (!pParms.hasOwnProperty(key)) continue;
+	// 			params = params.set(key, pParms[key]);
+	// 		}
+	// 	}
+
+	// 	// return Observable.create(observer => {
+	// 	try {
+	// 		const data = await this.http.get(pUrl, { params: params }).toPromise();
+	// 		if (data) {
+	// 			//console.log('serverdataget', data);
+	// 			// Before receiving date from server convert string to date
+	// 			if (pConvert) this.convertStringToDate(data);
+	// 		}
+	// 		return data;
+	// 	}
+	// 	catch(err) {
+	// 		this.toastr.error('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText);
+	// 		this.sharedSrvc.ofHourGlass(false);
+	// 		return null;
+	// 	}
+	// }
 	
-	serverDataGet(pUrl, pParms?, pConvert = true) : Observable<any> {
+	serverDataGet(pUrl, pParms?, pConvertDateTime = true) : Observable<any> {
 		// Create proper parameters
 		// let params: URLSearchParams = new URLSearchParams();
 		let retryCounter = 0;
@@ -94,7 +73,8 @@ export class DataService {
 				data => {
 					//console.log('serverdataget', data);
 					// Before receiving date from server convert string to date
-					if (pConvert) this.convertStringToDate(data);
+					// if (pConvertDateTime) this.convertStringToDate(data, pConvertDateTime);
+					this.convertStringToDate(data, pConvertDateTime);
 					observer.next(data);
 					observer.complete(); // This will trigger finally()
 				},
@@ -271,7 +251,7 @@ export class DataService {
 
 	regexIso8601 = /^(\d{4})-0?(\d+)-0?(\d+)[T ]0?(\d+):0?(\d+):0?(\d+)Z?/;
 	// Convert String to Date object
-	convertStringToDate(input) {
+	convertStringToDate(input, pConvertDateTime) {
 		// Ignore things that aren't objects.
 		if (typeof input !== "object") return input;
 
@@ -282,15 +262,26 @@ export class DataService {
 			var match;
 			// Check for string properties which look like dates.
 			if (typeof value === "string" && (match = value.match(this.regexIso8601))) {
-				//console.log(value);
-				// Use 12 hr o make sure date stays the same for Non-Timestamps
-				if (value.slice(-1) !== 'Z') value = value.replace("T00", "T12");
-				if (value.slice(-1) !== 'Z') value = value.replace("T", " "); // Preserve Original DateTime When new Date() is applied otherwise converted to Z
-				input[key] = new Date(value);
-				//console.log(input[key]);
+				// console.log('before date conversion', value);
+				
+				// find out if is DateTime (Date-only will have T00)
+				if (!value.includes('T00')) {
+					if (pConvertDateTime) {
+						// Use 12 hr o make sure date stays the same for Non-Timestamps
+						// if (value.slice(-1) !== 'Z') value = value.replace("T00", "T12");
+						if (value.slice(-1) !== 'Z') value = value.replace("T", " "); // Preserve Original DateTime When new Date() is applied otherwise converted to Z
+						input[key] = new Date(value); // Date-only convert
+					}
+				}
+				else {
+					// Use 12 hr o make sure date stays the same for Non-Timestamps
+					if (value.slice(-1) !== 'Z') value = value.replace("T00", " 12");
+					input[key] = new Date(value); // Date-only convert
+				}
+				// console.log('after date conversion', input[key]);
 			} else if (typeof value === "object") {
 				// Recurse into object
-				this.convertStringToDate(value);
+				this.convertStringToDate(value, pConvertDateTime);
 			}
 		}
 	}

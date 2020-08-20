@@ -1,0 +1,20 @@
+<div Layout="column" class="widget-grid panel-nobox" [style.height.px]="wH">
+    <as-split direction="vertical" (dragEnd)="gridRepaint()">
+        <as-split-area size="50" fxLayout="column">
+            <pcdrBuilder #bar01>
+                <span class="lmargin">Date:</span>
+                <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
+            </pcdrBuilder>
+            
+            <wj-flex-grid #cdmGrid01 (selectionChanged)='wjH.onGridSelectionChanged(cdmGrid01, $event)' fxFlex></wj-flex-grid>
+        </as-split-area>
+        <as-split-area size="50" fxLayout="column">
+            <pcdrBuilder #bar02></pcdrBuilder>
+            <wj-flex-grid #cdmGrid02 fxFlex
+                (keydown)='wjH.onGridKeyPress(cdmGrid02, $event)' 
+                (gotFocus)='wjH.onGridGotFocus(cdmGrid02, $event)'
+                (selectionChanged)='wjH.onGridSelectionChanged(cdmGrid02, $event)'>
+            </wj-flex-grid>
+        </as-split-area>
+    </as-split>
+</div>

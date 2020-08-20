@@ -72,6 +72,7 @@ import { salesordersrpt } from './ar/reports/salesordersrpt/salesordersrpt';
 import { soreopeninvoice } from './ar/soreopeninvoice/soreopeninvoice';
 import { cashregistersales } from './ar/reports/cashregistersales/cashregistersales';
 import { soProperties } from './ar/components/soproperties';
+import { crdrawersmaint } from './ar/crdrawersmaint/crdrawersmaint';
 
 //AP
 import { PoentryComponent } from './ap/poentry/poentry.component';
@@ -163,7 +164,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     itemsalesrpt,
     companymaint,
     itemreassign,
-    pricecheckmain
+    pricecheckmain,
+    crdrawersmaint
   ],
   imports: [
     BrowserModule,
@@ -252,7 +254,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     itemsalesrpt,
     companymaint,
     itemreassign,
-    pricecheckmain
+    pricecheckmain,
+    crdrawersmaint
   ],
   bootstrap: [AppComponent]
 })

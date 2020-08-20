@@ -2,6 +2,7 @@ import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Injec
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../services/data.service';
 import { CompanyService } from '../../services/company.service';
+import { SharedService } from '../../services/shared.service';
 import { wjHelperService } from '../../services/wjHelper.service';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjcCore from '@grapecity/wijmo';
@@ -21,7 +22,7 @@ export class pricecheckmain implements AfterViewInit {
     fileuploadinfo = {progress: 0, message: ''}
     gH01:number;
 
-    constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public wjH: wjHelperService, public toastr: ToastrService) {
+    constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public wjH: wjHelperService, public toastr: ToastrService, public sharedSrvc: SharedService) {
         // Wijmo License
         wjcCore.setLicenseKey("104.254.244.129,934896988983683#B0jUzHMpNnTNN4TQJ6TZdnWylWZwgnd5x4MJ5Wclh6QvE7cFtkVNl6SDVzatxGcSdVUQpHT7YDeoRkULVWap3EVOlUawlXaG5mMZx6d4AjQkl7dsNWT4cXRsNGOWNXVQZ7Q9YmWD5meNN7VIpWQNtWawE7QwgVclZFVWV7brEjYqZTQz3yUFplSup6K7MHTXJ7TDpUaWVzQwFlR59WdxEVaTJ6VrgXZshWY8ZnMWZVM73WQKhWczMURWtUY9VkVCV5MSlzQKJ6ZFFTR5I5Qa9Ecmd6NGp6QZNUe5MlUmN7KXtScQtWRo5Wdw26VTd6YEZmQiVVSw2kI0IyUiwiI4YDNDFUQDdjI0ICSiwiN7IjNzQzN8cTM0IicfJye&Qf35VfiMzQwIkI0IyQiwiIlJ7bDBybtpWaXJiOi8kI1tlOiQmcQJCLiITM6ADMxAiMxgDMwIDMyIiOiQncDJCLikjMx8CN4IjL4UjMuQDMxIiOiMXbEJCLi46bj9CdodWayVmbvR6YwBkbpJXYsFmYiojIh94QiwiIzgjNzgTO8gTO6kDO4MTOiojIklkIs4nIyYHMyAjMiojIyVmdiwSZzxWYmpjIyNHZisnOiwmbBJye0ICRiwiI34zdrwEVrlEZ8AzUUxWQEVVa6AVdQhEZWxEd4IjYwFlcxVGdvhjWSV5VxsSbDhncChle5FVbjJ6LFZUbNpXZWN5bvJURFJHZLRXeXRFUq9mW6YlZ9cnRvA7RlVUSSBDLVAE");
 
@@ -58,6 +59,14 @@ export class pricecheckmain implements AfterViewInit {
             this.fitem = ''; // Clear value
             this.focusToScan();
         });
+    }
+
+    prevrow() {
+        this.wjH.gridSelectPrevRow(this.itemsGrid);
+    }
+    
+    nextrow() {
+        this.wjH.gridSelectNextRow(this.itemsGrid);
     }
 
     setImage(row) {
@@ -114,7 +123,7 @@ export class pricecheckmain implements AfterViewInit {
     // Resize gridlist to fill window
     onResize(event) {
         setTimeout(() => {
-            this.gH01 = window.innerHeight - (170 + 170);
+            this.gH01 = window.innerHeight - (170 + 370);
         }, 100);
     };
 
