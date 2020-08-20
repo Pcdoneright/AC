@@ -1,6 +1,6 @@
 <!--<nav class="navbar navbar-toggleable-md navbar-light Xbg-faded bg-primary navbar-inverse" Xstyle="background-color: #e3f2fd;">-->
 <nav class="navbar navbar-expand-md mbg-primary" fxLayout="row">    
-    <i class="fa fa-navicon" style="cursor:pointer" (click)="onSideNavToggle()"></i>
+    <i class="fa fa-bars" style="cursor:pointer" (click)="onSideNavToggle()"></i>
     <span class="text-nowrap lmargin">{{sharedSrvc.companyName}} {{sharedSrvc.companyVersion}}</span>
     <div fxFlex="fxFill" fxLayoutAlign="center center" >
         <span class="text-nowrap" *ngIf="tabs.length > 0">{{tabs[selectedIndex].title}}</span>

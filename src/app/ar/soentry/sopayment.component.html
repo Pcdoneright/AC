@@ -11,7 +11,7 @@
         <!-- Payment Types -->
         <div fxLayout="column">
             <button type="button" class="btn btn-primary" *ngFor="let payment of paymentTypes | orderBy: 'forder'" style="margin: 0 10px 10px 10px" (click)="addPayment(payment)">
-                <i ngClass="fa fa-{{payment.fopt1}}"></i>
+                <i ngClass="fab fa-{{payment.fopt1}}"></i>
                 {{payment.fdescription}}
             </button>
         </div>
