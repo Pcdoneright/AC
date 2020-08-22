@@ -26,7 +26,7 @@ export class itemsalesrpt implements OnDestroy {
     ngOnInit() {
         this.bar01.setNavProperties(this, {
             buttons: [
-                {name: 'Report', icon: 'print', style: 'primary', tooltip: 'Generate Report', action: 'print'}
+                {name: 'Report', icon: 'fa fa-print', style: 'primary', tooltip: 'Generate Report', action: 'print'}
             ]
         })
     }

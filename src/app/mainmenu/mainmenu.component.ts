@@ -126,6 +126,13 @@ export class MainMenuComponent implements OnInit {
     addTab(submenu) {
         this.onSideNavToggle() // Close Side Menu after selection
 
+        // Route to stand-alone screen
+        if (submenu.fwindow) {
+            console.log('submenu', submenu);
+            this.router.navigateByUrl('/' + submenu.fwindow);
+            return; // Does not get this far
+        }
+
         // If found select it
         for (var j = 0; j < this.tabs.length; j++) {
             if (submenu.id == this.tabs[j].id) {
@@ -175,7 +182,8 @@ export class MainMenuComponent implements OnInit {
                 prog: pMenu[i].text,
                 id: pMenu[i].id,
                 fadmin: pMenu[i].fadmin,
-                fupdate: pMenu[i].fupdate
+                fupdate: pMenu[i].fupdate,
+                fwindow: pMenu[i].fwindow
             });
             mPrevGroup = pMenu[i].groupname;
         }

@@ -134,7 +134,7 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
             title: 'Order List', 
             buttons: [
                 {name: 'Edit Selected', style: 'success', action: 'listSOGridEdit'},
-                {name: '', style: 'secondary', icon: 'file-excel-o', action: 'exportToXcel'}
+                {name: '', style: 'secondary', icon: 'fas fa-file-excel', tooltip: 'Export List To Excel', action: 'exportToXcel'}
             ],
             rows: {grid: 'listSOGrid'}
         })
@@ -143,11 +143,11 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
             title: 'Properties', 
             buttons: [
                 {name: 'Save', style: 'primary', action: 'update', val: null},
-                {name: ' Payments', style: 'warning', icon: 'money', action: 'payment'},
+                {name: ' Payments', style: 'warning', icon: 'fa fa-money', action: 'payment'},
                 {name: 'Invoice', style: 'success', action: 'complete', val: true},
                 {name: 'Void', show: this.fadmin, style: 'danger', action: 'voidSO'},
-                {name: ' Packing', style: 'light', icon: 'print', action: 'printSO', val: 'P'},
-                {name: ' Receipt', style: 'light', icon: 'print', action: 'printSO', val: 'I'}
+                {name: ' Packing', style: 'light', icon: 'fa fa-print', action: 'printSO', val: 'P'},
+                {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printSO', val: 'I'}
             ],
             validEntry: true,
             navButtons: [
@@ -160,13 +160,13 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
         this.bar04.setNavProperties(this, {
             title: 'Details', 
             buttons: [
-                {name: ' Add', style: 'success', icon: 'plus', action: 'salesdetailsAdd'},
-                {name: ' Remove', style: 'danger', icon: 'plus', action: 'salesdetailsRemove'},
-                {name: ' Add From Favorites', style: 'light', icon: 'star', action: 'addCustomerItems', tooltip:"Customer's Favorites List"},
+                {name: ' Add', style: 'success', icon: 'fa fa-plus', action: 'salesdetailsAdd'},
+                {name: ' Remove', style: 'danger', icon: 'fa fa-plus', action: 'salesdetailsRemove'},
+                {name: ' Add From Favorites', style: 'light', icon: 'fa fa-star', action: 'addCustomerItems', tooltip:"Customer's Favorites List"},
                 {name: 'Item Options', style: 'light', action: 'itemOptions', tooltip: "View Selected Item Alternatives"},
                 {name: 'History', style: 'light', action: 'viewHistory', tooltip: "View Selected Item History"},
-                {name: ' Save To Favorites', style: 'primary', icon: 'star', action: 'saveFavorites', tooltip: "Save Items to Customer's Favorites with current Price"},
-                {name: '  Item Maintenance', show: this.fadmin, style: 'secondary', icon: 'gear', action: 'editItemmaint', tooltip: "Open Item Maintenance for selected Item"}
+                {name: ' Save To Favorites', style: 'primary', icon: 'fa fa-star', action: 'saveFavorites', tooltip: "Save Items to Customer's Favorites with current Price"},
+                {name: '  Item Maintenance', show: this.fadmin, style: 'secondary', icon: 'fa fa-gear', action: 'editItemmaint', tooltip: "Open Item Maintenance for selected Item"}
             ],
             rows: {grid: 'salesdetailsGrid'}
         })

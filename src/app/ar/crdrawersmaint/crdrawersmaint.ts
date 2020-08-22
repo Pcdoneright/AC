@@ -41,7 +41,7 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
             title: 'Cash Drawer', 
             buttons: [
                 {name: 'Save', style: 'primary', action: 'update'},
-                {name: ' Refresh', style: 'success', icon: 'sync', action: 'refresh'}
+                {name: ' Refresh', style: 'success', icon: 'fa fa-sync', action: 'refresh'}
             ],
             rows: {grid: 'cdmGrid01'}, 
         })

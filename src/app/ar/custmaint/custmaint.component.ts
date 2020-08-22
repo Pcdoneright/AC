@@ -125,7 +125,7 @@ export class CustmaintComponent implements AfterViewInit {
             title: 'Customer List', 
             buttons: [
                 {name: 'Edit Customer', style: 'success', tooltip: 'Selected', action: 'listGridDoubleClick', val: null},
-                {name: '', style: 'secondary', icon: 'file-excel-o', action: 'exportToXcel', val: null}
+                {name: '', style: 'secondary', icon: 'fas fa-file-excel', tooltip: 'Export List To Excel', action: 'exportToXcel', val: null}
             ],
             rows: {grid: 'custmg01'}, 
             navButtons: [
@@ -138,7 +138,7 @@ export class CustmaintComponent implements AfterViewInit {
             buttons: [
                 {name: 'Save', style: 'primary', action: 'update', val: null},
                 {name: 'New Customer', style: 'success', action: 'newCustomer'},
-                {name: 'Favorites', style: 'light', icon: 'print', action: 'printPL'}
+                {name: 'Favorites', style: 'light', icon: 'fa fa-print', action: 'printPL'}
             ],
             validEntry: true,
             navButtons: [
@@ -152,8 +152,8 @@ export class CustmaintComponent implements AfterViewInit {
         this.bar03.setNavProperties(this, {
             title: 'Favorite Items', 
             buttons: [
-                {name: 'Add', style: 'success', icon: 'plus', action: 'favoritesAdd', val: null},
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'favoritesRemove', val: null}
+                {name: 'Add', style: 'success', icon: 'fa fa-plus', action: 'favoritesAdd', val: null},
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'favoritesRemove', val: null}
             ],
             rows: {grid: 'gcustomeritems'}
         })
@@ -161,8 +161,8 @@ export class CustmaintComponent implements AfterViewInit {
         this.bar04.setNavProperties(this, {
             title: 'Contacts', 
             buttons: [
-                {name: 'Add', style: 'success', icon: 'plus', action: 'contactsAdd', val: null},
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'contactsRemove', val: null}
+                {name: 'Add', style: 'success', icon: 'fa fa-plus', action: 'contactsAdd', val: null},
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'contactsRemove', val: null}
             ],
             rows: {grid: 'gcustomercontacts'},
             navButtons: [
@@ -174,8 +174,8 @@ export class CustmaintComponent implements AfterViewInit {
         this.bar05.setNavProperties(this, {
             title: 'Bill To', 
             buttons: [
-                {name: 'Add', style: 'success', icon: 'plus', action: 'billtosAdd', val: null},
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'billtosRemove', val: null}
+                {name: 'Add', style: 'success', icon: 'fa fa-plus', action: 'billtosAdd', val: null},
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'billtosRemove', val: null}
             ],
             rows: {grid: 'gcustomerbilltos'},
             subnavbar: false
@@ -184,8 +184,8 @@ export class CustmaintComponent implements AfterViewInit {
         this.bar06.setNavProperties(this, {
             title: 'Ship To', 
             buttons: [
-                {name: 'Add', style: 'success', icon: 'plus', action: 'shiptosAdd'},
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'shiptosRemove'},
+                {name: 'Add', style: 'success', icon: 'fa fa-plus', action: 'shiptosAdd'},
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'shiptosRemove'},
                 {name: 'Copy From BILL-TO', style: 'light', action: 'copyBilltos'}
             ],
             rows: {grid: 'gcustomershiptos'},

@@ -93,7 +93,7 @@ export class VendormaintComponent implements AfterViewInit {
             title: 'Vendor List', 
             buttons: [
                 {name: 'Edit Vendor', style: 'success', tooltip: 'Selected', action: 'listGridDoubleClick', val: null},
-                {name: '', style: 'secondary', icon: 'file-excel-o', action: 'exportToXcel', val: null}
+                {name: '', style: 'secondary', icon: 'fas fa-file-excel', tooltip: 'Export List To Excel', action: 'exportToXcel', val: null}
             ],
             rows: {grid: 'gvendmg01'}, 
             navButtons: [
@@ -106,7 +106,7 @@ export class VendormaintComponent implements AfterViewInit {
             buttons: [
                 {name: 'Save', style: 'primary', action: 'update', val: null},
                 {name: 'New Vendor', style: 'success', action: 'newVendor'},
-                {name: 'Price List', style: 'light', icon: 'print', action: 'printPL'}
+                {name: 'Price List', style: 'light', icon: 'fa fa-print', action: 'printPL'}
             ],
             validEntry: true,
             navButtons: [
@@ -120,7 +120,7 @@ export class VendormaintComponent implements AfterViewInit {
         this.bar03.setNavProperties(this, {
             title: 'Items', 
             buttons: [
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'itemvendorsRemove', val: null}
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'itemvendorsRemove', val: null}
             ],
             rows: {grid: 'gvendomeritems'},
             subnavbar: false
@@ -129,8 +129,8 @@ export class VendormaintComponent implements AfterViewInit {
         this.bar04.setNavProperties(this, {
             title: 'Contacts', 
             buttons: [
-                {name: 'Add', style: 'success', icon: 'plus', action: 'contactsAdd', val: null},
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'contactsRemove', val: null}
+                {name: 'Add', style: 'success', icon: 'fa fa-plus', action: 'contactsAdd', val: null},
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'contactsRemove', val: null}
             ],
             rows: {grid: 'gvendomercontacts'},
             navButtons: [

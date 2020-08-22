@@ -14,6 +14,7 @@ export class KeyPadComponent {
     @Input() keypadAppend: boolean = true;
     @Output() keypadValueChange = new EventEmitter<string>();
     @Output() keypadEnter = new EventEmitter();
+    firstInput = true;
 
     pinEntry(input) {
         switch (input) {
@@ -32,6 +33,11 @@ export class KeyPadComponent {
                 break;
             // Actual Value
             default:
+                if (this.firstInput) {
+                    this.keypadValue = '';
+                    this.firstInput = false;
+                }
+
                 if (this.keypadAppend) {
                     this.keypadValue = (this.keypadValue) ? this.keypadValue.toString() + input : input;
                 }
@@ -39,6 +45,8 @@ export class KeyPadComponent {
                     this.keypadValue = input;
                 }
         }
+        console.log('this.keypadAppend', this.keypadAppend);
+        console.log('this.keypadValue', this.keypadValue);
         // Notify parent
         this.keypadValueChange.emit(this.keypadValue);
     }

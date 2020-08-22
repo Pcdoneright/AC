@@ -195,11 +195,10 @@ export class CompanyService {
 
         if (request.status == 200) {
             //file exists
-            setTimeout(() => {
+            // setTimeout(() => {
                 this.ofHourGlass(false);
                 window.open(pUrl);
-            }, 2000); // Delay 2 sec due to ng router redirecting
-            //$timeout(function () {window.open(pUrl);}, 1000); // Wait 1 second before opening to allow pb to save the file
+            // }, 6000); // Delay 2 sec due to ng router redirecting
         } else {
             // call every 3 second
             setTimeout(() => {this.ofOpenServerFile(pUrl);}, 3000);

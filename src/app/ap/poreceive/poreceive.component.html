@@ -1,5 +1,14 @@
 <div [hidden]="selectedTab != 0" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
-    <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+    <pcdrBuilder #bar01>
+        <span class="lmargin">Location:</span>
+        <select [(ngModel)]="fshipto" class="form-control lmargin" style="width: 350px;">
+            <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                {{opt.fname}}
+            </option>
+        </select>
+        <button type="button" class="btn btn-primary" (click)="listPOGridRefresh()"><i class="fa fa-search"></i> Search</button>
+    </pcdrBuilder>
+    <!-- <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
         <span class="text-nowrap">Purchase Order List</span>
         <button type="button" class="btn btn-success lmargin" (click)="listPOGridEdit()">Edit Selected</button>
         <div fxFlex="flex"></div>
@@ -14,12 +23,13 @@
             </option>
         </select>
         <button type="button" class="btn btn-primary" (click)="listPOGridRefresh()"><i class="fa fa-search"></i> Search</button>
-    </div>
+    </div> -->
     <wj-flex-grid #listPOGrid fxFlex></wj-flex-grid>
 </div>
 
 <div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
-        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+    <pcdrBuilder #bar02></pcdrBuilder>    
+    <!-- <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
             <span class="text-nowrap">Properties</span>
             <button type="button" class="btn btn-primary" (click)="update()" >Complete</button>
             <button type="button" class="btn btn-light" (click)="printPO()"><i class="fa fa-print"></i> Receipt</button>
@@ -33,7 +43,7 @@
             <input type="text" class="form-control lmargin" placeholder="PO Number" style="width: 150px" [(ngModel)]="searchId" (blur)='searchPONumber()'>
             <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
             <span fxflex="flex" *ngIf="!validEntry()" class="alert-danger text-nowrap" style="padding: 10px">NO CHANGES CAN BE SAVED</span>
-        </div>
+        </div> -->
         <div fxLayout="row">
             <!-- Form -->
             <form fxFlex>
@@ -107,15 +117,19 @@
             </div>
         </div>
     
-        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
+        <pcdrBuilder #bar03>
+            <input type="text" class="form-control lmargin" placeholder="Scan Item To Receive" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+        </pcdrBuilder>
+        <!-- <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
             <span class="text-nowrap">Details</span>
             <div fxFlex="flex"></div>
             <span class="text-nowrap">Rows: {{wjH.rowCount(purchasedetailsGrid)}}</span>
         </nav>
         <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
             <input type="text" class="form-control lmargin" placeholder="Scan Item To Receive" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
-            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
-        </div>
+            <a href="javascrip:;"></a> 
+        </div> -->
         <wj-flex-grid #purchasedetailsGrid fxFlex
             (keydown)='wjH.onGridKeyPress(purchasedetailsGrid, $event)' 
             (gotFocus)='wjH.onGridGotFocus(purchasedetailsGrid, $event)'

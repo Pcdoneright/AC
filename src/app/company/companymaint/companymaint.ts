@@ -54,8 +54,8 @@ export class companymaint implements AfterViewInit {
         this.bar02.setNavProperties(this, {
             title: 'Locations', 
             buttons: [
-                {name: 'Add', style: 'success', icon: 'plus', action: 'locationAdd', val: null},
-                {name: 'Remove', style: 'danger', icon: 'minus', action: 'locationRemove', val: null}
+                {name: 'Add', style: 'success', icon: 'fa fa-plus', action: 'locationAdd', val: null},
+                {name: 'Remove', style: 'danger', icon: 'fa fa-minus', action: 'locationRemove', val: null}
             ],
             navButtons: [
                 {name: 'Properties', action: 'selectedTab', val: 0},

@@ -96,7 +96,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             title: 'Properties', 
             buttons: [
                 {name: 'New Order', style: 'success', action: 'newSO'},
-                {name: ' Receipt', style: 'light', icon: 'print', action: 'printSO', val: false},
+                {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printSO', val: false},
                 {name: 'Drawer', style: 'light', tooltip: 'Open Drawer', action: 'openDrawer'},
                 {name: 'Set Pending', style: 'primary', action: 'setToPending'},
                 {name: 'Void', style: 'danger', action: 'setToVoid'},
@@ -246,7 +246,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         // Prompt if drawer amt exceeds
         if (this.totalDrawer >= this.fcrdraweramt && this.totalDrawer > 0) {
             this.openDrawer(); // Allow to take money out
-            this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
+            // this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
+            this.CompanySvc.inputDialog('Amount To Deposit', '', 'Max Deposit $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
                 this.cashDrawerOverride(this.CompanySvc.validNumber(ret, 2));
             });
         }
@@ -275,7 +276,6 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     }
 
     inputDialogAmount(val) {
-        console.log(val)
         let amt = this.CompanySvc.validNumber(val, 2);
         if (!amt) {
             this.toastr.warning('Invalid Amount!');
@@ -434,6 +434,9 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                     this.DataSvc.serverDataGet('api/CompanyMaint/GetValidatePOSOverride', { pfposoverride: value }).subscribe((dataResponse) => {
                         if (dataResponse.validate) {
                             observer.next(dataResponse);
+                        }
+                        else {
+                            this.toastr.warning('Invalid Admin Code!');
                         }
                     });
                 }

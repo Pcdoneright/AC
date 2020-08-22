@@ -2,7 +2,8 @@
     <span class="text-nowrap">{{navProperties.title}}</span>
     <!-- buttons -->
     <ng-container *ngFor='let button of navProperties.buttons'>
-        <button *ngIf=button.show type="button" class="btn btn-{{button.style}}" [ngClass]="{lmargin: index > 0}" matTooltip="{{button.tooltip}}" (click)="parent.onClickNav(button)" ><i class="fa fa-{{button.icon}}"></i> {{button.name}}</button>
+        <!-- <button *ngIf=button.show type="button" class="btn btn-{{button.style}}" [ngClass]="{lmargin: index > 0}" matTooltip="{{button.tooltip}}" (click)="parent.onClickNav(button)" ><i class="fa fa-{{button.icon}}"></i> {{button.name}}</button> -->
+        <button *ngIf=button.show type="button" class="btn btn-{{button.style}}" [ngClass]="{lmargin: index > 0}" matTooltip="{{button.tooltip}}" (click)="parent.onClickNav(button)" ><i class="{{button.icon}}"></i> {{button.name}}</button>
     </ng-container>
     <!-- spans -->
     <ng-container *ngFor='let span of navProperties.spans'>

@@ -236,8 +236,11 @@ export class soentrybaseClass {
             this.toastr.info('Only OPEN orders can be modified.');
             return;
         }
+        
+        console.log('this.orderOrigin', this.orderOrigin);
         // POS screens can only modified 'S' open orders
-        if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'POS' || this.orderOrigin === 'SMI')) {
+        // if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'POS' || this.orderOrigin === 'SMI')) {
+        if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'SO' || this.orderOrigin === 'SMI')) {
             this.toastr.info('Only OPEN orders can be modified.');
             return;
         }
@@ -366,10 +369,12 @@ export class soentrybaseClass {
         
         if (this.salesorders.items[0].fdocnumber === -1) return; // Only existing orders
 
-        if (this.salesorders.items[0].fstatus !== 'S') {
-            this.toastr.info('Only OPEN orders can be void.');
-            return;
-        }
+        // if (!voidInvoices) {
+        //     if (this.salesorders.items[0].fstatus !== 'S') {
+        //         this.toastr.info('Only OPEN orders can be void.');
+        //         return;
+        //     }
+        // }
 
         this.CompanySvc.confirm('Void this Sales Order?').subscribe(
             response => {

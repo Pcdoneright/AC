@@ -23,7 +23,7 @@ export class itemreassign implements OnDestroy {
     ngOnInit() {
         this.bar01.setNavProperties(this, {
             buttons: [
-                {name: ' Process', icon: 'cog', style: 'primary', tooltip: 'Execute Task', action: 'print'}
+                {name: ' Process', icon: 'fa fa-cog', style: 'primary', tooltip: 'Execute Task', action: 'print'}
             ],
             // subnavbar: false
         })

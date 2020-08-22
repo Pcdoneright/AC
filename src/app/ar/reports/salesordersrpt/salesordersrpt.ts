@@ -34,7 +34,7 @@ export class salesordersrpt implements OnDestroy, AfterViewInit {
         this.bar01.setNavProperties(this, {
             // title: 'Customer Selection', 
             buttons: [
-                {name: 'Report', icon: 'print', style: 'primary', tooltip: 'Generate Report', action: 'print', val: null}
+                {name: 'Report', icon: 'fa fa-print', style: 'primary', tooltip: 'Generate Report', action: 'print', val: null}
             ],
             subnavbar: false
         })

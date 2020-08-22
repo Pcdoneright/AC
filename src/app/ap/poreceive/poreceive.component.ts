@@ -9,6 +9,7 @@ import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjGrid from "@grapecity/wijmo.grid";
 import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
+import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 
 @Component({
     selector: 'poreceive',
@@ -16,6 +17,12 @@ import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
     providers: [DataEntryService],
 })
 export class PoreceiveComponent implements OnDestroy, AfterViewInit {
+    @ViewChild('bar01', {static: true}) bar01: pcdrBuilderComponent;
+    @ViewChild('bar02', {static: true}) bar02: pcdrBuilderComponent;
+    @ViewChild('bar03', {static: true}) bar03: pcdrBuilderComponent;
+    @ViewChild('purchasedetailsGrid', {static: true}) purchasedetailsGrid: WjFlexGrid;
+    @ViewChild('listPOGrid', {static: true}) listPOGrid: WjFlexGrid;
+    @ViewChild('fitemE') fitemE: ElementRef;
     tH01:number;
     showMoreEdit = false;
     poCurrent: any = {};
@@ -28,9 +35,6 @@ export class PoreceiveComponent implements OnDestroy, AfterViewInit {
     purchaseorders:DataStore;
     purchasedetails:DataStore;
     companylocations: any[];
-    @ViewChild('fitemE') fitemE: ElementRef;
-    @ViewChild('listPOGrid') listPOGrid: WjFlexGrid;
-    @ViewChild('purchasedetailsGrid') purchasedetailsGrid: WjFlexGrid;
     
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public dESrvc: DataEntryService, 
         private toastr: ToastrService, public sharedSrvc: SharedService, private $filter: PcdrFilterPipe, 
@@ -59,6 +63,87 @@ export class PoreceiveComponent implements OnDestroy, AfterViewInit {
             this.orderstatus = this.$filter.transform(dataResponse, {fgroupid: 'POS'}, true);
             this.orderstatus.unshift({fid: 'A', fdescription: 'All'}); // Add All
         });
+    }
+
+    ngOnInit() {
+        this.bar01.setNavProperties(this, {
+            title: 'Purchase Order List', 
+            buttons: [
+                {name: 'Edit Selected', style: 'success', tooltip: 'Selected', action: 'listPOGridEdit'}
+            ],
+            rows: {grid: 'listPOGrid'}, 
+            navButtons: [
+                {name: 'Entry', action: 'selectedTab', val: 1}
+            ]
+        })
+
+        this.bar02.setNavProperties(this, {
+            title: 'PO Properties', 
+            buttons: [
+                {name: 'Complete', style: 'success', action: 'update'},
+                {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printPO'}
+            ],
+            validEntry: true,
+            navButtons: [
+                {name: 'List', action: 'selectedTab', val: 0},
+            ],
+            chevron: {action: 'editMore', show: 'showMoreEdit'},
+            search: {action: 'searchPONumber', ngModel: 'searchId', placeholder: 'PO Number', }
+        })
+
+        this.bar03.setNavProperties(this, {
+            title: 'Details', 
+            buttons: [
+                {name: 'Change Qty', style: 'primary', action: 'editQty'}
+            ],
+            rows: {grid: 'purchasedetailsGrid'}
+        })
+    }
+
+    // barXX Events
+    onClickNav(parm) {
+        switch(parm.action) {
+            case 'selectedTab':
+                this.selectedTab = parm.val;
+                if (this.selectedTab == 2) {
+                    this.onResize(null);
+                    this.gridRepaint();
+                }
+                break;
+            case 'editMore':
+                this.showMoreEdit = !this.showMoreEdit;
+                this.onResize(null);
+                this.gridRepaint();
+                break;                
+            default:
+                this[parm.action](parm.val);
+                break;
+        }
+    }
+
+    editQty() {
+        if (!this.validEntry()) { this.focusToScan(); return };
+        var row = this.wjH.getGridSelectecRow(this.purchasedetailsGrid);
+        if (!row) { this.focusToScan(); return }; // No selected row
+
+        this.CompanySvc.inputDialog('Qty', row['freceivedqty'], 'Receving Quantity', 'Continue', 'Cancel', false, true, false, 'inputDialogQty', this).subscribe(() => {
+            this.focusToScan();
+        });
+    }
+    
+    inputDialogQty(val) {
+        let amt = this.CompanySvc.validNumber(val); // Will make it at least 0
+        console.log('amt', amt);
+        if (amt < 0) {
+            this.toastr.warning('Quantity cannot be negative!');
+            return false
+        }
+
+        var row = this.wjH.getGridSelectecRow(this.purchasedetailsGrid);
+        row.freceivedqty = amt;
+        this.purchasedetailsComputed(row, row.freceivedqty);
+        this.purchasedetailsGrid.refresh(false);
+        return true;
     }
 
     ngOnDestroy() {
@@ -178,7 +263,7 @@ export class PoreceiveComponent implements OnDestroy, AfterViewInit {
     fitemOnChange() {
         if (!this.validEntry()) return;
         if (!this.fitem) return;
-        if (this.fitem.length < 3) return false;
+        // if (this.fitem.length < 3) return false;
 
         var row = this.$filter.transform(this.purchasedetails.items, {fitem: this.fitem}, true);
         if (row.length == 0) {row = this.$filter.transform(this.purchasedetails.items, {fvitem: this.fitem}, true)}
@@ -256,28 +341,29 @@ export class PoreceiveComponent implements OnDestroy, AfterViewInit {
 
         // wj-flex-grid
         this.purchasedetailsGrid.initialize({
-            cellEditEnding: (s, e) => {
-                var col = s.columns[e.col];
-                var rec = s.rows[e.row].dataItem;
-                if (s.activeEditor.value == rec[col.binding]) return; // Only if changes
+            isReadOnly: true,
+            // cellEditEnding: (s, e) => {
+            //     var col = s.columns[e.col];
+            //     var rec = s.rows[e.row].dataItem;
+            //     if (s.activeEditor.value == rec[col.binding]) return; // Only if changes
 
-                switch (col.binding) {
-                    case 'freceivedqty':
-                        var newval = this.CompanySvc.validNumber(s.activeEditor.value, 2); // Convert to number
-                        if (newval != rec[col.binding]) {
-                            rec[col.binding] = newval;
-                            this.purchasedetailsComputed(rec, rec.freceivedqty);
-                        }
-                        break;
-                }
-            },
+            //     switch (col.binding) {
+            //         case 'freceivedqty':
+            //             var newval = this.CompanySvc.validNumber(s.activeEditor.value, 2); // Convert to number
+            //             if (newval != rec[col.binding]) {
+            //                 rec[col.binding] = newval;
+            //                 this.purchasedetailsComputed(rec, rec.freceivedqty);
+            //             }
+            //             break;
+            //     }
+            // },
             columns: [
-                { binding: "fitem", header: "Item Number", width: 200, isReadOnly: true},
-                { binding: "fvitem", header: "Vendor Item", width: 200, isReadOnly: true},
-                { binding: "fdescription", header: "Description", width: '*', minWidth: 100, isReadOnly: true},
-                { binding: "fqty", header: "Qty", width: 80, aggregate: 'Sum', isReadOnly: true},
+                { binding: "fitem", header: "Item Number", width: 200},
+                { binding: "fvitem", header: "Vendor Item", width: 200},
+                { binding: "fdescription", header: "Description", width: '*', minWidth: 100},
+                { binding: "fqty", header: "Qty", width: 80, aggregate: 'Sum'},
                 { binding: "freceivedqty", header: "Received", width: 80, aggregate: 'Sum' },
-                { binding: "cweight", header: "Weight", width: 100, aggregate: 'Sum', align: "right", isReadOnly: true },
+                { binding: "cweight", header: "Weight", width: 100, aggregate: 'Sum', align: "right"},
                 { binding: "fexpirationdate", header: "Exp Date", format: 'MM/dd/yyyy', width: 130 },
                 { binding: "floc1", header: "Aisle", width: 80},
                 { binding: "floc1", header: "Row", width: 80},
