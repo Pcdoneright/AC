@@ -161,7 +161,7 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
             title: 'Details', 
             buttons: [
                 {name: ' Add', style: 'success', icon: 'fa fa-plus', action: 'salesdetailsAdd'},
-                {name: ' Remove', style: 'danger', icon: 'fa fa-plus', action: 'salesdetailsRemove'},
+                {name: ' Remove', style: 'danger', icon: 'fa fa-minus-circle', action: 'salesdetailsRemove'},
                 {name: ' Add From Favorites', style: 'light', icon: 'fa fa-star', action: 'addCustomerItems', tooltip:"Customer's Favorites List"},
                 {name: 'Item Options', style: 'light', action: 'itemOptions', tooltip: "View Selected Item Alternatives"},
                 {name: 'History', style: 'light', action: 'viewHistory', tooltip: "View Selected Item History"},

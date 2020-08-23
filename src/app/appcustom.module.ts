@@ -27,6 +27,7 @@ import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
+import { invwork } from './inventory/invwork/invwork';
 import { Injectable } from "@angular/core";
 
 @Injectable()
@@ -91,6 +92,8 @@ export class CustomModule {
                 return itemreassign;
             case 'crdrawersmaint':
                 return crdrawersmaint;
+            case 'invwork':
+                return invwork;
         }
         return '';
     }

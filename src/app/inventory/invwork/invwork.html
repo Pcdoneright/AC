@@ -1,0 +1,87 @@
+<!-- <div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01"> -->
+<div class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
+    <pcdrBuilder #bar01></pcdrBuilder>    
+        <div fxLayout="row">
+            <!-- Form -->
+            <form fxFlex>
+                <div fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Description</label>
+                        <wj-auto-complete #fnotes class="mwj-form-control form-control" [(text)]='poCurrent.fnotes' [displayMemberPath]="'fid'" [itemsSource]="fctdescriptions" (gotFocus)="wjH.inputGotFocus(fnotes)" (lostFocus)="wjH.inputLostFocus(fnotes)"></wj-auto-complete>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>Type</label>
+                        <select [(ngModel)]="poCurrent.ftype" [ngModelOptions]="{standalone: true}" class="form-control">
+                            <option *ngFor="let opt of fcttypes" [value]="opt.fid">
+                                {{opt.fdescription}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Location From</label>
+                        <select [(ngModel)]="poCurrent.flocation" [ngModelOptions]="{standalone: true}" class="form-control">
+                            <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                                {{opt.fname}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group lmargin" fxFlex="flex">
+                        <label>Location To</label>
+                        <select [(ngModel)]="poCurrent.flocationto" [ngModelOptions]="{standalone: true}" class="form-control">
+                            <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                                {{opt.fname}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <!-- <div fxLayout="row" class="rmargin">
+                    <div class="form-group" fxFlex="flex">
+                        <label>Notes</label>
+                        <input type="text" class="form-control" name="fnotes" [(ngModel)]="poCurrent.fnotes" maxlength="400">
+                    </div>
+                    <div class="form-group lmargin" fxFlex="33">
+                        <label>Last Update</label>
+                        <input type="text" class="form-control" disabled
+                            value="{{poCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{poCurrent.fusername}}"/>
+                    </div>
+                </div> -->
+                    
+            </form>
+            <!-- Totals -->
+            <div class="panel" fxLayout="column" style="width: 280px">
+                <div class="mform-control-row">
+                    <label class="col-form-label" fxFlex='40'>Number</label>
+                    <span fxFlex class="fdocnumber">{{poCurrent.fiwhid}}</span>
+                </div>
+                <div class="mform-control-row">
+                    <label class="col-form-label" fxFlex='40'>Date</label>
+                    <input fxFlex type="text" class="form-control" value="{{poCurrent.fdate | date:'MM/dd/yyyy'}}" disabled>
+                </div>
+                <div class="mform-control-row">
+                    <label class="col-form-label" fxFlex='40'>Status</label>
+                    <select fxFlex name="fstatus" [(ngModel)]="poCurrent.fstatus" [ngModelOptions]="{standalone: true}" class="form-control" disabled>
+                        <option *ngFor="let opt of orderstatus" [value]="opt.fid">
+                            {{opt.fdescription}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    
+        <pcdrBuilder #bar02>
+            <input type="text" class="form-control lmargin" placeholder="Scan Item" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+        </pcdrBuilder>
+        <div fxLayout="row" fxFlex>
+            <wj-flex-grid #invworkGrid fxFlex
+                (keydown)='wjH.onGridKeyPress(invworkGrid, $event)' 
+                (gotFocus)='wjH.onGridGotFocus(invworkGrid, $event)'
+                (selectionChanged)='wjH.onGridSelectionChanged(invworkGrid, $event)'>
+            </wj-flex-grid>
+            <div style="height:250px; width:250px; margin:5px 0 0 5px">
+                <img [src]="itemunitsImgCurrent" onError="this.src='./images/250x250.png';" style="width:100%; height:100%;">
+            </div>
+        </div>
+</div>

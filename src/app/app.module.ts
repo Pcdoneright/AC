@@ -37,6 +37,7 @@ import { MenUtillitiesComponent } from "./services/menutillities.component";
 import { ItemPriceCheck } from './inventory/itempricecheck/itempricecheck.component';
 import { pricecheckmain } from './inventory/itempricecheck/pricecheckmain';
 import { wjHelperService } from './services/wjHelper.service';
+import { appHelperService } from './services/appHelper.service';
 import { CompanyService } from './services/company.service';
 import { ConfirmDialog } from './services/confirm-dialog.component';
 import { InputDialog } from './services/dialog-input.component';
@@ -87,6 +88,7 @@ import { ItemList } from './inventory/itemlist/itemlist.component';
 import { itemmaintComponent, DialogItemNumber, ViewCustomerPricing } from './inventory/itemmaint/itemmaint.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { ItemRelatedList } from './inventory/itemlist/itemrelatedlist.component';
+import { invwork } from './inventory/invwork/invwork';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { Itemvendorcost } from './inventory/itemlist/itemvendorcost.component';
 import { Itempurchasehist } from './ap/list/itempurchasehist.component';
@@ -165,7 +167,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     companymaint,
     itemreassign,
     pricecheckmain,
-    crdrawersmaint
+    crdrawersmaint,
+    invwork
   ],
   imports: [
     BrowserModule,
@@ -198,6 +201,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     PcdrFilterPipe,
     CompanyVersion,
     wjHelperService,
+    appHelperService,
     CompanyService,
     CompanyRulesService
   ],
@@ -255,7 +259,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     companymaint,
     itemreassign,
     pricecheckmain,
-    crdrawersmaint
+    crdrawersmaint,
+    invwork
   ],
   bootstrap: [AppComponent]
 })
