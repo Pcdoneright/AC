@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../services/shared.service';
+import { CompanyService } from '../services/company.service';
 
 import { Observable } from 'rxjs/Observable';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
@@ -15,11 +16,15 @@ import { BreakPointRegistry } from '@angular/flex-layout';
 @Injectable()
 export class appHelperService {
 
-    constructor(public tstr: ToastrService, public sharedSrvc: SharedService) {}
+    constructor(private CompanySvc: CompanyService, private tstr: ToastrService, private sharedSrvc: SharedService) {}
 
     // sharedSrvc
     getUsername(): string {
         return this.sharedSrvc.user.fname;
+    }
+    
+    getUserLocation(): number {
+        return this.sharedSrvc.user.flocation;
     }
 
     toastr(message:string, type:string = 'info', title:string = '',  bottom:boolean = false) {
@@ -64,4 +69,8 @@ export class appHelperService {
         if (!val) return '';
         return val.replace(/[^0-9\.-]/g, ''); //Remove non-numeric, period or minus char
     }
+
+    ofHourGlass(value: boolean) {
+        this.CompanySvc.ofHourGlass(value);
+	}
 }

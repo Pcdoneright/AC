@@ -687,6 +687,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                     if (!row) return;
                     this.sodCurrent = row; // pointer
                     this.setImage(row);
+                    this.focusToScan();
                 }
             },
             columns: [

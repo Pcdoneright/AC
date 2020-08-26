@@ -54,6 +54,7 @@ import { CodeMaintComponent } from './company/codemaintenance/codemaint.componen
 import { ProgMaintComponent } from './company/programrightsmaint/programmaint.component';
 import { DepartmentMaintComponent } from './company/depmaint/depmaint.component';
 import { companymaint } from './company/companymaint/companymaint';
+import { usermaint } from './company/usermaint/usermaint';
 // import { PcdrDirectiveDirective } from './company/companymaint/companymaint';
 
 //AR
@@ -89,11 +90,19 @@ import { itemmaintComponent, DialogItemNumber, ViewCustomerPricing } from './inv
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { ItemRelatedList } from './inventory/itemlist/itemrelatedlist.component';
 import { invwork } from './inventory/invwork/invwork';
+import { invadjustment } from './inventory/invwork/invadjustment';
+import { invtransferout } from './inventory/invwork/invtransferout';
+import { invtransferprod } from './inventory/invwork/invtransferprod';
+import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
+import { invtransferin } from './inventory/invwork/invtransferin';
+import { invphysicalentry } from './inventory/invwork/invphysicalentry';
+import { invphysicalpost } from './inventory/invwork/invphysicalpost';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { Itemvendorcost } from './inventory/itemlist/itemvendorcost.component';
 import { Itempurchasehist } from './ap/list/itempurchasehist.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
+import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
 
 //PR
 import { TimeclockComponent } from './pr/timeclock/timeclock.component';
@@ -168,7 +177,16 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     itemreassign,
     pricecheckmain,
     crdrawersmaint,
-    invwork
+    invwork,
+    invadjustment,
+    usermaint,
+    invtransferout,
+    invtransferprod,
+    invtransfertoinv,
+    invtransferin,
+    invphysicalentry,
+    invphysicalpost,
+    invdiscrepancy
   ],
   imports: [
     BrowserModule,
@@ -224,7 +242,6 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     CustomerList,
     SoPayment,
     SOViewCustomer,
-    KeyPadComponent,
     SlminvntryComponent,
     customersalesbyitemComponent,
     SalesmenMaintComponent,
@@ -260,7 +277,15 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     itemreassign,
     pricecheckmain,
     crdrawersmaint,
-    invwork
+    invadjustment,
+    usermaint,
+    invtransferout,
+    invtransferprod,
+    invtransfertoinv,
+    invtransferin,
+    invphysicalentry,
+    invphysicalpost,
+    invdiscrepancy
   ],
   bootstrap: [AppComponent]
 })

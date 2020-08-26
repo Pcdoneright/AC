@@ -63,10 +63,12 @@ export class pricecheckmain implements AfterViewInit {
 
     prevrow() {
         this.wjH.gridSelectPrevRow(this.itemsGrid);
+        this.focusToScan();
     }
     
     nextrow() {
         this.wjH.gridSelectNextRow(this.itemsGrid);
+        this.focusToScan();
     }
 
     setImage(row) {

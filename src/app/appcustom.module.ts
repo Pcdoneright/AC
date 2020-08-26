@@ -3,6 +3,7 @@ import { CodeMaintComponent } from './company/codemaintenance/codemaint.componen
 import { ProgMaintComponent } from './company/programrightsmaint/programmaint.component';
 import { DepartmentMaintComponent } from './company/depmaint/depmaint.component';
 import { companymaint } from './company/companymaint/companymaint';
+import { usermaint } from './company/usermaint/usermaint';
 import { CustmaintComponent } from './ar/custmaint/custmaint.component';
 import { SoentryComponent } from './ar/soentry/soentry.component';
 import { SoRegisterComponent } from './ar/soentry/soregister.component';
@@ -25,9 +26,16 @@ import { EmpMaintComponent } from './pr/empmaint/empmaint.component';
 import { itemmaintComponent } from './inventory/itemmaint/itemmaint.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
+import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
-import { invwork } from './inventory/invwork/invwork';
+import { invadjustment } from './inventory/invwork/invadjustment';
+import { invtransferout } from './inventory/invwork/invtransferout';
+import { invtransferprod } from './inventory/invwork/invtransferprod';
+import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
+import { invtransferin } from './inventory/invwork/invtransferin';
+import { invphysicalentry } from './inventory/invwork/invphysicalentry';
+import { invphysicalpost } from './inventory/invwork/invphysicalpost';
 import { Injectable } from "@angular/core";
 
 @Injectable()
@@ -92,8 +100,24 @@ export class CustomModule {
                 return itemreassign;
             case 'crdrawersmaint':
                 return crdrawersmaint;
-            case 'invwork':
-                return invwork;
+            case 'invadjustment':
+                return invadjustment;
+            case 'invtransferout':
+                return invtransferout;
+            case 'invtransferprod':
+                return invtransferprod;
+            case 'invtransfertoinv':
+                return invtransfertoinv;
+            case 'invtransferin':
+                return invtransferin;
+            case 'invphysicalentry':
+                return invphysicalentry;
+            case 'invphysicalpost':
+                return invphysicalpost;
+            case 'invdiscrepancy':
+                return invdiscrepancy;
+            case 'usermaint':
+                return usermaint;
         }
         return '';
     }

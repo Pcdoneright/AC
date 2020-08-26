@@ -10,6 +10,8 @@ import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjGrid from "@grapecity/wijmo.grid";
 import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
+import { ItemList } from '../../inventory/itemlist/itemlist.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'invwork',
@@ -24,14 +26,29 @@ export class invwork implements OnDestroy, AfterViewInit {
     tH01:number;
     gH03:number;
     poCurrent: any = {};
-    fshipto: string;
+    // fshipto: number;
     fitem:string;
     searchId = '';
     orderstatus:any [];
     fcttypes:any [];
     fctdescriptions:any [];
-    // flocationfrom: number;
     itemunitsImgCurrent = '';
+    
+    // Set by each program
+    @Input() programId: string;
+    @Input() showOnhand = false;
+    @Input() showQty2 = false;
+    @Input() allowDetailRemove = false;
+    @Input() allowNewTransaction = true;
+    @Input() allowItemLookup = true;
+    @Input() allowCustomAction = false;
+    @Input() customActionButton = '';
+    @Input() customActionIcon = '';
+    allowNegativeQty = false;
+    validateTransaction = false;
+    afterRetrieveTrx = false;
+    trxType:string;
+    parent:any;
 
     invworkheaders:DataStore;
     invwork:DataStore;
@@ -39,9 +56,10 @@ export class invwork implements OnDestroy, AfterViewInit {
     
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public dESrvc: DataEntryService, 
         public sharedSrvc: SharedService, private $filter: PcdrFilterPipe, 
-        public wjH: wjHelperService, public appH: appHelperService) {
+        public wjH: wjHelperService, public appH: appHelperService,
+        public dialog: MatDialog) {
         
-        this.sharedSrvc.setProgramRights(this, 'invwork'); // sets fupdate, fadmin
+        this.sharedSrvc.setProgramRights(this, this.programId); // sets fupdate, fadmin
         window.onresize = (e) => this.onResize(e); // Capture resize event
         this.onResize(null); // Execute at start
 
@@ -56,11 +74,11 @@ export class invwork implements OnDestroy, AfterViewInit {
         DataSvc.serverDataGet('api/CompanyMaint/GetLocationsDD').subscribe((dataResponse) => {
             this.companylocations = dataResponse;
             // this.companylocations.unshift({fcmpid: 1, fcmplid: 0, fname: "All"}); // Add first item
-            this.fshipto = this.sharedSrvc.user.flocation; // Assign user location
+            // this.fshipto = this.appH.getUserLocation(); // Assign user location
         });
 
         this.dESrvc.initCodeTable().subscribe((dataResponse) => {
-            this.orderstatus = this.$filter.transform(dataResponse, {fgroupid: 'POS'}, true);
+            this.orderstatus = this.$filter.transform(dataResponse, {fgroupid: 'ITS'}, true);
             // this.orderstatus.unshift({fid: 'A', fdescription: 'All'}); // Add All
 
             this.fcttypes = this.$filter.transform(dataResponse, {fgroupid: 'ITL'}, true); //
@@ -72,7 +90,7 @@ export class invwork implements OnDestroy, AfterViewInit {
         this.bar01.setNavProperties(this, {
             title: 'Inventory Properties', 
             buttons: [
-                {name: 'New Transaction', style: 'success', action: 'createOrder'},
+                {name: 'New Transaction', style: 'success', action: 'createOrder', show: this.allowNewTransaction},
                 {name: 'Complete', style: 'primary', action: 'update'},
                 {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printPO'}
             ],
@@ -83,8 +101,10 @@ export class invwork implements OnDestroy, AfterViewInit {
         this.bar02.setNavProperties(this, {
             title: 'Details', 
             buttons: [
-                {name: ' Remove', style: 'danger', icon: 'fa fa-minus-circle', action: 'detailsRemove'},
-                {name: 'Change Qty', style: 'primary', action: 'editQty'}
+                {name: ' Remove', style: 'danger', icon: 'fa fa-minus-circle', action: 'detailsRemove', show: this.allowDetailRemove},
+                {name: ' Find Item', style: 'success', icon: 'fa fa-search', action: 'lookupItem', show: this.allowItemLookup},
+                {name: 'Change Qty', style: 'primary', action: 'editQty'},
+                {name: this.customActionButton, style: 'light', icon: this.customActionIcon, action: 'allowCustomAction', show: this.allowCustomAction},
             ],
             // spans: [
             //     {text:'Items:', property:'invwork.items.length', style:'margin-left:35px'}
@@ -96,18 +116,9 @@ export class invwork implements OnDestroy, AfterViewInit {
     // barXX Events
     onClickNav(parm) {
         switch(parm.action) {
-            // case 'selectedTab':
-            //     this.selectedTab = parm.val;
-            //     if (this.selectedTab == 2) {
-            //         this.onResize(null);
-            //         this.gridRepaint();
-            //     }
-            //     break;
-            // case 'editMore':
-            //     this.showMoreEdit = !this.showMoreEdit;
-            //     this.onResize(null);
-            //     this.gridRepaint();
-            //     break;                
+            case 'allowCustomAction':
+                this.parent['allowCustomAction']();
+                break;
             default:
                 this[parm.action](parm.val);
                 break;
@@ -130,8 +141,9 @@ export class invwork implements OnDestroy, AfterViewInit {
                     fiwhid: dataResponse.data,
                     fdate: dt,
                     fstatus: 'O',
-                    fnotes: null // wijmo compalins
-                    //fshipto: this.sharedSrvc.user.flocation // Assign user location
+                    ftype: this.trxType,
+                    fnotes: null, // wijmo compalins
+                    flocation: this.appH.getUserLocation() // Assign user location
                 });
 
                 this.poCurrent = this.invworkheaders.items[0]; // pointer
@@ -171,7 +183,7 @@ export class invwork implements OnDestroy, AfterViewInit {
             this.wjH.gridScrollToRow(this.invworkGrid, -1, 0, 'fiwid', row[0].fiwid); // No-focus only scroll
         }
         else {
-            this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItem', {pfitem: this.fitem, pfactive: 'true'}).subscribe((res) => {
+            this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItemWOH', {pfitem: this.fitem, pfloc: this.poCurrent.flocation, pfactive: 'true'}).subscribe((res) => {
                 if (res.length == 0) {
                     this.appH.toastr('Item not found!','error', '', true);
                     return;
@@ -186,15 +198,16 @@ export class invwork implements OnDestroy, AfterViewInit {
                         fitem: this.fitem,                
                         ftype: this.invworkheaders.items[0].ftype,                
                         fstatus: this.invworkheaders.items[0].fstatus,              
-                        fuser: this.sharedSrvc.user.fname,                
+                        // fuser: this.sharedSrvc.user.fname,                
+                        fuser: this.appH.getUsername(),                
                         fdate: this.invworkheaders.items[0].fdate,                
-                        //fdoctype: this.invworkheaders.items[0].fiwhid,             
                         flocation: this.invworkheaders.items[0].flocation,            
                         fnotes: this.invworkheaders.items[0].fnotes,          
                         fqty: 1,
                         // computed                 
                         fdescription: res[0].cfdescription,
-                        funits: res[0].funits
+                        funits: res[0].funits,
+                        fonhand: res[0].fonhand
                     });
             
                     this.wjH.gridLoad(this.invworkGrid, this.invwork.items); // Load data
@@ -219,7 +232,7 @@ export class invwork implements OnDestroy, AfterViewInit {
     
     inputDialogQty(val) {
         let amt = this.CompanySvc.validNumber(val); // Will make it at least 0
-        if (amt < 0) {
+        if (amt < 0 && (!this.allowNegativeQty)) {
             this.appH.toastr('Quantity cannot be negative!','warning');
             return false
         }
@@ -245,13 +258,21 @@ export class invwork implements OnDestroy, AfterViewInit {
         if (!this.validEntry()) return;
         if (!this.dESrvc.checkForChanges()) return;
         
-        if (this.invworkheaders.items[0].fstatus !== 'O') {
-            this.appH.toastr('Only OPEN orders can be modified.');
+        if (!this.parent['allowToUpdate'](this.invworkheaders.items[0])) {
+            this.appH.toastr('Only OPEN Transactions can be modified.');
+            return;
+        }
+
+        // Validate Details
+        if (this.invwork.items.length < 1) {
+            this.appH.toastr('Transaction Must Have At Least 1 Detail.', 'warning');
             return;
         }
 
         if (this.dESrvc.validate() !== '')  return;
         this.CompanySvc.ofHourGlass(true);
+
+        this.parent['InUpdate'](); // Call paret.InUpdate();
 
         // Last Update
         this.invworkheaders.items[0].ts = new Date();
@@ -259,7 +280,7 @@ export class invwork implements OnDestroy, AfterViewInit {
 
         // Send to Server
         this.dESrvc.update('api/Invwork/Postupdate').subscribe((dataResponse) => {
-            // this.printPO();
+            this.printPO();
             this.CompanySvc.ofHourGlass(false);
         });
     }
@@ -271,11 +292,14 @@ export class invwork implements OnDestroy, AfterViewInit {
         this.CompanySvc.ofHourGlass(true);
         this.DataSvc.serverDataGet('api/Invwork/GetValidateInvworkheader', {pfid: this.searchId}).subscribe((dataResponse)=> {
             if (dataResponse.length > 0) {
-                if (dataResponse[0].fstatus !== 'O') {
+                if (!this.parent['allowToUpdate'](dataResponse[0])) {
                     this.appH.toastr('Only OPEN transactions can be modified.');
                 }
                 this.dESrvc.pendingChangesContinue().subscribe(() => {
-                    this.retrievePO(dataResponse[0].fiwhid);
+                    if (this.validateTransaction) {
+                        if (!this.parent['validateTransaction'](dataResponse[0])) return; // Exit if fails
+                    }
+                    this.retrieveTrx(dataResponse[0].fiwhid);
                     this.searchId = '';
                 });
             }
@@ -286,7 +310,7 @@ export class invwork implements OnDestroy, AfterViewInit {
         });
     }
 
-    retrievePO(afpoid:number):void {
+    retrieveTrx(afpoid:number):void {
         if (!afpoid) return;
         
         this.setImage(null);
@@ -295,8 +319,10 @@ export class invwork implements OnDestroy, AfterViewInit {
             this.invworkheaders.loadData(dataResponse.invworkheaders);
             this.invwork.loadData(dataResponse.invworks);
             this.poCurrent = this.invworkheaders.items[0]; // pointer
-            this.wjH.gridLoad(this.invworkGrid, this.invwork.items, false);
+            
+            if (this.afterRetrieveTrx) this.parent['afterRetrieveTrx'](); // Call parent after loading
 
+            this.wjH.gridLoad(this.invworkGrid, this.invwork.items, false);
             this.focusToScan();
             this.CompanySvc.ofHourGlass(false);
         });
@@ -309,13 +335,29 @@ export class invwork implements OnDestroy, AfterViewInit {
         }, 100);
     }
 
+    lookupItem() {
+        if (!this.validEntry()) return;
+        
+        // Clear Value to prevent showing continuous error on invalid value
+        if (this.fitem !== '') {
+            this.fitem = '';
+            // this.toastr.clear();
+        }
+
+        this.dialog.open(ItemList, {data: {fcid: -1}}).afterClosed().subscribe(dataResponse => {
+            this.focusToScan();
+            if (!dataResponse) return;
+            this.fitem = dataResponse.fitem;
+            this.fitemOnChange(); // Adds row
+        });
+    }
+
     printPO() {
         if (!this.validEntry()) return;
         this.CompanySvc.ofHourGlass(true);
 
-        var mParms = 'pfpoid=' + this.poCurrent.fpoid;
-        this.CompanySvc.ofCreateJasperReport('POReceive.pdf', mParms).subscribe((pResponse) => {
-            this.CompanySvc.ofHourGlass(false);
+        var mParms = 'pfiwhid=' + this.poCurrent.fiwhid;
+        this.CompanySvc.ofCreateJasperReport('invworkheader.pdf', mParms).subscribe((pResponse) => {
             // Print PDF file
             setTimeout(() => {
                 this.CompanySvc.printPDFserverFile(pResponse.data, this);
@@ -341,11 +383,26 @@ export class invwork implements OnDestroy, AfterViewInit {
                     this.setImage(row);
                 }
             },
+            formatItem: (s, e) => {
+                if (e.panel == s.cells) {
+                    var col = s.columns[e.col], row = s.rows[e.row].dataItem;
+                    switch (col.binding) {
+                        case 'fnonhand':
+                            e.cell.textContent = row.fonhand + (row.fqty * row.funits);
+                            break;
+                    }
+                }
+            },
             columns: [
                 { binding: "fitem", header: "Item Number", width: 200},
                 { binding: "fdescription", header: "Description", width: '*'},
-                { binding: "funits", header: "# Units", width: 80},
-                { binding: "fqty", header: "Qty", width: 100, aggregate: 'Sum'}
+                { binding: "funits", header: "# Units", width: 100},
+                { binding: "fonhand", header: "On-Hand", width: 100, visible: this.showOnhand},
+                // Show either qty
+                { binding: "fqty", header: "Qty", width: 100, aggregate: 'Sum', visible: (!this.showQty2)},
+                { binding: "fqty2", header: "Qty", width: 100, aggregate: 'Sum', visible: this.showQty2},
+                
+                { binding: "fnonhand", header: "New On-Hand", width: 130, visible: this.showOnhand}
             ]
         });
         this.wjH.gridInit(this.invworkGrid);

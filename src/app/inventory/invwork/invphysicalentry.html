@@ -1,0 +1,50 @@
+<div fxLayout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01>
+        <select [(ngModel)]="flocation" [ngModelOptions]="{standalone: true}" class="form-control" fxFlex=33>
+            <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                {{opt.fname}}
+            </option>
+        </select>
+    </pcdrBuilder>
+    
+    <div fxLayout="row">
+        <div fxLayout="column" fxFlex>
+            <pcdrBuilder #bar02>
+                <!-- Item Scan -->
+                <input type="text" cdkFocusInitial class="form-control lmargin" placeholder="Scan Item" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+                <!-- <a href="javascrip:;"></a> Prevents from leaving page since is last input -->
+            </pcdrBuilder>
+
+            <!-- Item Display -->
+            <div fxLayout="column" fxFlex style="background-color: #fff;" (click)="focusToScan()">
+                <div class="widget-grid panel-nobox" style="margin-top:25px" *ngIf='itemCurrent.fitem'>
+                    <div>
+                        <span class='mh1 text-uppercase' fxFlex='flex'>{{itemCurrent.fdescription}}</span>
+                    </div>
+                    <div class="text-nowrap">
+                        <span><h3># UNITS: {{itemCurrent.funits}}</h3></span>
+                    </div>
+                    <div class="text-nowrap" *ngIf='itemCurrent.fweight'>
+                        <span><h3>WEIGHT:  {{itemCurrent.fweight | number: ''}} lbs.</h3></span>
+                    </div>
+                    <div class="text-nowrap">
+                        <span><h3>{{itemCurrent.fitem}}</h3></span>
+                    </div>
+                    <!-- Images -->
+                    <div style="height:250px; margin:5px 0 0 5px">
+                        <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div fxLayout="column" style="width: 345px;">
+            <pcdrBuilder #bar03>
+                <input #ftenderqty type="text" pcdrAmount [(ngModel)]="tenderqty" class="form-control amount1" />
+            </pcdrBuilder>
+            <div>
+                <keypad [keypadValue]='tenderqty' keypadEnterLabel='Complete' (keypadValueChange)="onKeypadValueChange($event)" (keypadEnter)="onEnter()"></keypad>
+            </div>
+        </div>
+    </div>
+</div>

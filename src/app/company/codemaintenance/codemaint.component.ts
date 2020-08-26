@@ -113,7 +113,7 @@ export class CodeMaintComponent implements OnDestroy, AfterViewInit {
             },
             columns: [
 				{ binding: "fgroupid", header: "Group", width: 150 },
-				{ binding: "fdescription", header: "Description", width: 300 }
+				{ binding: "fdescription", header: "Description", width: '*' }
             ]
         });
 		this.wjH.gridInit(this.cdmGrid01, true);
@@ -121,8 +121,8 @@ export class CodeMaintComponent implements OnDestroy, AfterViewInit {
 		// wj-flex-grid
         this.cdmGrid02.initialize({
             columns: [
-				{ binding: "fid", header: "ID", width: 200, isReadOnly: true},
-				{ binding: "fdescription", header: "Description", width: 250 },
+				{ binding: "fid", header: "ID", width: 350, isReadOnly: true},
+				{ binding: "fdescription", header: "Description", width: 350 },
 				{ binding: "fopt1", header: "Option 1", width: 150 },
 				{ binding: "fopt2", header: "Option 2", width: 150 },
 				{ binding: "forder", header: "Sequence", width: 100 }

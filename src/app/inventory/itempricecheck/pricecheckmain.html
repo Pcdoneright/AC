@@ -40,8 +40,8 @@
                     </div>
                     <div fxLayout="row" class="text-nowrap" *ngIf='itemCurrent.fitem'>
                         <span><h3>
-                            <!-- {{itemCurrent.fuomdescription}} @{{itemCurrent.fsaleprice | currency: 'USD'}} each, {{itemCurrent.fweight | number: ''}} lbs. -->
-                            {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit, {{itemCurrent.fweight | number: ''}} lbs.
+                            <!-- {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit, {{itemCurrent.fweight | number: ''}} lbs. -->
+                            {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit
                         </h3></span>
                         <span *ngIf='!itemCurrent.fistaxable' style='margin-top:6px'><h5>&ensp;(Non-Taxable)</h5></span>
                     </div>
@@ -61,8 +61,8 @@
     <div fxLayout="column" style="width:450px;zoom: 1.5">
         <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" xstyle='zoom: 1.5'>
             <span class="text-nowrap">More Options</span>
-            <button type="button" class="btn btn-success" (click)="nextrow()"><i class="fa fa-arrow-down"></i></button>
-            <button type="button" class="btn btn-success" (click)="prevrow()"><i class="fa fa-arrow-up"></i></button>
+            <button type="button" class="btn btn-success" (click)="nextrow()" style="width: 200px;"><i class="fa fa-arrow-down"></i></button>
+            <button type="button" class="btn btn-success" (click)="prevrow()" style="width: 200px;"><i class="fa fa-arrow-up"></i></button>
             <div fxFlex="flex"></div>
             <span class="text-nowrap rmargin">Rows: {{wjH.rowCount(ipckg01)}}</span>
         </nav>

@@ -212,8 +212,9 @@ export class CompanyService {
             document.body.appendChild(iframe);
 
             iframe.style.display = 'none';
-            iframe.onload = function () {
-                setTimeout(function () {
+            iframe.onload = () => {
+                setTimeout(() => {
+                    this.ofHourGlass(false);
                     iframe.focus();
                     iframe.contentWindow.print(); // use --kiosk-printing to prevent dialog showing
                 }, 1);

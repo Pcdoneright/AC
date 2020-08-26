@@ -1,0 +1,8 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01></pcdrBuilder>
+    <wj-flex-grid #usersGrid01 [style.height.px]="wH"
+        (keydown)='wjH.onGridKeyPress(usersGrid01, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(usersGrid01, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(usersGrid01, $event)'>
+    </wj-flex-grid>
+</div>

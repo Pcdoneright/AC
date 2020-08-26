@@ -23,6 +23,8 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
     crdrawers: DataStore;
     crdeposits: DataStore;
     sodatef:Date = new Date();
+    totalDrawer:number = 0;
+    totalDeposit:number = 0;
 
 	constructor(private CompanySvc: CompanyService, public dESrvc: DataEntryService, private DataSvc: DataService, private sharedSrvc: SharedService, 
 		public wjH: wjHelperService, public $filter: PcdrFilterPipe ) {
@@ -68,6 +70,22 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
         this[parm.action](parm.val);
     }
 
+    getTotal() {
+        this.totalDrawer = 0;
+        this.totalDeposit = 0;
+
+        this.crdeposits.items.forEach(row => {
+            this.totalDeposit += row.ftotal;
+        });
+        
+        this.crdrawers.items.forEach(row => {
+            this.totalDrawer += row.fdrawer;
+        });
+
+        this.totalDrawer = this.CompanySvc.r2d(this.totalDrawer);
+        this.totalDeposit = this.CompanySvc.r2d(this.totalDeposit);
+    }
+
 	update() {
 		if (!this.dESrvc.checkForChanges()) return;
         if (this.dESrvc.validate() !== '') return;
@@ -94,6 +112,7 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
                 this.wjH.gridLoad(this.cdmGrid01, this.crdrawers.items);
                 this.wjH.gridLoad(this.cdmGrid02, []);
 
+                this.getTotal();
                 this.CompanySvc.ofHourGlass(false);
             });
         });
@@ -135,7 +154,7 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
 				{ binding: "fdrawer", header: "Amount", width: 150, format: 'c' }
             ]
         });
-		this.wjH.gridInit(this.cdmGrid01, true);
+		this.wjH.gridInit(this.cdmGrid01);
 		
 		// wj-flex-grid
         this.cdmGrid02.initialize({

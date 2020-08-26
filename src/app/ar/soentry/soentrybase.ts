@@ -238,12 +238,6 @@ export class soentrybaseClass {
         }
         
         console.log('this.orderOrigin', this.orderOrigin);
-        // POS screens can only modified 'S' open orders
-        // if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'POS' || this.orderOrigin === 'SMI')) {
-        if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'SO' || this.orderOrigin === 'SMI')) {
-            this.toastr.info('Only OPEN orders can be modified.');
-            return;
-        }
         // SO can only modify payments for invoices
         if (this.salesorders.items[0].fstatus === 'I' && this.orderOrigin === 'SO') {
             // Added 8/13/2020 But prevents it from updating since so.ts is updated too
@@ -254,6 +248,14 @@ export class soentrybaseClass {
             
             if (this.salesdetails.getChanges()) {
                 this.toastr.info('Only Payments can be modified for Invoices.');
+                return;
+            }
+        }
+        else {
+            // POS screens can only modified 'S' open orders
+            // if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'POS' || this.orderOrigin === 'SMI')) {
+            if (this.salesorders.items[0].fstatus !== 'S' && (this.orderOrigin === 'SO' || this.orderOrigin === 'SMI')) {
+                this.toastr.info('Only OPEN orders can be modified.');
                 return;
             }
         }
@@ -338,7 +340,7 @@ export class soentrybaseClass {
         // if (this.salesorders.items[0].fdocnumber !== -1) { // 2018/10/12 Regualr Order Entry Unable to invoice open orders
         // if ((this.salesorders.items[0].fdocnumber !== -1 && this.orderOrigin === 'POS') || 
         //     (this.salesorders.items[0].fstatus !== 'S' && this.orderOrigin !== 'POS'))  {  // 2018/10/13 Restore to original
-        if (this.salesorders.items[0].fstatus !== 'S') {
+        if (this.salesorders.items[0].fstatus !== 'S' && this.orderOrigin !== 'SO') {
             this.toastr.info('Only OPEN orders can be Invoiced.');
             return;
         }

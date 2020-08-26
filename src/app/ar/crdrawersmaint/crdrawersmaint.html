@@ -4,6 +4,7 @@
             <pcdrBuilder #bar01>
                 <span class="lmargin">Date:</span>
                 <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
+                <span style="font-weight: bold; margin-left: 200px;" >Drawers: ${{totalDrawer}} Deposits: ${{totalDeposit}} Total Cash: ${{totalDrawer + totalDeposit}}</span>
             </pcdrBuilder>
             
             <wj-flex-grid #cdmGrid01 (selectionChanged)='wjH.onGridSelectionChanged(cdmGrid01, $event)' fxFlex></wj-flex-grid>

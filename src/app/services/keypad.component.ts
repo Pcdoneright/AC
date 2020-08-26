@@ -45,8 +45,8 @@ export class KeyPadComponent {
                     this.keypadValue = input;
                 }
         }
-        console.log('this.keypadAppend', this.keypadAppend);
-        console.log('this.keypadValue', this.keypadValue);
+        // console.log('this.keypadAppend', this.keypadAppend);
+        // console.log('this.keypadValue', this.keypadValue);
         // Notify parent
         this.keypadValueChange.emit(this.keypadValue);
     }
