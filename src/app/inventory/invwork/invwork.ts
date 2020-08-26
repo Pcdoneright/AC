@@ -273,6 +273,10 @@ export class invwork implements OnDestroy, AfterViewInit {
         this.CompanySvc.ofHourGlass(true);
 
         this.parent['InUpdate'](); // Call paret.InUpdate();
+        // Update status from parent in case it was changed in 'InUpdate'
+        this.invwork.items.forEach((row) => {
+            row.fstatus = this.invworkheaders.items[0].fstatus;    
+        });
 
         // Last Update
         this.invworkheaders.items[0].ts = new Date();

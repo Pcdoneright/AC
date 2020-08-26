@@ -103,6 +103,7 @@ import { Itempurchasehist } from './ap/list/itempurchasehist.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
 import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
+import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 
 //PR
 import { TimeclockComponent } from './pr/timeclock/timeclock.component';
@@ -186,7 +187,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invtransferin,
     invphysicalentry,
     invphysicalpost,
-    invdiscrepancy
+    invdiscrepancy,
+    invworkreport
   ],
   imports: [
     BrowserModule,
@@ -285,7 +287,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invtransferin,
     invphysicalentry,
     invphysicalpost,
-    invdiscrepancy
+    invdiscrepancy,
+    invworkreport
   ],
   bootstrap: [AppComponent]
 })

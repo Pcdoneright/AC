@@ -27,6 +27,7 @@ import { itemmaintComponent } from './inventory/itemmaint/itemmaint.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
 import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
+import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { invadjustment } from './inventory/invwork/invadjustment';
@@ -116,6 +117,8 @@ export class CustomModule {
                 return invphysicalpost;
             case 'invdiscrepancy':
                 return invdiscrepancy;
+            case 'invworkreport':
+                return invworkreport;
             case 'usermaint':
                 return usermaint;
         }
