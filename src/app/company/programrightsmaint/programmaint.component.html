@@ -1,14 +1,15 @@
 <div layout="column" class="widget-grid panel-nobox" [style.height.px]="wH">
     <as-split direction="vertical" (dragEnd)="gridRepaint()">
         <as-split-area size="50" fxLayout="column">
-            <nav class="navbar navbar-expand-md mbg-info">
+            <pcdrBuilder #bar01></pcdrBuilder>
+            <!-- <nav class="navbar navbar-expand-md mbg-info">
                 <span class="text-nowrap">Group Right</span>
                 <button type="button" class="btn btn-success" (click)="groupsAdd()"><i class="fa fa-plus"></i> Add</button>
                 <button type="button" class="btn btn-danger" (click)="groupsRemove()"><i class="fa fa-minus"></i> Remove</button>
                 <button type="button" class="btn btn-primary" (click)="update()"><i class="fa fa-save"></i> Save</button>
                 <div class="container"></div>
                 <span class="text-nowrap">Rows: {{wjH.rowCount(prmGrid01)}}</span>
-            </nav>
+            </nav> -->
             <wj-flex-grid #prmGrid01 fxFlex
                 (keydown)='wjH.onGridKeyPress(prmGrid01, $event)' 
                 (gotFocus)='wjH.onGridGotFocus(prmGrid01, $event)'
@@ -16,13 +17,14 @@
             </wj-flex-grid>
         </as-split-area>
         <as-split-area size="50" fxLayout="column">
-            <nav class="navbar navbar-expand-md mbg-info">
+            <pcdrBuilder #bar02></pcdrBuilder>
+            <!-- <nav class="navbar navbar-expand-md mbg-info">
                 <span>Programs</span>
                 <button type="button" class="btn btn-success" (click)="groups_accessAdd()"><i class="fa fa-plus"></i> Add</button>
                 <button type="button" class="btn btn-danger" (click)="groups_accessRemove()"><i class="fa fa-minus"></i> Remove</button>
                 <div class="container"></div>
                 <span class="text-nowrap">Rows: {{wjH.rowCount(prmGrid02)}}</span>
-            </nav>
+            </nav> -->
             <wj-flex-grid #prmGrid02 fxFlex
                 (keydown)='wjH.onGridKeyPress(prmGrid02, $event)' 
                 (gotFocus)='wjH.onGridGotFocus(prmGrid02, $event)'

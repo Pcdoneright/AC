@@ -11,6 +11,8 @@ import {CompanyService} from '../../services/company.service';
 import {PcdrFilterPipe} from '../../pipes/pcdrfilter.pipe';
 import {ListPrograms} from '../../lists/list-programs.component';
 import { wjHelperService } from '../../services/wjHelper.service';
+import { pcdrBuilderComponent } from '../../services/builder/builder.component';
+import { appHelperService } from '../../services/appHelper.service';
 
 @Component({
     selector: 'app-programmaint',
@@ -19,9 +21,11 @@ import { wjHelperService } from '../../services/wjHelper.service';
 })
 
 export class ProgMaintComponent implements OnDestroy, AfterViewInit {
-    filterOrder: OrderByPipe = new OrderByPipe();
-    @ViewChild('prmGrid01') prmGrid01: WjFlexGrid;
-    @ViewChild('prmGrid02') prmGrid02: WjFlexGrid;
+    @ViewChild('bar01', {static: true}) bar01: pcdrBuilderComponent;
+    @ViewChild('bar02', {static: true}) bar02: pcdrBuilderComponent;
+    @ViewChild('prmGrid01', {static: true}) prmGrid01: WjFlexGrid;
+    @ViewChild('prmGrid02', {static: true}) prmGrid02: WjFlexGrid;
+    sortPipe: OrderByPipe = new OrderByPipe();
 
     @ViewChild('prmsp01') sp01;
     wH: number;
@@ -30,7 +34,7 @@ export class ProgMaintComponent implements OnDestroy, AfterViewInit {
     programsList: any;
 
     constructor(private toastr: ToastrService, private dialog: MatDialog, private CompanySvc: CompanyService, 
-        public dESrvc: DataEntryService, private DataSvc: DataService,
+        public dESrvc: DataEntryService, private DataSvc: DataService, public appH: appHelperService,
         public $filter: PcdrFilterPipe, public wjH: wjHelperService, private sharedSrvc: SharedService) {
 
         this.sharedSrvc.setProgramRights(this, 'programrights'); // sets fupdate, fadmin
@@ -41,6 +45,35 @@ export class ProgMaintComponent implements OnDestroy, AfterViewInit {
         this.dESrvc.validateDataStore('groups', 'GROUP RIGHT', 'fname', 'NAME');
         this.groups_access = this.dESrvc.newDataStore('groups_access', ['fgroupid', 'fprogid'], true, ['fgroupid', 'fprogid']);
     }
+
+    ngOnInit() {
+        this.bar01.setNavProperties(this, {
+            title: 'Group Right', 
+            buttons: [
+                {name: ' Add', style: 'success', icon: 'fa fa-plus-circle', action: 'groupsAdd'},
+                {name: ' Remove', style: 'danger', icon: 'fa fa-minus-circle', action: 'groupsRemove'},
+                {name: 'Save', style: 'primary', action: 'update'}
+            ],
+            subnavbar: false,
+            rows: {grid: 'prmGrid01'}
+        })
+
+        this.bar02.setNavProperties(this, {
+            title: 'Programs', 
+            buttons: [
+                {name: ' Add', style: 'success', icon: 'fa fa-plus-circle', action: 'groups_accessAdd'},
+                {name: ' Remove', style: 'danger', icon: 'fa fa-minus-circle', action: 'groups_accessRemove'}
+            ],
+            subnavbar: false,
+            rows: {grid: 'prmGrid02'}
+        })
+    }
+
+    // barXX Events
+    onClickNav(parm) {
+        this[parm.action](parm.val);
+    }
+
 
     ngAfterViewInit() {
         this.initGrids();
@@ -76,7 +109,9 @@ export class ProgMaintComponent implements OnDestroy, AfterViewInit {
     }
 
     groups_accessFilter(pfgroupid): any[] {
-        return this.$filter.transform(this.groups_access.items, {fgroupid: pfgroupid}, true);
+        let rows = this.$filter.transform(this.groups_access.items, {fgroupid: pfgroupid}, true);
+        rows = this.sortPipe.transform(rows, ["fgrouptype", "fsequence"]);
+        return rows;
     }
 
     groupsAdd() {
@@ -157,7 +192,7 @@ export class ProgMaintComponent implements OnDestroy, AfterViewInit {
             // if (obj.fsequence >= pfsequence && obj.fprogid !== pfprogid) obj.fsequence++; // Increment
         }
         // Get List Sorted and Reasign Sequence Starting with 1
-        var nrows = this.filterOrder.transform(rows, 'fsequence');
+        var nrows = this.sortPipe.transform(rows, 'fsequence');
         var nseq = 0;
         for (var i = 0; i < nrows.length; i++) {
             if (nrows[i].fsequence == null) continue; // Skip
@@ -193,8 +228,8 @@ export class ProgMaintComponent implements OnDestroy, AfterViewInit {
                 }
             },
             columns: [
-				{ binding: "fgroupid", header: "ID", width: 150, isReadOnly: true },
-                { binding: "fname", header: "Name", width: 300 }
+				{ binding: "fgroupid", header: "ID", width: 50, isReadOnly: true },
+                { binding: "fname", header: "Name", width: '*' }
             ]
         });
         this.wjH.gridInit(this.prmGrid01, true);
@@ -209,13 +244,14 @@ export class ProgMaintComponent implements OnDestroy, AfterViewInit {
                 switch (col.binding) {
                     case 'fsequence':
                         rec.fsequence = this.CompanySvc.validNumber(s.activeEditor.value.toString()); // Convert to number;
-                        this.fsequenceArrange(rec.fprogid, rec.fsequence);
+                        // this.fsequenceArrange(rec.fprogid, rec.fsequence);
                         break;
                 }
             },
             columns: [
-                {binding: "fsequence", header: "Sequence", width: 80 },
-                {binding: "cfname", header: "Program", width: 250, isReadOnly: true },
+                {binding: "fsequence", header: "Sequence", width: 120 },
+                {binding: "fdescription", header: "Menu", width: 200, isReadOnly: true },
+                {binding: "cfname", header: "Program", width: '*', isReadOnly: true },
                 {binding: "fupdate", header: "Update", width: 70 },
                 {binding: "fadmin", header: "Admin", width: 70 }
             ]
