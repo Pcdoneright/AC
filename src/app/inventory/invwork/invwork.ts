@@ -238,7 +238,12 @@ export class invwork implements OnDestroy, AfterViewInit {
         }
 
         var row = this.wjH.getGridSelectecRow(this.invworkGrid);
-        row.fqty = amt;
+        if (this.showQty2) {
+            row.fqty2 = amt;
+        }
+        else {
+            row.fqty = amt;
+        }
         this.invworkGrid.refresh(false);
         return true;
     }

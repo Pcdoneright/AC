@@ -28,6 +28,7 @@ import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
 import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
+import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { invadjustment } from './inventory/invwork/invadjustment';
@@ -119,6 +120,8 @@ export class CustomModule {
                 return invdiscrepancy;
             case 'invworkreport':
                 return invworkreport;
+            case 'invworkxdscrpc':
+                return invworkxdscrpc;
             case 'usermaint':
                 return usermaint;
         }
