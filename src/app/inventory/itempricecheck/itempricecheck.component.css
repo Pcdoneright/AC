@@ -32,3 +32,8 @@
     background-color: #0275d8;
     color: #fff;
 }
+
+.eachclass {
+    color: red;
+    font-weight: bold !important;
+}

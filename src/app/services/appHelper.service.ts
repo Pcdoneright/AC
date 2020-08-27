@@ -72,5 +72,32 @@ export class appHelperService {
 
     ofHourGlass(value: boolean) {
         this.CompanySvc.ofHourGlass(value);
-	}
+    }
+    
+    rawdatestrTruncatetz(val: string) {
+        //2020-08-27T02:27:13.1187737-05:00
+        let pattern = /(\d{4})\-(\d{2})\-(\d{2})\T(\d{2})\:(\d{2})\:(\d{2})/;
+        let matchVal = val.match(pattern);
+        return matchVal[1] + '-' +  matchVal[2] + '-' + matchVal[3] + "T" + matchVal[4] + ":" + matchVal[5] + ":" + matchVal[6];
+    }
+
+    datestrFromrawdate(val: string, option: number = 1) {
+        var months = [ "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December" ];
+        
+        //2020-08-27T02:27:13.1187737-05:00
+        let pattern = /(\d{4})\-(\d{2})\-(\d{2})\T(\d{2})\:(\d{2})\:(\d{2})/;
+        let matchVal = val.match(pattern);
+        let hour = (parseInt(matchVal[4]) > 12? parseInt(matchVal[4]) - 12: parseInt(matchVal[4]));
+        let ampm = (parseInt(matchVal[4]) > 12? 'PM': 'AM');
+        let monthName = months[parseInt(matchVal[2]) - 1];
+
+        switch (option) {
+            case 1:
+                return monthName + ' ' + parseInt(matchVal[3]) + ', ' +  matchVal[1] + ', ' + hour + ":" + matchVal[5] + " " + ampm;
+            case 2:
+                return matchVal[1] + '-' +  matchVal[2] + '-' + matchVal[3] + "T" + matchVal[4] + ":" + matchVal[5] + ":" + matchVal[6];
+
+        }
+    }
 }

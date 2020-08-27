@@ -12,6 +12,7 @@ import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 // import * as wjGrid from "@grapecity/wijmo.grid";
 import * as wjcCore from '@grapecity/wijmo';
 import {ViewHours} from "./viewHours.component";
+import { appHelperService } from '../../services/appHelper.service';
 
 @Component({
     selector: 'timeclock',
@@ -35,13 +36,12 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
     currpayperiod:number;
     serverDate: Date;
 
-    // constructor(private dialog: MatDialog, private CompanySvc: CompanyService, private dESrvc: DataEntryService, private DataSvc: DataService, private w2uiH: w2uiHelperService, private datePipe: DatePipe, private $filter: PcdrFilterPipe, private OrderByPipe: Ng2OrderPipe, public wjH: wjHelperService) { }
-    constructor(private datePipe: DatePipe, private $filter: PcdrFilterPipe, private dialog: MatDialog, private CompanySvc: CompanyService, private companyRules: CompanyRulesService, private dESrvc: DataEntryService, private DataSvc: DataService, public wjH: wjHelperService, private toastr: ToastrService) {
+    constructor(private datePipe: DatePipe, private $filter: PcdrFilterPipe, private dialog: MatDialog, private CompanySvc: CompanyService, private companyRules: CompanyRulesService, private dESrvc: DataEntryService, private DataSvc: DataService, public wjH: wjHelperService, private toastr: ToastrService, public appH: appHelperService) {
         // Data Stores, Unique Keys, updatable, validate fields
         this.employeehours = this.dESrvc.newDataStore('employeehours', ['ehid'], true, []);
 
         this.listEmployeeRefresh();
-        this.refreshIntervalId = setInterval(this.currentTime, 1000);
+        this.refreshIntervalId = setInterval(() => {this.currentTime();}, 1000);
 
         // Get PayPeriods for DropDown
         this.DataSvc.serverDataGet('api/EmployeeMaint/GetPayperiods').subscribe((dataResponse) => {
@@ -51,8 +51,6 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
             this.payperiods = dataResponse.payperiods;
             this.currpayperiod = this.$filter.transform(this.payperiods, {current: true}, true)[0].ppid;
         });
-
-        this.getServerDate();
     }
 
     // Keypad event raised <keypad>
@@ -76,8 +74,8 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
         this.employeehours.clearData();
     }
 
-    currentTime = () => {
-        //var mDate = new Date();
+    // Format needed for setInterval
+    currentTime() {
         this.serverDate.setSeconds(this.serverDate.getSeconds() + 1);
         this.fcurrTime = this.datePipe.transform(this.serverDate, 'h:mm:ss a');
         this.fcurrDate = this.datePipe.transform(this.serverDate, 'EEEE, MMMM d, y');
@@ -214,7 +212,8 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
 
     getServerDate() {
         this.DataSvc.serverDataGet('api/EmployeeMaint/GetServerDate').subscribe((dataResponse) => {
-            this.serverDate = new Date(dataResponse);
+            // this.serverDate = new Date(dataResponse);
+            this.serverDate = new Date(this.appH.rawdatestrTruncatetz(dataResponse));
         });
     }
 

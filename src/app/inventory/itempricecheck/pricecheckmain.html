@@ -27,7 +27,7 @@
                 <i class="fa fa-angle-double-up fa-rotate-270" style='zoom:2.0;margin-left: 5px;color:red;'></i>
                 <i class="fa fa-angle-double-up fa-rotate-270" style='zoom:2.0;margin-left: 5px;color:red;'></i>
                 <i class="fa fa-angle-double-up fa-rotate-270" style='zoom:2.0;margin-left: 5px;color:red;'></i>
-                <button type="button" class="btn btn-primary" style="margin-left: 10px;" (click)="clearForm()">Clear Form</button>
+                <button type="button" class="btn btn-primary" style="margin-left: 10px;width: 150px;" (click)="clearForm()">CLEAR</button>
             </div>
 
             <!-- Item Display -->
@@ -41,7 +41,7 @@
                     <div fxLayout="row" class="text-nowrap" *ngIf='itemCurrent.fitem'>
                         <span><h3>
                             <!-- {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit, {{itemCurrent.fweight | number: ''}} lbs. -->
-                            {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}/unit
+                            {{itemCurrent.fsaleprice | currency: 'USD'}} {{itemCurrent.fuomdescription}}, @<span class="eachclass">{{itemCurrent.fsaleprice/itemCurrent.funits | currency: 'USD'}}</span>/unit
                         </h3></span>
                         <span *ngIf='!itemCurrent.fistaxable' style='margin-top:6px'><h5>&ensp;(Non-Taxable)</h5></span>
                     </div>
@@ -60,12 +60,12 @@
     <!-- <div fxLayout="column" style="width:350px; height:350px"> -->
     <div fxLayout="column" style="width:450px;zoom: 1.5">
         <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" xstyle='zoom: 1.5'>
-            <span class="text-nowrap">More Options</span>
-            <button type="button" class="btn btn-success" (click)="nextrow()" style="width: 200px;"><i class="fa fa-arrow-down"></i></button>
-            <button type="button" class="btn btn-success" (click)="prevrow()" style="width: 200px;"><i class="fa fa-arrow-up"></i></button>
+            <span class="text-nowrap" style="font-weight: bold;">MORE OPTIONS</span>
+            <button type="button" class="btn btn-success" (click)="nextrow()" style="width: 450px;margin-left: 20px;"><i class="fa fa-arrow-down"></i></button>
+            <button type="button" class="btn btn-success" (click)="prevrow()" style="width: 450px;"><i class="fa fa-arrow-up"></i></button>
             <div fxFlex="flex"></div>
             <span class="text-nowrap rmargin">Rows: {{wjH.rowCount(ipckg01)}}</span>
         </nav>
-        <wj-flex-grid #ipckg01 xfxFlex  class='ipckclass' [style.height.px] = "gH01" Xstyle='zoom: 1.1'></wj-flex-grid>
+        <wj-flex-grid #ipckg01 xfxFlex  class='ipckclass' [style.height.px] = "gH01" (click)="focusToScan()"></wj-flex-grid>
     </div>
 </div>

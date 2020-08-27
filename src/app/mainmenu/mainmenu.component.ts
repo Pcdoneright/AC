@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { appHelperService } from '../services/appHelper.service';
 import { SharedService } from '../services/shared.service';
 import { CustomModule } from '../appcustom.module';
 import { DataService } from '../services/data.service';
@@ -71,7 +72,8 @@ export class MainMenuComponent implements OnInit {
     tabs = [];
     //currentTabTitle:string;
     selectedIndex:number = 0; // Tabs
-    serverDate: Date;
+    // serverDate: Date;
+    serverDate: string;
 
     // private _images: string[] = ['https://via.placeholder.com/400x400?text=Hello',
     // 'https://via.placeholder.com/400x400?text=Angular',
@@ -91,9 +93,9 @@ export class MainMenuComponent implements OnInit {
 //     // this.selectedIndexA = Math.min(this.selectedIndexA + 1, this._images.length - 1);
 //   }
 
-    constructor(private customModule: CustomModule, public sharedSrvc: SharedService, private DataSvc: DataService, private router: Router) {
+    constructor(private customModule: CustomModule, public sharedSrvc: SharedService, private DataSvc: DataService, private router: Router, public appH: appHelperService) {
         this.currentTime();
-        setInterval(this.currentTime, 60000);
+        setInterval(() => {this.currentTime();}, 60000);
 
         // Return to login if invalid (refresh from mainmenu)
         if (!this.sharedSrvc.user) {
@@ -101,9 +103,10 @@ export class MainMenuComponent implements OnInit {
         }
     }
 
-    currentTime = () => {
+    currentTime() {
         this.DataSvc.serverDataGet('api/EmployeeMaint/GetServerDate').subscribe((dataResponse) => {
-            this.serverDate = new Date(dataResponse);
+            // this.serverDate = new Date(dataResponse);
+            this.serverDate = this.appH.rawdatestrTruncatetz(dataResponse);
         });
     };
 

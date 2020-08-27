@@ -21,6 +21,7 @@ export class pricecheckmain implements AfterViewInit {
     itemunitsImgCurrent = '';
     fileuploadinfo = {progress: 0, message: ''}
     gH01:number;
+    clearFormnow = true;
 
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public wjH: wjHelperService, public toastr: ToastrService, public sharedSrvc: SharedService) {
         // Wijmo License
@@ -32,6 +33,13 @@ export class pricecheckmain implements AfterViewInit {
 
         window.onresize = (e) => this.onResize(e); // Capture resize event
         this.onResize(null); // Execute at start
+
+        setInterval(() => {this.clearFormInterval();}, 120000); // Every 2 Minutes clear screen
+    }
+
+    clearFormInterval() {
+        if (this.clearFormnow) this.clearForm();
+        this.clearFormnow = true;
     }
 
     ngAfterViewInit() {
@@ -41,9 +49,9 @@ export class pricecheckmain implements AfterViewInit {
     }
 
     fitemOnChange() {
-        if (!this.fitem || this.fitem.length < 3) return;
+        if (!this.fitem || this.fitem.length < 2) return;
 
-        this.DataSvc.serverDataGet('api/ItemMaint/GetItemandRelated', {pfitem: this.fitem}).subscribe((dataResponse) => {
+        this.DataSvc.serverDataGet('api/ItemMaint/GetItemandRelated', {pfitem: this.fitem}).subscribe((dataResponse) => {        
             if (dataResponse.length == 0) {
                 let fitem = this.fitem; // Assign temporarily
                 this.clearForm(); // Clears this.fitem
@@ -58,6 +66,7 @@ export class pricecheckmain implements AfterViewInit {
             this.wjH.gridScrollToRow(this.itemsGrid, -1, 0, 'fitem', this.fitem); // No-focus only scroll
             this.fitem = ''; // Clear value
             this.focusToScan();
+            this.clearFormnow = false; // Is in use
         });
     }
 
@@ -142,9 +151,21 @@ export class pricecheckmain implements AfterViewInit {
                 }
                 this.focusToScan();
             },
+            formatItem: (s, e) => {
+                if (e.panel == s.cells) {
+                    var col = s.columns[e.col], row = s.rows[e.row].dataItem;
+                    switch (col.binding) {
+                        case 'cfeach':
+                            e.cell.textContent = this.CompanySvc.currencyRenderer({value: row.fsaleprice / row.funits});
+                            break;
+                    }
+                }
+            },
+            // itemCurrent.fsaleprice/itemCurrent.funits
             columns: [
                 { binding: "fuomdescription", header: "Unit Name", width: '*'},
-                { binding: "fsaleprice", header: "Price", format: 'c', width: 80 }
+                { binding: "fsaleprice", header: "Price", format: 'c', width: 80 },
+                { binding: "cfeach", header: "Each", format: 'c', width: 150, align: "right", cssClass: 'eachclass' }
             ]
         });
         this.wjH.gridInit(this.itemsGrid);
