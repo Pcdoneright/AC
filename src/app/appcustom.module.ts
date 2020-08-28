@@ -31,6 +31,7 @@ import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
 import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
+import { invvaluation } from './inventory/reports/invvaluation/invvaluation';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { invadjustment } from './inventory/invwork/invadjustment';
@@ -130,6 +131,8 @@ export class CustomModule {
                 return soonline;
             case 'taxrates':
                 return taxrates;
+            case 'invvaluation':
+                return invvaluation;
         }
         return '';
     }
