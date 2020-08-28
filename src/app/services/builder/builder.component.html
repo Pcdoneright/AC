@@ -15,7 +15,9 @@
     <div fxFlex="flex"></div>
     <!-- navButtons -->
     <div class="btn-group" role="group">
-        <button *ngFor='let navButton of navProperties.navButtons' type="button" class="btn btn-outline-primary mbtn-outline-primary nobutton" (click)='parent.onClickNav(navButton)'>{{navButton.name}}</button>
+        <ng-container *ngFor='let navButton of navProperties.navButtons'>
+            <button *ngIf=navButton.show type="button" class="btn btn-outline-primary mbtn-outline-primary nobutton" (click)='parent.onClickNav(navButton)'>{{navButton.name}}</button>
+        </ng-container>
     </div>
     <span *ngIf='navProperties.rows' class="text-nowrap lmargin">Rows: {{parent.wjH.rowCount(parent[navProperties.rows.grid])}}</span>
     <!-- chebron -->

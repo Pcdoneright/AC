@@ -7,7 +7,7 @@ import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Injec
 })
 
 export class pcdrBuilderComponent implements AfterViewInit {
-    navProperties = {title:'', buttons:'', spans:'', rows:'', chevron:'', subnavbar:false, navButtons:{}};
+    navProperties = {title:'', buttons:'', spans:'', rows:'', chevron:'', subnavbar:false, navButtons:''};
     parent: any;
 
     constructor() {
@@ -22,6 +22,14 @@ export class pcdrBuilderComponent implements AfterViewInit {
         if (this.navProperties.hasOwnProperty('buttons')) {
             // if [show] not created assume is 'true'
             for (const iterator of this.navProperties['buttons']) {
+                if (!iterator.hasOwnProperty('show')) iterator['show'] = true;
+            }
+        }
+
+        // navButtons only
+        if (this.navProperties.hasOwnProperty('navButtons')) {
+            // if [show] not created assume is 'true'
+            for (const iterator of this.navProperties['navButtons']) {
                 if (!iterator.hasOwnProperty('show')) iterator['show'] = true;
             }
         }

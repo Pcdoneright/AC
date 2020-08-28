@@ -1,10 +1,29 @@
 <mat-tab-group [selectedIndex]="selectedTab" [animationDuration]="sharedSrvc.animationDuration" class="widget-grid panel-nobox">
+    <!-- On-Line List -->
+    <mat-tab>
+        <div fxLayout="column" [style.height.px] = "tH01">
+            <pcdrBuilder #bar01>
+                <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
+                <span class="lmargin">To:</span>
+                <wj-input-date #fsodatet [(value)]="sodatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatet)" (lostFocus)="wjH.inputLostFocus(fsodatet)"></wj-input-date>
+                <span class="lmargin">Status:</span>
+                <select [(ngModel)]="sostatus" class="form-control lmargin" style="width: 150px;">
+                    <option *ngFor="let opt of orderstatus" [value]="opt.fid">
+                        {{opt.fdescription}}
+                    </option>
+                </select>
+                <button type="button" class="btn btn-primary" (click)="listOLGridRefresh()"><i class="fa fa-search"></i> Search</button>
+            </pcdrBuilder>
+            <wj-flex-grid #listSOGrid fxFlex></wj-flex-grid>
+        </div>
+    </mat-tab>
+
     <!-- Entry -->
     <mat-tab>
         <!-- <div [hidden]="selectedTab != 0" class="tcpanel" fxLayout="row" style='padding: 5px'> -->
         <div class="tcpanel" fxLayout="row" xstyle='padding: 5px'>
             <div fxLayout="column" fxFlex style="margin-right: 5px;">
-                <pcdrBuilder #bar01>
+                <pcdrBuilder #bar02>
                     <span *ngIf=!isOnlineso style='margin-left:45px'><h4>Last Order: {{lastordernumber}}</h4></span>
                 </pcdrBuilder>
                 <!-- Form -->
@@ -28,11 +47,18 @@
                             <button type="button" (click)="viewOrder()" style='height:38px;margin-top:32px'matTooltip="View Order Info" class="btn btn-primary"><i class="fa fa-cog"></i></button>
                             <div *ngIf=isOnlineso class="form-group lmargin" fxFlex="flex">
                                 <label>Tax Rate</label>
-                                <select [(ngModel)]="soCurrent.ftrid" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                                <select [(ngModel)]="soCurrent.ftrid" [ngModelOptions]="{standalone: true}" class="form-control" required (blur)="salesordersTotals()">
                                     <option *ngFor="let opt of taxrates" [value]="opt.ftrid">
                                         {{opt.fdescription}}: {{opt.frate}}%
                                     </option>
                                 </select>
+                            </div>
+                            <div *ngIf=isOnlineso class="form-group lmargin" fxFlex="flex">
+                                <label>Shipping</label>
+                                <wj-input-number #fshipamt class="mwj-form-control form-control" [(value)]="soCurrent.fshipamt" format='c2' 
+                                (gotFocus)="wjH.inputGotFocus(fshipamt, 'input-mask')" 
+                                (lostFocus)="wjH.inputLostFocus(fshipamt, 'input-mask')" required
+                                (lostFocus)="salesordersTotals()"></wj-input-number>
                             </div>
                         </div>
                     </form>
@@ -44,6 +70,7 @@
                     <button type="button" class="btn btn-success lmargin" (click)="salesdetailsAdd()"><i class="fa fa-search"></i> Find Item</button>
                     <button type="button" class="btn btn-danger" (click)="salesdetailsRemove()"><i class="fa fa-minus-circle"></i> Remove</button>
                     <button type="button" class="btn btn-primary" (click)="itemOptions()" matTooltip="View Selected Item Alternatives">Item Options</button>
+                    <button type="button" class="btn btn-light" (click)="editQty()" >Change Qty</button>
                     <button type="button" class="btn btn-primary" (click)="editItem()" matTooltip="Edit Selected Item">Edit</button>
                     <div fxFlex="flex"></div>
                     <mat-slide-toggle [(ngModel)]='printMobile'>Print Mobile</mat-slide-toggle>
@@ -135,14 +162,8 @@
     <!-- Restore -->
     <mat-tab>
         <!-- <div [hidden]="selectedTab != 1" class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01"> -->
-        <div fxLayout="column" [style.height.px] = "tH01">
-            <nav class="navbar navbar-expand-md mbg-info" fxLayout="row">
-                <span class="text-nowrap">Pending List</span>
-                <button type="button" class="btn btn-success lmargin" (click)="restorePending()">Restore</button>
-                <div fxFlex></div>
-                <button type="button" class="btn btn-outline-primary mbtn-outline-primary" (click)="selectedTab=0; gridRepaint(); focusToScan()">Entry</button>
-                <span class="text-nowrap">Rows: {{wjH.rowCount(soeg02)}}</span>
-            </nav>
+        <div fxLayout="column" [style.height.px] = "tH02">
+            <pcdrBuilder #bar03></pcdrBuilder>
             <wj-flex-grid #soeg02 fxFlex></wj-flex-grid>
         </div>
     </mat-tab>

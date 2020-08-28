@@ -1,6 +1,5 @@
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Inject, ViewEncapsulation, ElementRef, Input } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import {FormControl} from "@angular/forms";
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../services/data.service';
@@ -558,7 +557,7 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
         this.listSOGrid.initialize({
             isReadOnly: true,
             columns: [
-                { binding: "fdocnumber", header: "S.O.#", width: 80, format:'D' },
+                { binding: "fdocnumber", header: "S.O.#", width: 100, format:'D' },
                 { binding: "fdate", header: "Date", width: 100, format:'MM/dd/yyyy' },
                 { binding: "finvoice_date", header: "Invoiced", width: 120, format:'MM/dd/yyyy' },
                 { binding: 'cfstatus', header: 'Status', width: 100 },
@@ -573,7 +572,7 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
         this.listSOGrid.hostElement.addEventListener('dblclick', (e)=> {
             this.listSOGridEdit();
         });
-        new wjGridFilter.FlexGridFilter(this.listCustomerGrid);
+        new wjGridFilter.FlexGridFilter(this.listSOGrid);
 
         // wj-flex-grid
         this.salesdetailsGrid.initialize({

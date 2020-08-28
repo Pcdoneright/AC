@@ -12,6 +12,7 @@ import { wjHelperService } from '../../services/wjHelper.service';
 import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjGrid from "@grapecity/wijmo.grid";
+import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
 import { ItemList } from '../../inventory/itemlist/itemlist.component';
 import { soentrybaseClass } from './soentrybase';
 import { SoPayment } from './sopayment.component';
@@ -28,13 +29,16 @@ import { appHelperService } from '../../services/appHelper.service';
 })
 export class SoRegisterComponent extends soentrybaseClass implements AfterViewInit {
     @ViewChild('bar01', {static: true}) bar01: pcdrBuilderComponent;
-    @ViewChild('soeg01') salesdetailsGrid: WjFlexGrid;
-    @ViewChild('soeg02') salesorderspendingGrid: WjFlexGrid;
+    @ViewChild('bar02', {static: true}) bar02: pcdrBuilderComponent;
+    @ViewChild('bar03', {static: true}) bar03: pcdrBuilderComponent;
+    @ViewChild('soeg01', {static: true}) salesdetailsGrid: WjFlexGrid;
+    @ViewChild('soeg02', {static: true}) salesorderspendingGrid: WjFlexGrid;
+    @ViewChild('listSOGrid', {static: true}) listSOGrid: WjFlexGrid;
     @ViewChild('fitemE') fitemE: ElementRef;
     @Input() programId: string = 'soentrytouch';
     @Input() isOnlineso: boolean = false;
 
-    selectedTab:number = 0;
+    selectedTab:number = 1;
     lastordernumber:string;
     default_fcid:number;
     customers:any;
@@ -45,17 +49,22 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     totalDrawer: number = 0;
     fcrdraweramt : number = 0;
     onlinepostSetToPending = false;
+
+    sodatef:Date = new Date();
+    sodatet:Date = new Date();
+    sostatus:string = 'S';
     
     showMoreEdit:boolean;
     fitem:string;
     
     tH01:number;
+    tH02:number;
     gH01:number;
     defRepresentative:number = 1; // TODO: s/b from companymstr
     printMobile = false;
     
     // objects, DS, Grids, arrays
-    soCurrent: any = {};
+    soCurrent: any = {fshipamt: 0};
     sodCurrent: any = {};
     customerterms:any[];
     representatives:any[];
@@ -69,7 +78,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService, toastr: ToastrService, sharedSrvc: SharedService, 
         dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe, public appH: appHelperService) {
         super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
-        this.sharedSrvc.setProgramRights(this, this.programId); // sets fupdate, fadmin
+
         window.onresize = (e) => this.onResize(e); // Capture resize event
         this.onResize(null); // Execute at start
 
@@ -77,6 +86,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
         this.dESrvc.initCodeTable().subscribe((dataResponse) => {
             this.orderstatus = this.$filter.transform(dataResponse, {fgroupid: 'SOS'}, true);
+            this.orderstatus.unshift({fid: 'A', fdescription: 'All'}); // Add All
         }); // when codetable is needed
 
         // Get Company Locations for DropDown
@@ -98,6 +108,17 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     
     ngOnInit() {
         this.bar01.setNavProperties(this, {
+            title: 'Order List', 
+            buttons: [
+                {name: 'Edit Selected', style: 'success', action: 'listSOGridEdit'},
+            ],
+            navButtons: [
+                {name: 'Entry', action: 'selectedTab', val: 1},
+            ],
+            rows: {grid: 'listSOGrid'}
+        })
+
+        this.bar02.setNavProperties(this, {
             title: 'Properties', 
             buttons: [
                 {name: 'New Order', style: 'success', action: 'newSO'},
@@ -114,14 +135,32 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 // {text: 'Drawer:', property: 'totalDrawer', style: 'margin-left:15px'}
             // ],
             navButtons: [
-                {name: 'Pending List', action: 'selectedTab', val: 1}
+                {name: 'Order List', action: 'selectedTab', val: 0, show: this.isOnlineso},
+                {name: 'Pending List', action: 'selectedTab', val: 2}
             ],
             search: {action: 'searchSONumber', ngModel: 'searchId', placeholder: 'Order Number', val: true},
             validEntry: true
         })
+
+        this.bar03.setNavProperties(this, {
+            title: 'Pending List', 
+            buttons: [
+                {name: 'Restore', style: 'success', action: 'restorePending'},
+            ],
+            navButtons: [
+                {name: 'Entry', action: 'selectedTab', val: 1}
+            ],
+            subnavbar: false,
+            rows: {grid: 'salesorderspendingGrid'}
+        })
+        
+        
     }
 
     ngAfterViewInit() {
+        // programId gets overriden at this level, not at constructor
+        this.sharedSrvc.setProgramRights(this, this.programId); // sets fupdate, fadmin
+        
         this.initGrids();
         this.wjH.fixWM();
 
@@ -527,14 +566,17 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             row.fprice = Math.abs(this.CompanySvc.validNumber(row.fprice, 2)); // Amount alway positive
             row.fqty = this.CompanySvc.validNumber(row.fqty, 2);
 
-            this.salesdetailsComputed(row, row.fprice, row.fqty);
-            this.salesordersTotals();
-            row.cfmarkup = this.companyRules.markupCalculate(row.fprice, row.funits, row.fsalesbase);
-            this.updateTotalQty();
-            this.salesdetailsGrid.refresh();
-            
+            this.salesdetailchanged(row);
             this.focusToScan();
         });
+    }
+
+    salesdetailchanged(row) {
+        this.salesdetailsComputed(row, row.fprice, row.fqty);
+        this.salesordersTotals();
+        row.cfmarkup = this.companyRules.markupCalculate(row.fprice, row.funits, row.fsalesbase);
+        this.updateTotalQty();
+        this.salesdetailsGrid.refresh();
     }
 
     // Assign Discount
@@ -679,7 +721,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             this.retrieveSO(fsoid);
         }
 
-        this.selectedTab = 0;
+        this.selectedTab = 1;
         this.focusToScan();
     }
 
@@ -744,6 +786,68 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         });
     }
 
+    listOLGridRefresh() {
+        this.CompanySvc.ofHourGlass(true);
+        this.DataSvc.serverDataGet('api/SO/GetSOList', {
+            psotype: 'C',
+            pfcid: this.default_fcid,
+            pdatef: this.datePipe.transform(this.sodatef, 'yyyy-MM-dd'),
+            pdatet: this.datePipe.transform(this.sodatet, 'yyyy-MM-dd'),
+            pfstatus: this.sostatus
+        }).subscribe((dataResponse) => {
+            this.wjH.gridLoad(this.listSOGrid, dataResponse);
+            this.listSOGridTotal();
+
+            if (dataResponse.length === 0) this.toastr.info('No Rows found');
+            this.CompanySvc.ofHourGlass(false);
+        });
+    }
+
+    listSOGridTotal() {
+        var ftotal = 0, fbalance = 0;
+
+        this.listSOGrid.itemsSource.forEach((row) => {
+            if (row.fstatus !== 'V') {
+                ftotal += row.ftotal;
+                fbalance += row.fbalance;
+            }
+        });
+        this.listSOGrid.columnFooters.setCellData(0, 'ftotal', ftotal);
+        this.listSOGrid.columnFooters.setCellData(0, 'fbalance', fbalance);
+    }
+
+    listSOGridEdit() {
+        let row = this.wjH.getGridSelectecRow(this.listSOGrid);
+        if (!row) return;
+
+        this.dESrvc.pendingChangesContinue().subscribe(() => {
+            this.retrieveSO(row.fsoid);
+            this.selectedTab = 1;
+            this.gridRepaint();
+        });
+    };
+
+    editQty() {
+        if (!this.validEntry()) { this.focusToScan(); return };
+        var row = this.wjH.getGridSelectecRow(this.salesdetailsGrid);
+        if (!row) { this.focusToScan(); return }; // No selected row
+
+        this.CompanySvc.inputDialog('Qty', row['fqty'], 'Quantity', 'Continue', 'Cancel', false, true, false, 'inputDialogQty', this).subscribe(() => {
+            this.focusToScan();
+        });
+    }
+    
+    inputDialogQty(val) {
+        let amt = this.CompanySvc.validNumber(val); // Will make it at least 0
+
+        var row = this.wjH.getGridSelectecRow(this.salesdetailsGrid);
+        row.fqty = amt;
+
+        this.salesdetailchanged(row);
+        this.focusToScan();
+        return true;
+    }
+
     setImage(row) {
         this.itemunitsImgCurrent = (row) ? './images/' + row.fitem + '.jpg' : '';
     }
@@ -751,6 +855,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     onResize(event) {
         // setTimeout(() => {
             this.tH01 = window.innerHeight - 50;
+            this.tH02 = window.innerHeight - 50;
             this.gH01 = window.innerHeight - 50;
         // }, 100);
     };
@@ -821,6 +926,28 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             ]
         });
         this.wjH.gridInit(this.salesorderspendingGrid);
+
+        // wj-flex-grid
+        this.listSOGrid.initialize({
+            isReadOnly: true,
+            columns: [
+                { binding: "fdocnumber", header: "S.O.#", width: 100, format:'D' },
+                { binding: "fdate", header: "Date", width: 100, format:'MM/dd/yyyy' },
+                { binding: "finvoice_date", header: "Invoiced", width: 120, format:'MM/dd/yyyy' },
+                { binding: 'cfstatus', header: 'Status', width: 100 },
+                { binding: 'fname', header: 'Customer', width: '*' },
+                { binding: 'fponumber', header: 'PO Number', width: 200 },
+                { binding: 'fshipamt', header: 'Shipping', width: 130, format: 'c' },
+                { binding: 'ftotal', header: 'Total', width: 130, format: 'c' },
+                { binding: 'fbalance', header: 'Balance', width: 130, format: 'c' }
+            ]
+        });
+        this.wjH.gridInit(this.listSOGrid, true);
+        this.listSOGrid.columnFooters.rows.push(new wjGrid.GroupRow());
+        this.listSOGrid.hostElement.addEventListener('dblclick', (e)=> {
+            this.listSOGridEdit();
+        });
+        new wjGridFilter.FlexGridFilter(this.listSOGrid);
     }
 }
 
