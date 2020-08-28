@@ -23,6 +23,7 @@ import { SoPayment } from './sopayment.component';
 import { itemmaintComponent } from '../../inventory/itemmaint/itemmaint.component';
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { soProperties } from '../components/soproperties';
+import { appHelperService } from '../../services/appHelper.service';
 
 @Component({
     selector: 'soentry',
@@ -70,9 +71,9 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
 
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService,
         toastr: ToastrService, sharedSrvc: SharedService, dialog: MatDialog, $filter: PcdrFilterPipe,
-        public wjH: wjHelperService, companyRules: CompanyRulesService) {
+        public wjH: wjHelperService, companyRules: CompanyRulesService, public appH: appHelperService) {
 
-        super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules);
+        super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
         this.sharedSrvc.setProgramRights(this, 'soentry'); // sets fupdate, fadmin
 
         window.onresize = (e) => this.onResize(e); // Capture resize event

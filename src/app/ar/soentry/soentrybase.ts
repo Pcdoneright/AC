@@ -8,6 +8,7 @@ import { DataEntryService, DataStore } from '../../services/dataentry.service';
 import { CompanyService } from '../../services/company.service';
 import { CompanyRulesService } from '../../services/companyrules.service';
 import { SharedService } from '../../services/shared.service';
+import { appHelperService } from '../../services/appHelper.service';
 import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import { ItemList } from '../../inventory/itemlist/itemlist.component';
 import { ItemRelatedList } from '../../inventory/itemlist/itemrelatedlist.component';
@@ -34,7 +35,7 @@ export class soentrybaseClass {
 
     constructor(public CompanySvc: CompanyService, public DataSvc: DataService, public dESrvc: DataEntryService, public toastr: ToastrService, 
         public sharedSrvc: SharedService, public dialog: MatDialog, public $filter: PcdrFilterPipe, 
-        public companyRules: CompanyRulesService) {
+        public companyRules: CompanyRulesService, public appH: appHelperService) {
         // Data Stores, Unique Keys, updatable, validate fields
         this.salesorders = this.dESrvc.newDataStore('salesorders', ['fsoid'], true, ['fccid', 'frid', 'fctid', 'fcbtid', 'fcstid', 'flocation']);
         this.salesdetails = this.dESrvc.newDataStore('salesdetails', ['fsoid', 'fsodid'], true, ['fitem', 'fdescription']);
@@ -58,6 +59,12 @@ export class soentrybaseClass {
         return (this.salesorders.items.length !== 1) ? false: true;
     }
 
+    getTaxRate(pftrid:number) {
+        //let row = this.$filter.transform(this.taxrates, {ftrid: pftrid}, true); // Did not work
+        let row = this.taxrates.filter(row => row.ftrid == pftrid);
+        return (row[0].frate / 100); // Get proper decimal
+    }
+
     // Calculate totals for salesorders
     salesordersTotals() {
         var sorow = this.salesorders.items[0];
@@ -77,7 +84,8 @@ export class soentrybaseClass {
         }
         sorow.fnontaxabletotal = this.CompanySvc.r2d(sorow.fnontaxabletotal);
 
-        var trate = this.taxrates[0].frate / 100; // Get proper decimal
+        // var trate = this.taxrates[this.taxratetoUse].frate / 100; // Get proper decimal
+        var trate = this.getTaxRate(sorow.ftrid);
         sorow.ftax = this.CompanySvc.r2d(sorow.ftaxabletotal * trate);
         sorow.ftotal = this.CompanySvc.r2d(sorow.ftaxabletotal + sorow.ftax + sorow.fnontaxabletotal);
 
@@ -167,7 +175,7 @@ export class soentrybaseClass {
         this.salespayments.loadData([]);
     }
 
-    createSO(pCustomer, department) {
+    createSO(pCustomer, pRepresentative) {
         if (!pCustomer) return;
 
         this.CompanySvc.ofHourGlass(true);
@@ -183,7 +191,7 @@ export class soentrybaseClass {
                 cfcid: pCustomer.fname,
                 fstatus: 'S', // Open
                 fcustom1: this.orderOrigin,
-                frid: department, // Representative (Department)
+                frid: pRepresentative, // Representative (Department)
                 //frid: pCustomer.frid, // Rep
                 ftrid: pCustomer.ftrid, // Tax Rate
                 fctid: pCustomer.fctid, // Terms
@@ -266,10 +274,20 @@ export class soentrybaseClass {
             return;
         }
 
-        // Balance must be zero for POS
-        if ((this.orderOrigin === 'POS' || this.orderOrigin === 'SMI') && this.salesorders.items[0].fbalance !== 0) {
-            this.toastr.error('Balance amount must be Zero');
-            return;
+        // Balance must be zero for POS, 'OL' allow to have balance
+        if (this.orderOrigin != 'OL') {
+            if ((this.orderOrigin === 'POS' || this.orderOrigin === 'SMI') && this.salesorders.items[0].fbalance !== 0) {
+                this.toastr.error('Balance amount must be Zero');
+                return;
+            }
+        }
+        else {
+            // Make sure is not invoicing
+            if (this.invoiceFlag && this.salesorders.items[0].fbalance !== 0) {
+                this.toastr.error('Balance amount must be Zero');
+                this.invoiceFlag = false;
+                return;
+            }
         }
 
         // SCA 'Re-assign customer to Invoice'
@@ -447,7 +465,7 @@ export class soentrybaseClass {
         return Observable.create(observer => {
             this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItemWithPrice', {pfitem: pfitem, pfcid: this.salesorders.items[0].fcid}).subscribe((dataResponse) => {
                 if (dataResponse.length == 0) {
-                    this.toastr.error('Item not found!','', {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
+                    this.appH.toastr('Item ' + pfitem + ' not found!','error', '', true);
                     observer.next(null);
                     return;
                 }

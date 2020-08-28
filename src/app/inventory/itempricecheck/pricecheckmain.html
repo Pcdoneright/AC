@@ -49,8 +49,9 @@
                         <span><h2>{{itemCurrent.fitem}}</h2></span>
                     </div>
                     <!-- Images -->
-                    <div style="height:250px; margin:5px 0 0 5px">
-                        <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+                    <div style="margin:5px 0 0 5px">
+                        <!-- <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;"> -->
+                        <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" class="imgW400">
                     </div>
                 </div>
             </div>

@@ -15,6 +15,7 @@ import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { soProperties } from '../components/soproperties';
 import { soentrybaseClass } from '../soentry/soentrybase';
 import { FormControl } from '@angular/forms';
+import { appHelperService } from '../../services/appHelper.service';
 
 @Component({
     selector: 'soreopeninvoice',
@@ -42,9 +43,9 @@ export class soreopeninvoice extends soentrybaseClass implements AfterViewInit {
 
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService,
         toastr: ToastrService, sharedSrvc: SharedService, dialog: MatDialog, $filter: PcdrFilterPipe,
-        public wjH: wjHelperService, companyRules: CompanyRulesService) {
+        public wjH: wjHelperService, companyRules: CompanyRulesService, public appH: appHelperService) {
 
-        super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules);
+        super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
 
         this.sharedSrvc.setProgramRights(this, 'soreopeninvoice'); // sets fupdate, fadmin
         

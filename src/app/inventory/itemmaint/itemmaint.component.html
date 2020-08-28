@@ -60,9 +60,13 @@
                     <label>Description</label>
                     <input type="text" class="form-control" [(ngModel)]="itmCurrent.fdescription" [ngModelOptions]="{standalone: true}" required>
                 </div>
-                <div class="form-group lmargin" style="width: 180px;">
+                <!-- <div class="form-group lmargin" style="width: 180px;">
                     <label>Sales Base Price</label>
                     <input type="text" #fsalebaseprice pcdrAmount class="form-control" (blur)="onfsalebaseprice(fsalebaseprice.value)" value="{{itmCurrent.fsalesbase}}" required>
+                </div> -->
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Sales Base Price</label>
+                    <wj-input-number #fsalebaseprice class="mwj-form-control form-control" [(value)]="itmCurrent.fsalesbase" format='c2' (gotFocus)="wjH.inputGotFocus(fsalebaseprice, 'input-mask')" (lostFocus)="wjH.inputLostFocus(fsalebaseprice, 'input-mask')" required></wj-input-number>
                 </div>
             </div>
             <!-- <div *ngIf="showMoreEdit" layout="row" style="padding-top: 10px; padding-bottom: 10px"> -->
@@ -102,12 +106,20 @@
             <div *ngIf="showMoreEdit" fxLayout="row" class="rmargin">
                 <div class="form-group" fxFlex="flex">
                     <label>Reorder Point</label>
+                    <wj-input-number #Freorderpoint class="mwj-form-control form-control" [(value)]="itmCurrent.freorderpoint" format='n0' (gotFocus)="wjH.inputGotFocus(Freorderpoint, 'input-mask')" (lostFocus)="wjH.inputLostFocus(Freorderpoint, 'input-mask')"></wj-input-number>
+                </div>
+                <div class="form-group lmargin" fxFlex="flex">
+                    <label>Reorder Qty</label>
+                    <wj-input-number #Freorderqty class="mwj-form-control form-control" [(value)]="itmCurrent.freorderqty" format='n0' (gotFocus)="wjH.inputGotFocus(Freorderqty, 'input-mask')" (lostFocus)="wjH.inputLostFocus(Freorderqty, 'input-mask')"></wj-input-number>
+                </div>
+                <!-- <div class="form-group" fxFlex="flex">
+                    <label>Reorder Point</label>
                     <input type="text" pcdrQty class="form-control" [(ngModel)]="itmCurrent.freorderpoint" [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="form-group lmargin" fxFlex="flex">
                     <label>Reorder Qty</label>
                     <input type="text" pcdrQty class="form-control" [(ngModel)]="itmCurrent.freorderqty" [ngModelOptions]="{standalone: true}">
-                </div>
+                </div> -->
                 <div class="form-group lmargin" fxFlex="flex">
                     <label>ABC</label>
                     <select [(ngModel)]="itmCurrent.fabc" [ngModelOptions]="{standalone: true}" class="form-control">

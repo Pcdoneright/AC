@@ -7,6 +7,7 @@ import { usermaint } from './company/usermaint/usermaint';
 import { CustmaintComponent } from './ar/custmaint/custmaint.component';
 import { SoentryComponent } from './ar/soentry/soentry.component';
 import { SoRegisterComponent } from './ar/soentry/soregister.component';
+import { soonline } from './ar/soentry/soonline';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
 import { crdrawersmaint } from './ar/crdrawersmaint/crdrawersmaint';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
@@ -15,6 +16,7 @@ import { salesordersrpt } from './ar/reports/salesordersrpt/salesordersrpt';
 import { cashregistersales } from './ar/reports/cashregistersales/cashregistersales';
 import { SalesmenMaintComponent } from './ar/slmmaint/slmmaint.component';
 import { soreopeninvoice } from './ar/soreopeninvoice/soreopeninvoice';
+import { taxrates } from './ar/taxrates/taxrates';
 import { PoentryComponent } from './ap/poentry/poentry.component';
 import { PoreceiveComponent } from './ap/poreceive/poreceive.component';
 import { AppaymentsComponent } from './ap/payments/appayments.component';
@@ -124,6 +126,10 @@ export class CustomModule {
                 return invworkxdscrpc;
             case 'usermaint':
                 return usermaint;
+            case 'soonline':
+                return soonline;
+            case 'taxrates':
+                return taxrates;
         }
         return '';
     }

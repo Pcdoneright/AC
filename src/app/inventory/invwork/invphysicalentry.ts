@@ -5,7 +5,9 @@ import { SharedService } from '../../services/shared.service';
 import { wjHelperService } from '../../services/wjHelper.service';
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { appHelperService } from '../../services/appHelper.service';
-import { DataEntryService, DataStore } from '../../services/dataentry.service';
+import { DataStore } from '../../services/dataentry.service';
+import { MatDialog} from '@angular/material/dialog';
+import { ItemRelatedList } from '../../inventory/itemlist/itemrelatedlist.component';
 
 @Component({
     selector: 'invphysicalentry',
@@ -28,7 +30,7 @@ export class invphysicalentry implements AfterViewInit {
     invwork:DataStore;
 
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public wjH: wjHelperService, 
-        public sharedSrvc: SharedService, public appH: appHelperService) {
+        public appH: appHelperService, public dialog: MatDialog) {
             // Get Company Locations for DropDown
             DataSvc.serverDataGet('api/CompanyMaint/GetLocationsDD').subscribe((dataResponse) => {
                 this.companylocations = dataResponse;
@@ -48,7 +50,8 @@ export class invphysicalentry implements AfterViewInit {
         this.bar02.setNavProperties(this, {
             title: 'Item', 
             buttons: [
-                {name: 'Clear Form', style: 'secondary', action: 'clearForm'}
+                {name: 'Clear Form', style: 'light', action: 'clearForm'},
+                {name: 'Item Options', style: 'primary', action: 'itemOptions'}
             ],
         })
         this.bar03.setNavProperties(this, {
@@ -98,21 +101,45 @@ export class invphysicalentry implements AfterViewInit {
         });
     }
 
+    validEntry() {
+        return (this.itemCurrent.hasOwnProperty('fitem'));
+    }
+
+    // Show related items and replace if not isNew()
+    itemOptions() {
+        if (!this.validEntry()) { this.focusToScan(); return };
+
+        let row = this.itemCurrent;
+        let pData = { fitem: row.fitem, fcid: 0 };
+        this.dialog.open(ItemRelatedList, {data: pData}).afterClosed().subscribe(selected => {
+            if (!selected) { this.focusToScan(); return };
+            
+            // Make sure is different
+            if (row.fitem !== selected.fitem) {
+                row.fitem = selected.fitem;
+                row.fdescription = selected.fdescription;
+                row.fuomdescription = selected.fuomdescription;
+                row.funits = selected.funits;
+            }
+            this.setImage(this.itemCurrent);
+            this.focusToQty();
+        });
+    }
+    
+
     fitemOnChange() {
         if (!this.fitem || this.fitem.length < 2) return;
 
         this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItem', {pfitem: this.fitem}).subscribe((dataResponse) => {
             if (dataResponse.length == 0) {
-                let fitem = this.fitem; // Assign temporarily
+                this.appH.toastr('Item ' + this.fitem + ' not found!','error', '', true);
                 this.clearForm(); // Clears this.fitem
-                this.fitem = fitem;
-
-                this.appH.toastr('Item not found!', 'warning');
                 this.focusToScan();
                 return;
             }
             else {
                 this.itemCurrent = dataResponse[0];
+                this.setImage(this.itemCurrent);
             }
 
             this.fitem = ''; // Clear value

@@ -1,0 +1,8 @@
+<div fxLayout="column" class="widget-grid panel-nobox" [style.height.px]="wH">
+    <pcdrBuilder #bar01></pcdrBuilder>
+    <wj-flex-grid #taxratesGrid fxFlex
+        (keydown)='wjH.onGridKeyPress(taxratesGrid, $event)' 
+        (gotFocus)='wjH.onGridGotFocus(taxratesGrid, $event)'
+        (selectionChanged)='wjH.onGridSelectionChanged(taxratesGrid, $event)'>
+    </wj-flex-grid>
+</div>

@@ -185,7 +185,8 @@ export class invwork implements OnDestroy, AfterViewInit {
         else {
             this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItemWOH', {pfitem: this.fitem, pfloc: this.poCurrent.flocation, pfactive: 'true'}).subscribe((res) => {
                 if (res.length == 0) {
-                    this.appH.toastr('Item not found!','error', '', true);
+                    this.appH.toastr('Item ' + this.fitem + ' not found!','error', '', true);
+                    this.fitem = '';
                     return;
                 }
                     

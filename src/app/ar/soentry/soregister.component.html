@@ -5,7 +5,7 @@
         <div class="tcpanel" fxLayout="row" xstyle='padding: 5px'>
             <div fxLayout="column" fxFlex style="margin-right: 5px;">
                 <pcdrBuilder #bar01>
-                    <span style='margin-left:45px'><h4>Last Order: {{lastordernumber}}</h4></span>
+                    <span *ngIf=!isOnlineso style='margin-left:45px'><h4>Last Order: {{lastordernumber}}</h4></span>
                 </pcdrBuilder>
                 <!-- Form -->
                 <div style="background-color: #fff">
@@ -20,12 +20,20 @@
                                 <label>Name</label>
                                 <input type="text" class="form-control" value="{{soCurrent.cfcid}}" disabled>
                             </div>
-                            <button type="button" (click)="assignCustomer()" style='height:38px;margin-top:32px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
-                            <div class="form-group" fxFlex="33">
+                            <button *ngIf=!isOnlineso type="button" (click)="assignCustomer()" style='height:38px;margin-top:32px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
+                            <div class="form-group lmargin" fxFlex="33">
                                 <label>PO Number</label>
                                 <input type="text" class="form-control" name="fponumber" [(ngModel)]="soCurrent.fponumber">
                             </div>
                             <button type="button" (click)="viewOrder()" style='height:38px;margin-top:32px'matTooltip="View Order Info" class="btn btn-primary"><i class="fa fa-cog"></i></button>
+                            <div *ngIf=isOnlineso class="form-group lmargin" fxFlex="flex">
+                                <label>Tax Rate</label>
+                                <select [(ngModel)]="soCurrent.ftrid" [ngModelOptions]="{standalone: true}" class="form-control" required>
+                                    <option *ngFor="let opt of taxrates" [value]="opt.ftrid">
+                                        {{opt.fdescription}}: {{opt.frate}}%
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -34,7 +42,7 @@
                 <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" style='margin-top:5px'>
                     <span class="text-nowrap">Details</span>
                     <button type="button" class="btn btn-success lmargin" (click)="salesdetailsAdd()"><i class="fa fa-search"></i> Find Item</button>
-                    <button type="button" class="btn btn-danger" (click)="salesdetailsRemove()"><i class="fa fa-minus"></i> Remove</button>
+                    <button type="button" class="btn btn-danger" (click)="salesdetailsRemove()"><i class="fa fa-minus-circle"></i> Remove</button>
                     <button type="button" class="btn btn-primary" (click)="itemOptions()" matTooltip="View Selected Item Alternatives">Item Options</button>
                     <button type="button" class="btn btn-primary" (click)="editItem()" matTooltip="Edit Selected Item">Edit</button>
                     <div fxFlex="flex"></div>
@@ -66,8 +74,8 @@
 
                     <div fxLayout="row">
                         <!-- Images -->
-                        <div style="height:250px; margin:5px 0 0 5px">
-                            <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" style="height:100%;">
+                        <div style="margin:5px 0 0 5px">
+                            <img [src]="itemunitsImgCurrent" onError="this.src='./images/download.png';" class="imgW400">
                         </div>
                         
                         <div style='width:100%' fxLayoutAlign="center center">

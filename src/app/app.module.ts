@@ -66,6 +66,7 @@ import { CustomerList } from './ar/list/custlist.component';
 import { SoPayment } from './ar/soentry/sopayment.component';
 import { SoRegisterComponent, SOEditItem } from './ar/soentry/soregister.component';
 import { SOViewCustomer } from './ar/soentry/soregisterorder.component';
+import { soonline } from './ar/soentry/soonline';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
 import { SalesmenMaintComponent } from './ar/slmmaint/slmmaint.component';
@@ -75,6 +76,7 @@ import { soreopeninvoice } from './ar/soreopeninvoice/soreopeninvoice';
 import { cashregistersales } from './ar/reports/cashregistersales/cashregistersales';
 import { soProperties } from './ar/components/soproperties';
 import { crdrawersmaint } from './ar/crdrawersmaint/crdrawersmaint';
+import { taxrates } from './ar/taxrates/taxrates';
 
 //AP
 import { PoentryComponent } from './ap/poentry/poentry.component';
@@ -190,7 +192,9 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invphysicalpost,
     invdiscrepancy,
     invworkreport,
-    invworkxdscrpc
+    invworkxdscrpc,
+    soonline,
+    taxrates
   ],
   imports: [
     BrowserModule,
@@ -291,7 +295,9 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invphysicalpost,
     invdiscrepancy,
     invworkreport,
-    invworkxdscrpc
+    invworkxdscrpc,
+    soonline,
+    taxrates
   ],
   bootstrap: [AppComponent]
 })

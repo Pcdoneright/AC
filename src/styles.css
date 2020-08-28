@@ -188,3 +188,12 @@ form {
     margin-top: 40px;
     margin-left: -105px;
 }
+
+/* Image 400W */
+.imgW400 {
+    display: block;
+    max-width:400px;
+    max-height:250px;
+    width: auto;
+    height: auto;
+}

@@ -17,6 +17,7 @@ import { soentrybaseClass } from './soentrybase';
 import { SoPayment } from './sopayment.component';
 import { SOViewCustomer } from './soregisterorder.component';
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
+import { appHelperService } from '../../services/appHelper.service';
 
 @Component({
     selector: 'soregister',
@@ -27,6 +28,12 @@ import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 })
 export class SoRegisterComponent extends soentrybaseClass implements AfterViewInit {
     @ViewChild('bar01', {static: true}) bar01: pcdrBuilderComponent;
+    @ViewChild('soeg01') salesdetailsGrid: WjFlexGrid;
+    @ViewChild('soeg02') salesorderspendingGrid: WjFlexGrid;
+    @ViewChild('fitemE') fitemE: ElementRef;
+    @Input() programId: string = 'soentrytouch';
+    @Input() isOnlineso: boolean = false;
+
     selectedTab:number = 0;
     lastordernumber:string;
     default_fcid:number;
@@ -37,19 +44,17 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     itemunitsImgCurrent = '';
     totalDrawer: number = 0;
     fcrdraweramt : number = 0;
+    onlinepostSetToPending = false;
     
     showMoreEdit:boolean;
     fitem:string;
-    @ViewChild('fitemE') fitemE: ElementRef;
     
     tH01:number;
     gH01:number;
-    defDepartment:number = 1; // TODO: s/b from companymstr
+    defRepresentative:number = 1; // TODO: s/b from companymstr
     printMobile = false;
     
     // objects, DS, Grids, arrays
-    @ViewChild('soeg01') salesdetailsGrid: WjFlexGrid;
-    @ViewChild('soeg02') salesorderspendingGrid: WjFlexGrid;
     soCurrent: any = {};
     sodCurrent: any = {};
     customerterms:any[];
@@ -62,9 +67,9 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     salespaymentspending:any[] = [];
 
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService, toastr: ToastrService, sharedSrvc: SharedService, 
-        dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe) {
-        super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules);
-        this.sharedSrvc.setProgramRights(this, 'soentrytouch'); // sets fupdate, fadmin
+        dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe, public appH: appHelperService) {
+        super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
+        this.sharedSrvc.setProgramRights(this, this.programId); // sets fupdate, fadmin
         window.onresize = (e) => this.onResize(e); // Capture resize event
         this.onResize(null); // Execute at start
 
@@ -96,11 +101,13 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             title: 'Properties', 
             buttons: [
                 {name: 'New Order', style: 'success', action: 'newSO'},
-                {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printSO', val: false},
-                {name: 'Drawer', style: 'light', tooltip: 'Open Drawer', action: 'openDrawer'},
-                {name: 'Set Pending', style: 'primary', action: 'setToPending'},
+                {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printSO', val: false, show: !this.isOnlineso},
+                {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printOnline', show: this.isOnlineso},
+                {name: 'Drawer', style: 'light', tooltip: 'Open Drawer', action: 'openDrawer', show: !this.isOnlineso},
+                {name: 'Set Pending', style: 'primary', action: 'setToPending', show: !this.isOnlineso},
                 {name: 'Void', style: 'danger', action: 'setToVoid'},
-                {name: 'Drawer Report', style: 'secondary', action: 'drawerReport'},
+                {name: 'Drawer Report', style: 'secondary', action: 'drawerReport', show: !this.isOnlineso},
+                {name: 'Save Order', style: 'primary', action: 'saveonline', show: this.isOnlineso}
             ],
             // spans: [
                 // {text: 'Last Order:', property: 'lastordernumber', style: 'margin-left:45px'},
@@ -119,7 +126,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.wjH.fixWM();
 
         // Get default customer id
-        this.DataSvc.serverDataGet('api/CompanyMaint/GetPOSCustomerID').subscribe((dataResponse) => {
+        let api = (this.isOnlineso? 'api/CompanyMaint/GetOLCustomerID': 'api/CompanyMaint/GetPOSCustomerID');
+        this.DataSvc.serverDataGet(api).subscribe((dataResponse) => {
             this.default_fcid = dataResponse.fpos_cid;
             this.getcustomer(this.default_fcid); // will call postCreateSO()
 
@@ -155,7 +163,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     getcustomer(pfcid: number) {
         this.DataSvc.serverDataGet('api/CustomerMaint/GetValidateCustomer', {pfcid: pfcid}).subscribe((dataResponse) => {
             this.customers = dataResponse;
-            this.createSO(this.customers[0], this.defDepartment); // will call postCreateSO()
+            this.createSO(this.customers[0], this.defRepresentative); // will call postCreateSO()
         });
     }
 
@@ -183,23 +191,45 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
     // Override to create a new order after update
     postUpdate() {
-        this.printSO(true); // Open Drawer
-        this.lastordernumber = this.soCurrent.fdocnumber; //Save last fdocnumber
-        
-        // Save totalDrawer
-        this.getCashTotal();
-        this.depositDrawerTotal();
+        if (!this.isOnlineso) {
+            
+            this.printSO(true); // Open Drawer
+            this.lastordernumber = this.soCurrent.fdocnumber; //Save last fdocnumber
+            
+            // Save totalDrawer
+            this.getCashTotal();
+            this.depositDrawerTotal();
 
-        // Display Change Amount
-        if (this.soCurrent.fchange !== 0) {
-            // Display Change Due
-            this.CompanySvc.alert(this.CompanySvc.currencyRenderer({value: this.soCurrent.fchange}), 'Change Amount')
-                .subscribe(() =>{
-                    this.newSO();
-                });
+            // Display Change Amount
+            if (this.soCurrent.fchange !== 0) {
+                // Display Change Due
+                this.CompanySvc.alert(this.CompanySvc.currencyRenderer({value: this.soCurrent.fchange}), 'Change Amount')
+                    .subscribe(() =>{
+                        this.newSO();
+                    });
+            }
+            else {
+                this.newSO();
+            }
         }
         else {
-            this.newSO();
+            // On-line if it was done from saveorder
+            if (this.onlinepostSetToPending) {
+                this.postSetToPending();
+            }
+            else {
+                // find and remove it, Payment-Complete
+                for (var i=0; i < this.salesorderspending.length; i++) {
+                    // if found exit
+                    if (this.salesorderspending[i].fsoid === this.salesorders.items[0].fsoid) {
+                        this.salesorderspending.splice(i, 1)[0]; // slice out specific item, and get 1st item of returned array
+                        break;
+                    }
+                }
+                this.wjH.gridLoad(this.salesorderspendingGrid, this.salesorderspending); // Reload grid
+
+                this.newSO();
+            }
         }
     }
 
@@ -241,15 +271,18 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.focusToScan();
         // return; // <<<<<---------
         
-        console.log('totalDrawer', this.totalDrawer);
-        console.log('fcrdraweramt', this.fcrdraweramt);
-        // Prompt if drawer amt exceeds
-        if (this.totalDrawer >= this.fcrdraweramt && this.totalDrawer > 0) {
-            this.openDrawer(); // Allow to take money out
-            // this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
-            this.CompanySvc.inputDialog('Amount To Deposit', '', 'Max Deposit $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
-                this.cashDrawerOverride(this.CompanySvc.validNumber(ret, 2));
-            });
+        // Exclude on-line orders
+        if (!this.isOnlineso) {
+            console.log('totalDrawer', this.totalDrawer);
+            console.log('fcrdraweramt', this.fcrdraweramt);
+            // Prompt if drawer amt exceeds
+            if (this.totalDrawer >= this.fcrdraweramt && this.totalDrawer > 0) {
+                this.openDrawer(); // Allow to take money out
+                // this.CompanySvc.inputDialog('Amount To Deposit', this.totalDrawer.toString(), 'Must Deposit Now $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
+                this.CompanySvc.inputDialog('Amount To Deposit', '', 'Max Deposit $' + this.totalDrawer.toString(), 'Continue', 'Cancel', false, true, false, 'inputDialogAmount', this).subscribe((ret) => {
+                    this.cashDrawerOverride(this.CompanySvc.validNumber(ret, 2));
+                });
+            }
         }
     }
 
@@ -343,6 +376,26 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         });
     }
 
+    printOnline() {
+        if (!this.validEntry() || this.soCurrent.fdocnumber == -1) {
+            this.focusToScan();
+            return;
+        };
+
+        this.CompanySvc.ofHourGlass(true);
+
+        var mParms = [
+            {fline: 1, fnumber: this.soCurrent.fsoid}
+        ];
+
+        this.CompanySvc.ofCreateReport('d_salesorder_invoice_rpt', mParms, 3).subscribe((pResponse) => {
+            // Open PDF file
+            setTimeout(() => {
+                this.CompanySvc.ofOpenServerFile(pResponse.data);
+            }, 1000);
+        });
+    }
+
     drawerReport() {
         let fdate = new Date(); // Use todays date
         
@@ -383,17 +436,17 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     fitemOnChange() {
         if (!this.validEntry()) return;
         if (!this.fitem) return;
-        if (this.fitem.length < 3) return false;
+        if (this.fitem.length < 2) return false;
 
         this.salesdetailsAddItemByFitem(this.fitem).subscribe((row) => {
             if (row) {
                 this.scanBeep();
 
-                this.fitem = ''; // Clear value
                 this.updateTotalQty();
                 this.wjH.gridLoad(this.salesdetailsGrid, this.salesdetails.items, false);
                 this.wjH.gridScrollToRow(this.salesdetailsGrid, -1, 0, 'fsodid', row.fsodid); // No-focus only scroll
             }
+            this.fitem = ''; // Clear value
             this.focusToScan();
         });
     }
@@ -497,6 +550,22 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         })
     }
 
+    saveonline() {
+        // no details, not new order
+        if (!this.validEntry() || this.salesdetails.items.length == 0) {
+            this.focusToScan(); 
+            return;
+        };
+        
+        if (this.salesorders.getChanges()) {
+            this.onlinepostSetToPending = true; // Flag to do postSetToPending
+            this.update(); // Save it
+        }
+        else {
+            this.postSetToPending();
+        }
+    }
+
     // Set current order to pending
     setToPending() {
         // no details, not new order
@@ -508,30 +577,43 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.CompanySvc.inputDialog('Enter a Reference', this.soCurrent.fponumber, 'Pending Order', '', '', false, false).subscribe((response) => {
             if (response) {
                 this.soCurrent.fponumber  = response;
-                this.salesorderspending.push(this.soCurrent); // Append to end
-                // Add all salesdetails
-                for (var i = 0; i < this.salesdetails.items.length; i++) {
-                    this.salesdetailspending.push(this.salesdetails.items[i]);
-                }
-                // Add all payments
-                for (var i = 0; i < this.salespayments.items.length; i++) {
-                    this.salespaymentspending.push(this.salespayments.items[i]);
-                }
-
-                this.wjH.gridLoad(this.salesorderspendingGrid, this.salesorderspending);
-
-                // clear all
-                this.clearSalesOrder();
-                this.setImage(null);
-                // this.salesorders.loadData([]);
-                // this.salesdetails.loadData([]);
-                // this.salespayments.loadData([]);
-
-                // Create new order, clear current
-                this.newSO();
+                this.postSetToPending();
             }
             this.focusToScan();
         });
+    }
+
+    postSetToPending() {
+        // Add as before
+        if (!this.isOnlineso) {
+            this.salesorderspending.push(this.soCurrent); // Append to end
+            // Add all salesdetails
+            for (var i = 0; i < this.salesdetails.items.length; i++) {
+                this.salesdetailspending.push(this.salesdetails.items[i]);
+            }
+            // Add all payments
+            for (var i = 0; i < this.salespayments.items.length; i++) {
+                this.salespaymentspending.push(this.salespayments.items[i]);
+            }
+        }
+        else {
+            // Check if not already there
+            let nrow = this.salesorderspending.filter(row => row.fsoid == this.soCurrent.fsoid);
+            if (nrow.length == 0) {
+                this.salesorderspending.push(this.soCurrent); // Append to end
+            }
+        }
+
+        this.wjH.gridLoad(this.salesorderspendingGrid, this.salesorderspending);
+
+        // clear all
+        this.clearSalesOrder();
+        this.setImage(null);
+
+        // Create new order, clear current
+        this.newSO();
+
+        this.onlinepostSetToPending = false; // Clear flag
     }
 
     // Restore pending order
@@ -540,43 +622,62 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         if (this.salesdetails.items.length > 0 && this.soCurrent.fdocnumber == -1) return; // exit if current order exist
         if (!this.wjH.getGridSelectecRow(this.salesorderspendingGrid)) return; // make sure row is selected
 
+        if (this.isOnlineso && this.salesorders.getChanges() && this.salesdetails.items.length > 0) return; // On-line order not saved
+
         // clear all
         this.clearSalesOrder();
         this.setImage(null);
 
-        var fsoid = this.wjH.getGridSelectecRow(this.salesorderspendingGrid).fsoid;
-        // find and remove it
-        for (var i=0; i < this.salesorderspending.length; i++) {
-            // if found exit
-            if (this.salesorderspending[i].fsoid === fsoid) {
-                this.salesorders.items.push(this.salesorderspending.splice(i, 1)[0]); // slice out specific item, and get 1st item of returned array
-                break;
+        let fsoid = this.wjH.getGridSelectecRow(this.salesorderspendingGrid).fsoid;
+        
+        // Not on-line continue as before
+        if (!this.isOnlineso) {
+            // find and remove it
+            for (var i=0; i < this.salesorderspending.length; i++) {
+                // if found exit
+                if (this.salesorderspending[i].fsoid === fsoid) {
+                    this.salesorders.items.push(this.salesorderspending.splice(i, 1)[0]); // slice out specific item, and get 1st item of returned array
+                    break;
+                }
             }
-        }
 
-        // details
-        for (var i=0; i < this.salesdetailspending.length; i++) {
-            // if found exit
-            if (this.salesdetailspending[i].fsoid === fsoid) {
-                this.salesdetails.items.push(this.salesdetailspending.splice(i, 1)[0]);
-                i--; // decrease loop
+            // details
+            for (var i=0; i < this.salesdetailspending.length; i++) {
+                // if found exit
+                if (this.salesdetailspending[i].fsoid === fsoid) {
+                    this.salesdetails.items.push(this.salesdetailspending.splice(i, 1)[0]);
+                    i--; // decrease loop
+                }
             }
-        }
 
-        // payments
-        for (var i=0; i < this.salespaymentspending.length; i++) {
-            // if found exit
-            if (this.salespaymentspending[i].fsoid === fsoid) {
-                this.salespayments.items.push(this.salespaymentspending.splice(i, 1)[0]);
-                i--; // decrease loop
+            // payments
+            for (var i=0; i < this.salespaymentspending.length; i++) {
+                // if found exit
+                if (this.salespaymentspending[i].fsoid === fsoid) {
+                    this.salespayments.items.push(this.salespaymentspending.splice(i, 1)[0]);
+                    i--; // decrease loop
+                }
             }
-        }
 
-        // Retrieve customer related if diff from walkin
-        if (this.default_fcid !== this.soCurrent.fcid) this.getCustomerRelated(this.soCurrent.fcid, false).subscribe();
-        this.wjH.gridLoad(this.salesorderspendingGrid, this.salesorderspending);
-        this.wjH.gridLoad(this.salesdetailsGrid, this.salesdetails.items, false);
-        this.soCurrent = this.salesorders.items[0]; // pointer
+            // Retrieve customer related if diff from walkin
+            if (this.default_fcid !== this.soCurrent.fcid) this.getCustomerRelated(this.soCurrent.fcid, false).subscribe();
+            this.wjH.gridLoad(this.salesorderspendingGrid, this.salesorderspending);
+            this.wjH.gridLoad(this.salesdetailsGrid, this.salesdetails.items, false);
+            this.soCurrent = this.salesorders.items[0]; // pointer
+        }
+        else {
+            // // find and remove it
+            // for (var i=0; i < this.salesorderspending.length; i++) {
+            //     // if found exit
+            //     if (this.salesorderspending[i].fsoid === fsoid) {
+            //         this.salesorderspending.splice(i, 1)[0]; // slice out specific item, and get 1st item of returned array
+            //         break;
+            //     }
+            // }
+            // this.wjH.gridLoad(this.salesorderspendingGrid, this.salesorderspending); // Reload grid
+            // On-line retrieve order since it was already saved
+            this.retrieveSO(fsoid);
+        }
 
         this.selectedTab = 0;
         this.focusToScan();
@@ -590,7 +691,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             this.getcustomer(this.default_fcid); // Will call postCreateSO()
         }
         else {
-            this.createSO(this.customers[0], this.defDepartment); // Will call postCreateSO()
+            this.createSO(this.customers[0], this.defRepresentative); // Will call postCreateSO()
         }
         this.setImage(null);
     }

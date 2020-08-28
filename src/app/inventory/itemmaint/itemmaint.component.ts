@@ -34,7 +34,7 @@ export class itemmaintComponent implements AfterViewInit {
     tH01:number;
     gH03:number;
     ftype = 'D';
-    itmCurrent: any = {};
+    itmCurrent: any = {fsalesbase: 0, freorderpoint: 0, freorderqty: 0};
     itemunitsImgCurrent = '';
     listCategory:any[];
     listSubcategory:any[];
