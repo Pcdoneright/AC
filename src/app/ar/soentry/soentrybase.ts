@@ -87,7 +87,13 @@ export class soentrybaseClass {
         // var trate = this.taxrates[this.taxratetoUse].frate / 100; // Get proper decimal
         var trate = this.getTaxRate(sorow.ftrid);
         sorow.ftax = this.CompanySvc.r2d(sorow.ftaxabletotal * trate);
-        if (sorow.fshipamt == null) sorow.fshipamt = 0; // Existing orders before field was created
+        if (!sorow.fshipamt) 
+            sorow.fshipamt = 0; // Existing orders before field was created
+        else {
+            if (trate > 0) {
+                sorow.ftax += this.CompanySvc.r2d(sorow.fshipamt * trate); // Add tax for shipment too.
+            }
+        }
         sorow.ftotal = this.CompanySvc.r2d(sorow.ftaxabletotal + sorow.ftax + sorow.fnontaxabletotal + sorow.fshipamt);
 
         // if discount rate is specified, discount is % of ftotal

@@ -67,6 +67,7 @@
                 <div class="form-group lmargin" fxFlex="flex">
                     <label>Sales Base Price</label>
                     <wj-input-number #fsalebaseprice class="mwj-form-control form-control" [(value)]="itmCurrent.fsalesbase" format='c2' 
+                    [isRequired]="false"
                     (gotFocus)="wjH.inputGotFocus(fsalebaseprice, 'input-mask')" 
                     (lostFocus)="wjH.inputLostFocus(fsalebaseprice, 'input-mask')" required
                     (lostFocus)="onfsalebaseprice(fsalebaseprice.value)"></wj-input-number>
@@ -109,11 +110,17 @@
             <div *ngIf="showMoreEdit" fxLayout="row" class="rmargin">
                 <div class="form-group" fxFlex="flex">
                     <label>Reorder Point</label>
-                    <wj-input-number #Freorderpoint class="mwj-form-control form-control" [(value)]="itmCurrent.freorderpoint" format='n0' (gotFocus)="wjH.inputGotFocus(Freorderpoint, 'input-mask')" (lostFocus)="wjH.inputLostFocus(Freorderpoint, 'input-mask')"></wj-input-number>
+                    <wj-input-number #Freorderpoint class="mwj-form-control form-control" [(value)]="itmCurrent.freorderpoint" format='n0' 
+                    [isRequired]="false"
+                    (gotFocus)="wjH.inputGotFocus(Freorderpoint, 'input-mask')" 
+                    (lostFocus)="wjH.inputLostFocus(Freorderpoint, 'input-mask')"></wj-input-number>
                 </div>
                 <div class="form-group lmargin" fxFlex="flex">
                     <label>Reorder Qty</label>
-                    <wj-input-number #Freorderqty class="mwj-form-control form-control" [(value)]="itmCurrent.freorderqty" format='n0' (gotFocus)="wjH.inputGotFocus(Freorderqty, 'input-mask')" (lostFocus)="wjH.inputLostFocus(Freorderqty, 'input-mask')"></wj-input-number>
+                    <wj-input-number #Freorderqty class="mwj-form-control form-control" [(value)]="itmCurrent.freorderqty" format='n0' 
+                    [isRequired]="false"
+                    (gotFocus)="wjH.inputGotFocus(Freorderqty, 'input-mask')" 
+                    (lostFocus)="wjH.inputLostFocus(Freorderqty, 'input-mask')"></wj-input-number>
                 </div>
                 <!-- <div class="form-group" fxFlex="flex">
                     <label>Reorder Point</label>

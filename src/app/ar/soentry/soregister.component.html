@@ -30,7 +30,7 @@
                 <div style="background-color: #fff">
                     <form novalidate>
                         <div fxLayout="row" class="rmargin">
-                            <div class="form-group" style="width: 220px;" fxLayout="column">
+                            <div class="form-group" style="width: 250px;" fxLayout="column">
                                 <label>Order #</label>
                                 <span *ngIf="soCurrent.fdocnumber != -1" class="fdocnumber">{{soCurrent.fdocnumber}}</span>
                                 <span *ngIf="soCurrent.fdocnumber == -1" class="fdocnumber">NEW</span>
@@ -56,6 +56,7 @@
                             <div *ngIf=isOnlineso class="form-group lmargin" fxFlex="flex">
                                 <label>Shipping</label>
                                 <wj-input-number #fshipamt class="mwj-form-control form-control" [(value)]="soCurrent.fshipamt" format='c2' 
+                                [isRequired]="false"
                                 (gotFocus)="wjH.inputGotFocus(fshipamt, 'input-mask')" 
                                 (lostFocus)="wjH.inputLostFocus(fshipamt, 'input-mask')" required
                                 (lostFocus)="salesordersTotals()"></wj-input-number>
@@ -124,6 +125,11 @@
                 <wj-flex-grid #soeg01 fxFlex class='sorclass' style='border:none'></wj-flex-grid>
                 <!-- Totals -->
                 <div style="background-color: #e3f2fd; padding-left: 5px; padding-right:5px; border-top:1px solid rgba(0,0,0,.2)">
+                    <div *ngIf='isOnlineso' fxLayout='row'>
+                        <span><h5>Tax</h5></span>
+                        <div fxFlex='flex'></div>
+                        <span><h5>{{soCurrent.ftax | currency:'USD'}}</h5></span>
+                    </div>
                     <div *ngIf='soCurrent.fdiscountp != 0' fxLayout='row' class="font2">
                         <span>Discount</span>
                         <div fxFlex='flex'></div>
