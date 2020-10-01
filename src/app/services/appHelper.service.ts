@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../services/shared.service';
 import { CompanyService } from '../services/company.service';
+import { DataService } from '../services/data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemList } from '../inventory/itemlist/itemlist.component';
 
 import { Observable } from 'rxjs/Observable';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
@@ -16,7 +19,8 @@ import { BreakPointRegistry } from '@angular/flex-layout';
 @Injectable()
 export class appHelperService {
 
-    constructor(private CompanySvc: CompanyService, private tstr: ToastrService, private sharedSrvc: SharedService) {}
+    constructor(private CompanySvc: CompanyService, private tstr: ToastrService, private sharedSrvc: SharedService, 
+        private DataSvc: DataService, public dialog: MatDialog) {}
 
     // sharedSrvc
     getUsername(): string {
@@ -70,8 +74,8 @@ export class appHelperService {
         return val.replace(/[^0-9\.-]/g, ''); //Remove non-numeric, period or minus char
     }
 
-    ofHourGlass(value: boolean) {
-        this.CompanySvc.ofHourGlass(value);
+    ofHourGlass(show: boolean = true) {
+        this.CompanySvc.ofHourGlass(show);
     }
     
     rawdatestrTruncatetz(val: string) {
@@ -99,5 +103,21 @@ export class appHelperService {
                 return matchVal[1] + '-' +  matchVal[2] + '-' + matchVal[3] + "T" + matchVal[4] + ":" + matchVal[5] + ":" + matchVal[6];
 
         }
+    }
+
+    // Item Related
+    async validateItem(fitem: string, showError = true) {
+        const dataResponse = await this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItem', {pfitem: fitem}).toPromise();
+        if (dataResponse.length == 0) {
+            if (showError) this.toastr('Item ' + fitem + ' not found!','error', '', true);
+            return null;
+        }
+        return dataResponse;
+    }
+
+    async lookupItem(fcustomerId = '-1') {
+        let selected = await this.dialog.open(ItemList, {data: {fcid: fcustomerId}}).afterClosed().toPromise();
+        if (!selected) return null;
+        return selected;
     }
 }

@@ -1,6 +1,6 @@
-<div mat-dialog-content cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="max-height:none;" fxLayout="row" class="widget-grid panel-nobox">
+<div mat-dialog-content  style="max-height:none;" fxLayout="row" class="widget-grid panel-nobox" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <div fxLayout="column" style="min-width:450px">
-        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" Xstyle='margin-top:5px'>
+        <nav class="navbar navbar-expand-md mbg-info" fxLayout="row" cdkDragHandle>
             <span class="text-nowrap">Price Check</span>
             <div fxFlex="flex"></div>
             <input type="file" hidden='true' #fileupload (change)="fileChange($event)" placeholder="Upload file" accept=".jpg">

@@ -1,0 +1,10 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01>
+        <input type="text" class="form-control lmargin" placeholder="Item Number" style="width: 250px" [(ngModel)]="fitem" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fitemOnChange()">
+        <button type="button" class="btn btn-primary" (click)="lookupitem()">Lookup List</button>
+        <span class="lmargin">From:</span>
+        <wj-input-date #fsodatef [(value)]="fdatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fdatef)" (lostFocus)="wjH.inputLostFocus(fdatef)"></wj-input-date>
+        <span class="lmargin">To:</span>
+        <wj-input-date #fsodatet [(value)]="fdatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fdatet)" (lostFocus)="wjH.inputLostFocus(fdatet)"></wj-input-date>
+    </pcdrBuilder>
+ </div>

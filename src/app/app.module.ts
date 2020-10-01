@@ -108,6 +108,7 @@ import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepanc
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
 import { invvaluation } from './inventory/reports/invvaluation/invvaluation';
+import { dashboarditem } from './inventory/dashboarditem/dashboarditem';
 
 //PR
 import { TimeclockComponent } from './pr/timeclock/timeclock.component';
@@ -196,7 +197,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invworkxdscrpc,
     soonline,
     taxrates,
-    invvaluation
+    invvaluation,
+    dashboarditem
   ],
   imports: [
     BrowserModule,
@@ -300,7 +302,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invworkxdscrpc,
     soonline,
     taxrates,
-    invvaluation
+    invvaluation,
+    dashboarditem
   ],
   bootstrap: [AppComponent]
 })

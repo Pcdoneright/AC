@@ -41,6 +41,7 @@ import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
 import { invtransferin } from './inventory/invwork/invtransferin';
 import { invphysicalentry } from './inventory/invwork/invphysicalentry';
 import { invphysicalpost } from './inventory/invwork/invphysicalpost';
+import { dashboarditem } from './inventory/dashboarditem/dashboarditem';
 import { Injectable } from "@angular/core";
 
 @Injectable()
@@ -133,6 +134,8 @@ export class CustomModule {
                 return taxrates;
             case 'invvaluation':
                 return invvaluation;
+            case 'dashboarditem':
+                return dashboarditem;
         }
         return '';
     }

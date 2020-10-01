@@ -45,9 +45,7 @@ export class ItemPriceCheck implements AfterViewInit {
             if (dataResponse.length == 0) {
                 let fitem = this.fitem; // Assign temporarily
                 this.clearForm(); // Clears this.fitem
-                this.fitem = fitem;
-
-                this.toastr.warning('Item not found!');
+                this.toastr.warning('Item ' + fitem + ' not found!');
                 this.focusToScan();
                 return;
             }

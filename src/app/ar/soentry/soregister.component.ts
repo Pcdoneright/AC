@@ -253,12 +253,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             // Display Change Amount
             if (this.soCurrent.fchange !== 0) {
                 // Display Change Due
-                this.CompanySvc.alert(
-                    this.CompanySvc.currencyRenderer({
-                        value: this.soCurrent.fchange,
-                    }),
-                    'Change Amount'
-                ).subscribe(() => {
+                this.CompanySvc.alert( this.CompanySvc.currencyRenderer({ value: this.soCurrent.fchange, }), 'Change Amount' ).subscribe(() => {
                     this.newSO();
                 });
             } else {
@@ -272,18 +267,12 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 // find and remove it, Payment-Complete
                 for (var i = 0; i < this.salesorderspending.length; i++) {
                     // if found exit
-                    if (
-                        this.salesorderspending[i].fsoid ===
-                        this.salesorders.items[0].fsoid
-                    ) {
+                    if ( this.salesorderspending[i].fsoid === this.salesorders.items[0].fsoid ) {
                         this.salesorderspending.splice(i, 1)[0]; // slice out specific item, and get 1st item of returned array
                         break;
                     }
                 }
-                this.wjH.gridLoad(
-                    this.salesorderspendingGrid,
-                    this.salesorderspending
-                ); // Reload grid
+                this.wjH.gridLoad( this.salesorderspendingGrid, this.salesorderspending ); // Reload grid
 
                 this.newSO();
             }
@@ -740,24 +729,12 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     // Set current order to pending
     setToPending() {
         // no details, not new order
-        if (
-            !this.validEntry() ||
-            this.soCurrent.fdocnumber !== -1 ||
-            this.salesdetails.items.length == 0
-        ) {
+        if ( !this.validEntry() || this.soCurrent.fdocnumber !== -1 || this.salesdetails.items.length == 0 ) {
             this.focusToScan();
             return;
         }
 
-        this.CompanySvc.inputDialog(
-            'Enter a Reference',
-            this.soCurrent.fponumber,
-            'Pending Order',
-            '',
-            '',
-            false,
-            false
-        ).subscribe((response) => {
+        this.CompanySvc.inputDialog( 'Enter a Reference', this.soCurrent.fponumber, 'Pending Order', '', '', false, false ).subscribe((response) => {
             if (response) {
                 this.soCurrent.fponumber = response;
                 this.postSetToPending();
