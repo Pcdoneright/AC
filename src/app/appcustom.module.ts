@@ -8,6 +8,7 @@ import { CustmaintComponent } from './ar/custmaint/custmaint.component';
 import { SoentryComponent } from './ar/soentry/soentry.component';
 import { SoRegisterComponent } from './ar/soentry/soregister.component';
 import { soonline } from './ar/soentry/soonline';
+import { soquick } from './ar/soentry/soquick';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
 import { crdrawersmaint } from './ar/crdrawersmaint/crdrawersmaint';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
@@ -136,6 +137,8 @@ export class CustomModule {
                 return invvaluation;
             case 'dashboarditem':
                 return dashboarditem;
+            case 'soquick':
+                return soquick;
         }
         return '';
     }

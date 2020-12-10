@@ -75,6 +75,17 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     salesdetailspending: any[] = [];
     salespaymentspending: any[] = [];
 
+    // options
+    OptOpenDrawer = true;
+    OptSetPending = true;
+    OptPrintSO = true;
+    OptDrwRpt = true;
+    Optlastorder = true;
+    OptAssignCustomer = true;
+    OptShowTax = false;
+    OptShowShipping = false;
+    OptOrderList = false;
+
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService, toastr: ToastrService, sharedSrvc: SharedService, dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe, public appH: appHelperService) {
         super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
 
@@ -128,12 +139,12 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             title: 'Properties',
             buttons: [
                 { name: 'New Order', style: 'success', action: 'newSO' },
-                { name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printSO', val: false, show: !this.isOnlineso, },
+                { name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printSO', val: false, show: this.OptPrintSO },
                 { name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printOnline', show: this.isOnlineso, },
-                { name: 'Drawer', style: 'light', tooltip: 'Open Drawer', action: 'openDrawer', show: !this.isOnlineso, },
-                { name: 'Set Pending', style: 'primary', action: 'setToPending', show: !this.isOnlineso, },
+                { name: 'Drawer', style: 'light', tooltip: 'Open Drawer', action: 'openDrawer', show: this.OptOpenDrawer },
+                { name: 'Set Pending', style: 'primary', action: 'setToPending', show: this.OptSetPending },
                 { name: 'Void', style: 'danger', action: 'setToVoid' },
-                { name: 'Drawer Report', style: 'secondary', action: 'drawerReport', show: !this.isOnlineso, },
+                { name: 'Drawer Report', style: 'secondary', action: 'drawerReport', show: this.OptDrwRpt },
                 { name: 'Save & Pending', style: 'primary', action: 'saveonline', show: this.isOnlineso },
             ],
             // spans: [
@@ -141,7 +152,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             // {text: 'Drawer:', property: 'totalDrawer', style: 'margin-left:15px'}
             // ],
             navButtons: [
-                { name: 'Order List', action: 'selectedTab', val: 0, show: this.isOnlineso, },
+                { name: 'Order List', action: 'selectedTab', val: 0, show: this.OptOrderList },
                 { name: 'Pending List', action: 'selectedTab', val: 2 },
             ],
             search: { action: 'searchSONumber', ngModel: 'searchId', placeholder: 'Order Number', val: true, },
@@ -167,9 +178,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.wjH.fixWM();
 
         // Get default customer id
-        let api = this.isOnlineso
-            ? 'api/CompanyMaint/GetOLCustomerID'
-            : 'api/CompanyMaint/GetPOSCustomerID';
+        let api = this.isOnlineso ? 'api/CompanyMaint/GetOLCustomerID' : 'api/CompanyMaint/GetPOSCustomerID';
         this.DataSvc.serverDataGet(api).subscribe((dataResponse) => {
             this.default_fcid = dataResponse.fpos_cid;
             this.getcustomer(this.default_fcid); // will call postCreateSO()
@@ -354,22 +363,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     }
 
     cashDrawerOverride(amtToDeposit: number) {
-        this.CompanySvc.inputDialog(
-            'Enter Code',
-            '',
-            'Admin Deposit-Code',
-            'Continue',
-            'Cancel',
-            true,
-            true,
-            false
-        ).subscribe((value) => {
-            this.DataSvc.serverDataGet(
-                'api/CompanyMaint/GetValidateCROverride',
-                {
-                    fcrdrawercode: value,
-                }
-            ).subscribe((dataResponse) => {
+        this.CompanySvc.inputDialog( 'Enter Code', '', 'Admin Deposit-Code', 'Continue', 'Cancel', true, true, false ).subscribe((value) => {
+            this.DataSvc.serverDataGet( 'api/CompanyMaint/GetValidateCROverride', { fcrdrawercode: value, } ).subscribe((dataResponse) => {
                 if (!dataResponse.validate) {
                     this.toastr.warning('Invalid Override Code');
                     setTimeout(() => {
@@ -381,19 +376,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                     this.totalDrawer = this.CompanySvc.r2d(this.totalDrawer);
                     console.log('deposit', amtToDeposit);
 
-                    this.DataSvc.serverDataPost(
-                        'api/CashRegister/PostDrawerDeposit',
-                        [
-                            {
-                                pfuserid: this.sharedSrvc.user.fuid,
-                                pfdrawer: amtToDeposit,
-                            },
-                        ]
-                    ).subscribe(() => {
-                        this.generateReport(
-                            'CashDrawerLastDeposit.pdf',
-                            'pfuserid=' + this.sharedSrvc.user.fuid
-                        ); // Print receipt after every deposit
+                    this.DataSvc.serverDataPost( 'api/CashRegister/PostDrawerDeposit', [ { pfuserid: this.sharedSrvc.user.fuid, pfdrawer: amtToDeposit, }, ] ).subscribe(() => {
+                        this.generateReport( 'CashDrawerLastDeposit.pdf', 'pfuserid=' + this.sharedSrvc.user.fuid ); // Print receipt after every deposit
                     });
                     this.depositDrawerTotal();
                 }
@@ -780,26 +764,16 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     // Restore pending order
     restorePending() {
         if (!this.validEntry()) return;
-        if (
-            this.salesdetails.items.length > 0 &&
-            this.soCurrent.fdocnumber == -1
-        )
-            return; // exit if current order exist
+        if ( this.salesdetails.items.length > 0 && this.soCurrent.fdocnumber == -1 ) return; // exit if current order exist
         if (!this.wjH.getGridSelectecRow(this.salesorderspendingGrid)) return; // make sure row is selected
 
-        if (
-            this.isOnlineso &&
-            this.salesorders.getChanges() &&
-            this.salesdetails.items.length > 0
-        )
-            return; // On-line order not saved
+        if ( this.isOnlineso && this.salesorders.getChanges() && this.salesdetails.items.length > 0 ) return; // On-line order not saved
 
         // clear all
         this.clearSalesOrder();
         this.setImage(null);
 
-        let fsoid = this.wjH.getGridSelectecRow(this.salesorderspendingGrid)
-            .fsoid;
+        let fsoid = this.wjH.getGridSelectecRow(this.salesorderspendingGrid).fsoid;
 
         // Not on-line continue as before
         if (!this.isOnlineso) {
@@ -897,17 +871,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 if (!dataResponse) return;
                 let row = this.salesdetailsAddItem(dataResponse, true); //  Add selection to salesdetails
                 this.updateTotalQty();
-                this.wjH.gridLoad(
-                    this.salesdetailsGrid,
-                    this.salesdetails.items
-                );
-                this.wjH.gridScrollToRow(
-                    this.salesdetailsGrid,
-                    -1,
-                    0,
-                    'fsodid',
-                    row.fsodid
-                ); // park on Price
+                this.wjH.gridLoad( this.salesdetailsGrid, this.salesdetails.items );
+                this.wjH.gridScrollToRow( this.salesdetailsGrid, -1, 0, 'fsodid', row.fsodid ); // park on Price
             });
     }
 
@@ -924,11 +889,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 this.focusToScan();
             })
             .subscribe(() => {
-                this.wjH.gridLoad(
-                    this.salesdetailsGrid,
-                    this.salesdetails.items,
-                    false
-                );
+                this.wjH.gridLoad( this.salesdetailsGrid, this.salesdetails.items, false );
                 this.salesordersTotals();
                 this.updateTotalQty();
                 this.setImage(null);

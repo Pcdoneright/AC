@@ -3,27 +3,27 @@ import { appHelperService } from '../../services/appHelper.service';
 import { SoRegisterComponent } from './soregister.component';
 
 @Component({
-    selector: 'soonline',
-    templateUrl: './soonline.html'
+    selector: 'soquick',
+    templateUrl: './soquick.html'
 })
-export class soonline implements AfterViewInit {
+export class soquick implements AfterViewInit {
     @ViewChild('soregister', {static: true}) soregister: SoRegisterComponent;
     
     constructor(public appH: appHelperService) {}
 
     ngOnInit() {
-        this.soregister.orderOrigin = 'OL';
+        this.soregister.orderOrigin = 'SO';
         this.soregister.OptOpenDrawer = false;
         this.soregister.OptSetPending = false;
         this.soregister.OptPrintSO = false;
         this.soregister.OptDrwRpt = false;
-        this.soregister.Optlastorder = false;
-        this.soregister.OptAssignCustomer = false;
-        this.soregister.OptShowTax = true;
-        this.soregister.OptShowShipping = true;
-        this.soregister.OptOrderList = true;
+        this.soregister.Optlastorder = true;
+        this.soregister.OptAssignCustomer = true;
+        this.soregister.OptShowTax = false;
+        this.soregister.OptShowShipping = false;
     }
     
     ngAfterViewInit() {
     }
 }
+        

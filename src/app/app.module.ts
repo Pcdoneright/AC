@@ -67,6 +67,7 @@ import { SoPayment } from './ar/soentry/sopayment.component';
 import { SoRegisterComponent, SOEditItem } from './ar/soentry/soregister.component';
 import { SOViewCustomer } from './ar/soentry/soregisterorder.component';
 import { soonline } from './ar/soentry/soonline';
+import { soquick } from './ar/soentry/soquick';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
 import { SalesmenMaintComponent } from './ar/slmmaint/slmmaint.component';
@@ -196,6 +197,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invworkreport,
     invworkxdscrpc,
     soonline,
+    soquick,
     taxrates,
     invvaluation,
     dashboarditem
@@ -301,6 +303,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invworkreport,
     invworkxdscrpc,
     soonline,
+    soquick,
     taxrates,
     invvaluation,
     dashboarditem

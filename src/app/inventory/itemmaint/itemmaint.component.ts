@@ -245,7 +245,7 @@ export class itemmaintComponent implements AfterViewInit {
 
         this.itemvendors.addRow({
             fitem: row.fitem,
-            fivid: this.dESrvc.getMaxValue(this.itmmg04.rows, 'fivid') + 1, // Assign next value
+            fivid: this.dESrvc.getMaxValue(this.itemvendors.items, 'fivid') + 1, // Assign next value
             fimid: this.itemmasters.items[0].fimid,
             fcost: 0,
             fvitem: row.fitem,

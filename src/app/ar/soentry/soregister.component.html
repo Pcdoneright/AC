@@ -24,7 +24,7 @@
         <div class="tcpanel" fxLayout="row" xstyle='padding: 5px'>
             <div fxLayout="column" fxFlex style="margin-right: 5px;">
                 <pcdrBuilder #bar02>
-                    <span *ngIf=!isOnlineso style='margin-left:45px'><h4>Last Order: {{lastordernumber}}</h4></span>
+                    <span *ngIf=Optlastorder style='margin-left:45px'><h4>Last Order: {{lastordernumber}}</h4></span>
                 </pcdrBuilder>
                 <!-- Form -->
                 <div style="background-color: #fff">
@@ -39,13 +39,13 @@
                                 <label>Name</label>
                                 <input type="text" class="form-control" value="{{soCurrent.cfcid}}" disabled>
                             </div>
-                            <button *ngIf=!isOnlineso type="button" (click)="assignCustomer()" style='height:38px;margin-top:32px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
+                            <button *ngIf=OptAssignCustomer type="button" (click)="assignCustomer()" style='height:38px;margin-top:32px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
                             <div class="form-group lmargin" fxFlex="33">
                                 <label>PO Number</label>
                                 <input type="text" class="form-control" name="fponumber" [(ngModel)]="soCurrent.fponumber">
                             </div>
                             <button type="button" (click)="viewOrder()" style='height:38px;margin-top:32px'matTooltip="View Order Info" class="btn btn-primary"><i class="fa fa-cog"></i></button>
-                            <div *ngIf=isOnlineso class="form-group lmargin" fxFlex="flex">
+                            <div *ngIf=OptShowTax class="form-group lmargin" fxFlex="flex">
                                 <label>Tax Rate</label>
                                 <select [(ngModel)]="soCurrent.ftrid" [ngModelOptions]="{standalone: true}" class="form-control" required (blur)="salesordersTotals()">
                                     <option *ngFor="let opt of taxrates" [value]="opt.ftrid">
@@ -53,7 +53,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <div *ngIf=isOnlineso class="form-group lmargin" fxFlex="flex">
+                            <div *ngIf=OptShowShipping class="form-group lmargin" fxFlex="flex">
                                 <label>Shipping</label>
                                 <wj-input-number #fshipamt class="mwj-form-control form-control" [(value)]="soCurrent.fshipamt" format='c2' 
                                 [isRequired]="false"
@@ -125,7 +125,7 @@
                 <wj-flex-grid #soeg01 fxFlex class='sorclass' style='border:none'></wj-flex-grid>
                 <!-- Totals -->
                 <div style="background-color: #e3f2fd; padding-left: 5px; padding-right:5px; border-top:1px solid rgba(0,0,0,.2)">
-                    <div *ngIf='isOnlineso' fxLayout='row'>
+                    <div *ngIf=OptShowTax fxLayout='row'>
                         <span><h5>Tax</h5></span>
                         <div fxFlex='flex'></div>
                         <span><h5>{{soCurrent.ftax | currency:'USD'}}</h5></span>
