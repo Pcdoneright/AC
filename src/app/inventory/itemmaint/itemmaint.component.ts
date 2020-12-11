@@ -129,7 +129,8 @@ export class itemmaintComponent implements AfterViewInit {
     // Get item by id
     searchByIdNumber() {
         if (!this.searchId) return;
-        this.searchId = this.searchId.replace(/[^0-9\.-]/g, '');
+        //this.searchId = this.searchId.replace(/[^0-9\.-]/g, '');
+        this.searchId = this.searchId.toUpperCase();
         if (this.searchId === '') return; //Remove non-numeric, period or minus char
 
         var api = (this.itemnumberid === "I") ? 'api/ItemMaint/GetValidateItemmasters' : 'api/ItemMaint/GetValidateItemmastersByItem';

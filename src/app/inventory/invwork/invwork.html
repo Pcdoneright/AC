@@ -1,5 +1,7 @@
 <div class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
-    <pcdrBuilder #bar01></pcdrBuilder>    
+    <pcdrBuilder #bar01>
+        <span style='margin-left:45px'><h4>Last Transaction: {{lastordernumber}}</h4></span>
+    </pcdrBuilder>    
     <div fxLayout="row">
         <!-- Form -->
         <form fxFlex>

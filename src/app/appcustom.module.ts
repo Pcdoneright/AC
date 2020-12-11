@@ -42,6 +42,7 @@ import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
 import { invtransferin } from './inventory/invwork/invtransferin';
 import { invphysicalentry } from './inventory/invwork/invphysicalentry';
 import { invphysicalpost } from './inventory/invwork/invphysicalpost';
+import { invtransfertosaleman } from './inventory/invwork//invtransfertosaleman';
 import { dashboarditem } from './inventory/dashboarditem/dashboarditem';
 import { Injectable } from "@angular/core";
 
@@ -139,6 +140,8 @@ export class CustomModule {
                 return dashboarditem;
             case 'soquick':
                 return soquick;
+            case 'invtransfertosaleman':
+                return invtransfertosaleman;
         }
         return '';
     }

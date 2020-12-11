@@ -100,6 +100,7 @@ import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
 import { invtransferin } from './inventory/invwork/invtransferin';
 import { invphysicalentry } from './inventory/invwork/invphysicalentry';
 import { invphysicalpost } from './inventory/invwork/invphysicalpost';
+import { invtransfertosaleman } from './inventory/invwork//invtransfertosaleman';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { Itemvendorcost } from './inventory/itemlist/itemvendorcost.component';
 import { Itempurchasehist } from './ap/list/itempurchasehist.component';
@@ -200,6 +201,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     soquick,
     taxrates,
     invvaluation,
+    invtransfertosaleman,
     dashboarditem
   ],
   imports: [
@@ -306,6 +308,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     soquick,
     taxrates,
     invvaluation,
+    invtransfertosaleman,
     dashboarditem
   ],
   bootstrap: [AppComponent]

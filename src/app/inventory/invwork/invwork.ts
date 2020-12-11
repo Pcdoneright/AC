@@ -44,11 +44,13 @@ export class invwork implements OnDestroy, AfterViewInit {
     @Input() allowCustomAction = false;
     @Input() customActionButton = '';
     @Input() customActionIcon = '';
+    @Input() addincrementScanItem = true;
     allowNegativeQty = false;
     validateTransaction = false;
     afterRetrieveTrx = false;
     trxType:string;
     parent:any;
+    lastordernumber: string;
 
     invworkheaders:DataStore;
     invwork:DataStore;
@@ -178,11 +180,13 @@ export class invwork implements OnDestroy, AfterViewInit {
         
         if (row.length > 0) {
             this.fitem = ''; // Clear value
-            row[0].fqty += 1; // Increment Qty
+            if (this.addincrementScanItem) { row[0].fqty += 1; } // Increment Qty only if allowed
             this.invworkGrid.refresh();
             this.wjH.gridScrollToRow(this.invworkGrid, -1, 0, 'fiwid', row[0].fiwid); // No-focus only scroll
         }
         else {
+            if (!this.addincrementScanItem) return; // Do not add new item
+
             this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItemWOH', {pfitem: this.fitem, pfloc: this.poCurrent.flocation, pfactive: 'true'}).subscribe((res) => {
                 if (res.length == 0) {
                     this.appH.toastr('Item ' + this.fitem + ' not found!','error', '', true);
@@ -196,7 +200,7 @@ export class invwork implements OnDestroy, AfterViewInit {
                         fiwid: dataResponse.data,
                         fiwhid: this.invworkheaders.items[0].fiwhid,
                         ts: dt,
-                        fitem: this.fitem,                
+                        fitem: res[0].fitem,                
                         ftype: this.invworkheaders.items[0].ftype,                
                         fstatus: this.invworkheaders.items[0].fstatus,              
                         // fuser: this.sharedSrvc.user.fname,                
@@ -290,7 +294,13 @@ export class invwork implements OnDestroy, AfterViewInit {
 
         // Send to Server
         this.dESrvc.update('api/Invwork/Postupdate').subscribe((dataResponse) => {
+            this.lastordernumber = this.invworkheaders.items[0].fiwhid; // Save last order
             this.printPO();
+            this.CompanySvc.ofHourGlass(false);
+            this.createOrder()
+        }, (ErrorMsg) => {
+            this.lastordernumber = '';
+            // this.invworkheaders.items[0].fstatus = 'O'; // Reverse status
             this.CompanySvc.ofHourGlass(false);
         });
     }

@@ -16,6 +16,11 @@ export class invphysicalpost implements AfterViewInit {
         this.invwork.parent = this;
         this.invwork.allowNegativeQty = false;
         this.invwork.trxType = 'AP'; // Physical Inventory
+
+        this.invwork.createOrder(); // Create by default and retrieve items
+        setTimeout(() => {
+            this.allowCustomAction();
+        }, 500);
     }
 
     allowCustomAction() {
