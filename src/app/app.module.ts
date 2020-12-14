@@ -67,12 +67,13 @@ import { SoPayment } from './ar/soentry/sopayment.component';
 import { SoRegisterComponent, SOEditItem } from './ar/soentry/soregister.component';
 import { SOViewCustomer } from './ar/soentry/soregisterorder.component';
 import { soonline } from './ar/soentry/soonline';
-import { soquick } from './ar/soentry/soquick';
+import { sovendor } from './ar/soentry/sovendor';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
 import { SalesmenMaintComponent } from './ar/slmmaint/slmmaint.component';
 import { salesagingrpt } from './ar/reports/salesagingrpt/salesagingrpt';
 import { salesordersrpt } from './ar/reports/salesordersrpt/salesordersrpt';
+import { pricediscrepancyrpt } from './ar/reports/pricediscrepancyrpt/pricediscrepancyrpt';
 import { soreopeninvoice } from './ar/soreopeninvoice/soreopeninvoice';
 import { cashregistersales } from './ar/reports/cashregistersales/cashregistersales';
 import { soProperties } from './ar/components/soproperties';
@@ -176,6 +177,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     VendormaintComponent,
     salesagingrpt,
     salesordersrpt,
+    pricediscrepancyrpt,
     soreopeninvoice,
     cashregistersales,
     soProperties,
@@ -198,7 +200,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invworkreport,
     invworkxdscrpc,
     soonline,
-    soquick,
+    sovendor,
     taxrates,
     invvaluation,
     invtransfertosaleman,
@@ -285,6 +287,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     VendormaintComponent,
     salesagingrpt,
     salesordersrpt,
+    pricediscrepancyrpt,
     soreopeninvoice,
     cashregistersales,
     itemmovement,
@@ -305,7 +308,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invworkreport,
     invworkxdscrpc,
     soonline,
-    soquick,
+    sovendor,
     taxrates,
     invvaluation,
     invtransfertosaleman,

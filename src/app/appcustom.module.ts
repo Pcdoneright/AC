@@ -8,12 +8,13 @@ import { CustmaintComponent } from './ar/custmaint/custmaint.component';
 import { SoentryComponent } from './ar/soentry/soentry.component';
 import { SoRegisterComponent } from './ar/soentry/soregister.component';
 import { soonline } from './ar/soentry/soonline';
-import { soquick } from './ar/soentry/soquick';
+import { sovendor } from './ar/soentry/sovendor';
 import { SlminvntryComponent } from './ar/slminvntry/slminvntry.component';
 import { crdrawersmaint } from './ar/crdrawersmaint/crdrawersmaint';
 import { customersalesbyitemComponent } from './ar/reports/customersalesbyitem/customersalesbyitem.component';
 import { salesagingrpt } from './ar/reports/salesagingrpt/salesagingrpt';
 import { salesordersrpt } from './ar/reports/salesordersrpt/salesordersrpt';
+import { pricediscrepancyrpt } from './ar/reports/pricediscrepancyrpt/pricediscrepancyrpt';
 import { cashregistersales } from './ar/reports/cashregistersales/cashregistersales';
 import { SalesmenMaintComponent } from './ar/slmmaint/slmmaint.component';
 import { soreopeninvoice } from './ar/soreopeninvoice/soreopeninvoice';
@@ -138,10 +139,12 @@ export class CustomModule {
                 return invvaluation;
             case 'dashboarditem':
                 return dashboarditem;
-            case 'soquick':
-                return soquick;
+            case 'sovendor':
+                return sovendor;
             case 'invtransfertosaleman':
                 return invtransfertosaleman;
+            case 'pricediscrepancyrpt':
+                return pricediscrepancyrpt;
         }
         return '';
     }

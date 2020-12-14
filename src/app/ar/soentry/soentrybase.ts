@@ -283,20 +283,37 @@ export class soentrybaseClass {
         }
 
         // Balance must be zero for POS, 'OL' allow to have balance
-        if (this.orderOrigin != 'OL') {
-            if ((this.orderOrigin === 'POS' || this.orderOrigin === 'SMI') && this.salesorders.items[0].fbalance !== 0) {
-                this.toastr.error('Balance amount must be Zero');
-                return;
-            }
+        switch (this.orderOrigin) {
+            case 'OL':
+                // Make sure is not invoicing
+                if (this.invoiceFlag && this.salesorders.items[0].fbalance !== 0) {
+                    this.toastr.error('Balance amount must be Zero');
+                    this.invoiceFlag = false;
+                    return;
+                }
+                break;
+            case 'VS': // Vendor Sales Order
+                break;
+            default:
+                if ((this.orderOrigin === 'POS' || this.orderOrigin === 'SMI') && this.salesorders.items[0].fbalance !== 0) {
+                    this.toastr.error('Balance amount must be Zero');
+                    return;
+                }
         }
-        else {
-            // Make sure is not invoicing
-            if (this.invoiceFlag && this.salesorders.items[0].fbalance !== 0) {
-                this.toastr.error('Balance amount must be Zero');
-                this.invoiceFlag = false;
-                return;
-            }
-        }
+        // if (this.orderOrigin != 'OL') {
+        //     if ((this.orderOrigin === 'POS' || this.orderOrigin === 'SMI') && this.salesorders.items[0].fbalance !== 0) {
+        //         this.toastr.error('Balance amount must be Zero');
+        //         return;
+        //     }
+        // }
+        // else {
+        //     // Make sure is not invoicing
+        //     if (this.invoiceFlag && this.salesorders.items[0].fbalance !== 0) {
+        //         this.toastr.error('Balance amount must be Zero');
+        //         this.invoiceFlag = false;
+        //         return;
+        //     }
+        // }
 
         // SCA 'Re-assign customer to Invoice'
         if (this.orderOrigin === 'SCA') {

@@ -1,0 +1,15 @@
+<pcdrBuilder #bar01></pcdrBuilder>
+
+<form>
+    <div fxLayout="row">
+        <div class="form-group lmargin" style="width: 300px;">
+            <label>Customer ID</label>
+            <input type="text" class="form-control" placeholder="All Customers" [(ngModel)]="fcid" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fcidOnChange()">
+        </div>
+        <button type="button" style='height:38px;margin-top:32px' (click)="lookupcust()" matTooltip="Customer List" class="btn btn-primary"><i class="fa fa-user"></i></button>
+        <div class="form-group lmargin" fxFlex="flex">
+            <label>Name</label>
+            <input type="text" class="form-control" placeholder="All Customers" [(ngModel)]="fdescription" [ngModelOptions]="{standalone: true}" (ngModelChange)="fcidOnChange()" disabled>
+        </div>
+    </div> 
+</form>

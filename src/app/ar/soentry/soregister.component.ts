@@ -85,6 +85,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     OptShowTax = false;
     OptShowShipping = false;
     OptOrderList = false;
+    OptShowShipto = false;
+    OptShowPrintMobile = true;
 
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService, toastr: ToastrService, sharedSrvc: SharedService, dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe, public appH: appHelperService) {
         super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
@@ -251,41 +253,81 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
     // Override to create a new order after update
     postUpdate() {
-        if (!this.isOnlineso) {
-            this.printSO(true); // Open Drawer
-            this.lastordernumber = this.soCurrent.fdocnumber; //Save last fdocnumber
-
-            // Save totalDrawer
-            this.getCashTotal();
-            this.depositDrawerTotal();
-
-            // Display Change Amount
-            if (this.soCurrent.fchange !== 0) {
-                // Display Change Due
-                this.CompanySvc.alert( this.CompanySvc.currencyRenderer({ value: this.soCurrent.fchange, }), 'Change Amount' ).subscribe(() => {
-                    this.newSO();
-                });
-            } else {
-                this.newSO();
-            }
-        } else {
-            // On-line if it was done from saveorder
-            if (this.onlinepostSetToPending) {
-                this.postSetToPending();
-            } else {
-                // find and remove it, Payment-Complete
-                for (var i = 0; i < this.salesorderspending.length; i++) {
-                    // if found exit
-                    if ( this.salesorderspending[i].fsoid === this.salesorders.items[0].fsoid ) {
-                        this.salesorderspending.splice(i, 1)[0]; // slice out specific item, and get 1st item of returned array
-                        break;
+        switch (this.orderOrigin) {
+            case 'OL':
+                // On-line if it was done from saveorder
+                if (this.onlinepostSetToPending) {
+                    this.postSetToPending();
+                } else {
+                    // find and remove it, Payment-Complete
+                    for (var i = 0; i < this.salesorderspending.length; i++) {
+                        // if found exit
+                        if ( this.salesorderspending[i].fsoid === this.salesorders.items[0].fsoid ) {
+                            this.salesorderspending.splice(i, 1)[0]; // slice out specific item, and get 1st item of returned array
+                            break;
+                        }
                     }
+                    this.wjH.gridLoad( this.salesorderspendingGrid, this.salesorderspending ); // Reload grid
+                    this.newSO();
                 }
-                this.wjH.gridLoad( this.salesorderspendingGrid, this.salesorderspending ); // Reload grid
+                break;
+            
+            default:
+                this.printSO(true); // Open Drawer
+                this.lastordernumber = this.soCurrent.fdocnumber; //Save last fdocnumber
 
-                this.newSO();
-            }
+                if (this.orderOrigin != 'VS') { // Don't save drawer for Vendor-Sales-Order
+                    // Save totalDrawer
+                    this.getCashTotal();
+                    this.depositDrawerTotal();
+                }
+
+                // Display Change Amount
+                if (this.soCurrent.fchange !== 0) {
+                    // Display Change Due
+                    this.CompanySvc.alert( this.CompanySvc.currencyRenderer({ value: this.soCurrent.fchange, }), 'Change Amount' ).subscribe(() => {
+                        this.newSO();
+                    });
+                } else {
+                    this.newSO();
+                }
         }
+
+        // if (!this.isOnlineso) {
+        //     this.printSO(true); // Open Drawer
+        //     this.lastordernumber = this.soCurrent.fdocnumber; //Save last fdocnumber
+
+        //     // Save totalDrawer
+        //     this.getCashTotal();
+        //     this.depositDrawerTotal();
+
+        //     // Display Change Amount
+        //     if (this.soCurrent.fchange !== 0) {
+        //         // Display Change Due
+        //         this.CompanySvc.alert( this.CompanySvc.currencyRenderer({ value: this.soCurrent.fchange, }), 'Change Amount' ).subscribe(() => {
+        //             this.newSO();
+        //         });
+        //     } else {
+        //         this.newSO();
+        //     }
+        // } else {
+        //     // On-line if it was done from saveorder
+        //     if (this.onlinepostSetToPending) {
+        //         this.postSetToPending();
+        //     } else {
+        //         // find and remove it, Payment-Complete
+        //         for (var i = 0; i < this.salesorderspending.length; i++) {
+        //             // if found exit
+        //             if ( this.salesorderspending[i].fsoid === this.salesorders.items[0].fsoid ) {
+        //                 this.salesorderspending.splice(i, 1)[0]; // slice out specific item, and get 1st item of returned array
+        //                 break;
+        //             }
+        //         }
+        //         this.wjH.gridLoad( this.salesorderspendingGrid, this.salesorderspending ); // Reload grid
+
+        //         this.newSO();
+        //     }
+        // }
     }
 
     depositDrawerTotal() {
@@ -434,11 +476,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.CompanySvc.ofHourGlass(true);
         var mParms = [{ fline: 1, fnumber: this.soCurrent.fdocnumber }];
         // Set priority = 4
-        this.CompanySvc.ofCreateReport(
-            'd_salesorder_cr_receipt',
-            mParms,
-            4
-        ).subscribe((pResponse) => {
+        this.CompanySvc.ofCreateReport( 'd_salesorder_cr_receipt', mParms, 4 ).subscribe((pResponse) => {
             var filename = pResponse.ffilename;
             // Send to printer
             setTimeout(() => {
@@ -446,14 +484,10 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                     // if (this.fposprint == 'D') { // Direct
                     if (this.printMobile) {
                         // Direct
-                        this.CompanySvc.printPDFserverFile(
-                            pResponse.data,
-                            this
-                        );
-                        if (opendrawer) this.openDrawer();
+                        this.CompanySvc.printPDFserverFile( pResponse.data, this );
+                        // if (opendrawer) this.openDrawer();
                     } else {
-                        window.location.href =
-                            'pcdrprintpdfv3:' + filename + ':' + opendrawer; // open drawer option
+                        window.location.href = 'pcdrprintpdfv3:' + filename + ':' + opendrawer; // open drawer option
                     }
                     this.focusToScan();
                 });
@@ -912,8 +946,19 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
     listOLGridRefresh() {
         this.CompanySvc.ofHourGlass(true);
+        let sotype = '';
+
+        switch (this.orderOrigin) {
+            case 'OL':
+                sotype = 'C'
+                break;
+            case 'VS': // Vendor Sales Order
+                sotype = 'VS'
+                break;
+        }
+
         this.DataSvc.serverDataGet('api/SO/GetSOList', {
-            psotype: 'C',
+            psotype: sotype,
             pfcid: this.default_fcid,
             pdatef: this.datePipe.transform(this.sodatef, 'yyyy-MM-dd'),
             pdatet: this.datePipe.transform(this.sodatet, 'yyyy-MM-dd'),
