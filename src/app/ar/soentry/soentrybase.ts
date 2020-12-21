@@ -13,7 +13,7 @@ import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import { ItemList } from '../../inventory/itemlist/itemlist.component';
 import { ItemRelatedList } from '../../inventory/itemlist/itemrelatedlist.component';
 import { CustomerList } from '../../ar/list/custlist.component';
-import { debug } from 'util';
+// import { debug } from 'util';
 
 export class soentrybaseClass {
     fadmin: boolean = false;

@@ -6,7 +6,7 @@
                 <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
                 <span class="lmargin">To:</span>
                 <wj-input-date #fsodatet [(value)]="sodatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatet)" (lostFocus)="wjH.inputLostFocus(fsodatet)"></wj-input-date>
-                <span class="lmargin">Salesmen:</span>
+                <span class="lmargin">Location:</span>
                 <select [(ngModel)]="soflocation" class="form-control lmargin" style="width: 350px">
                     <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
                         {{opt.fname}}
@@ -35,7 +35,7 @@
                                 <span class="fdocnumber">{{soCurrent.fiwhid}}</span>
                             </div>
                             <div class="form-group lmargin" fxFlex="flex">
-                                <label>Location</label>
+                                <label>Location From</label>
                                 <select [(ngModel)]="soCurrent.flocation" [ngModelOptions]="{standalone: true}" class="form-control">
                                     <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
                                         {{opt.fname}}
@@ -43,7 +43,7 @@
                                 </select>
                             </div>
                             <div class="form-group lmargin" fxFlex="flex">
-                                <label>Salesmen</label>
+                                <label>Location To</label>
                                 <select [(ngModel)]="soCurrent.flocation2" [ngModelOptions]="{standalone: true}" class="form-control">
                                     <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
                                         {{opt.fname}}

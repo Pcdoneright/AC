@@ -30,6 +30,7 @@
     "jquery": "^3.2.0",
     "ngx-pipes": "^2.7.5",
     "ngx-toastr": "^13.0.0",
+    "remote-pay-cloud": "^4.0.2",
     "rxjs": "^6.6.0",
     "rxjs-compat": "^6.0.0",
     "tslib": "^2.0.0",

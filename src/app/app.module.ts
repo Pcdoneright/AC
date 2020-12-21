@@ -44,6 +44,7 @@ import { InputDialog } from './services/dialog-input.component';
 import { CompanyRulesService } from './services/companyrules.service';
 import { pcdrBuilderComponent } from './services/builder/builder.component';
 import { KeyPadComponent } from "./services/keypad.component"
+import { cloverService } from "./services/clover.service"
 import { ListPrograms } from './lists/list-programs.component';
 
 //Company
@@ -239,7 +240,8 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     wjHelperService,
     appHelperService,
     CompanyService,
-    CompanyRulesService
+    CompanyRulesService,
+    cloverService
   ],
   entryComponents: [
     MenUtillitiesComponent,
