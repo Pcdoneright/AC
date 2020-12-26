@@ -12,6 +12,14 @@
                         {{opt.fdescription}}
                     </option>
                 </select>
+                <ng-container *ngIf="OptShowLocation">
+                    <span class="lmargin">Location:</span>
+                    <select [(ngModel)]="flocation" class="form-control lmargin" style="width: 350px;">
+                        <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                            {{opt.fname}}
+                        </option>
+                    </select>
+                </ng-container>
                 <button type="button" class="btn btn-primary" (click)="listOLGridRefresh()"><i class="fa fa-search"></i> Search</button>
             </pcdrBuilder>
             <wj-flex-grid #listSOGrid fxFlex></wj-flex-grid>
@@ -45,6 +53,14 @@
                                 <select name="fcstid" [(ngModel)]="soCurrent.fcstid" class="form-control">
                                     <option *ngFor="let opt of customershiptos" [value]="opt.fcstid">
                                         {{opt.faddress1}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div *ngIf=OptShowShipto class="form-group lmargin" fxFlex="flex">
+                                <label>From</label>
+                                <select name="fcmplid" [(ngModel)]="soCurrent.flocation" class="form-control">
+                                    <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                                        {{opt.fname}}
                                     </option>
                                 </select>
                             </div>

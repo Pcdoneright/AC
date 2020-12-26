@@ -21,6 +21,8 @@ export class sovendor implements AfterViewInit {
         this.soregister.printMobile = true;
         this.soregister.OptShowPrintMobile = false;
         this.soregister.sostatus = 'A'; // Order List show ALL
+        this.soregister.OptShowLocation = true;
+        this.soregister.OptSaveOnPending = true;
     }
     
     ngAfterViewInit() {

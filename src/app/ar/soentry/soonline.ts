@@ -23,6 +23,7 @@ export class soonline implements AfterViewInit {
         this.soregister.OptShowShipping = true;
         this.soregister.OptOrderList = true;
         this.soregister.OptShowPrintMobile = false;
+        this.soregister.OptSaveOnPending = true;
     }
     
     ngAfterViewInit() {

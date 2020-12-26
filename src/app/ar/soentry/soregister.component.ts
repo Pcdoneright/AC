@@ -53,6 +53,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     sodatef: Date = new Date();
     sodatet: Date = new Date();
     sostatus: string = 'S';
+    flocation = 0;
 
     showMoreEdit: boolean;
     fitem: string;
@@ -87,6 +88,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     OptOrderList = false;
     OptShowShipto = false;
     OptShowPrintMobile = true;
+    OptShowLocation = false;
+    OptSaveOnPending = false;
 
     constructor(CompanySvc: CompanyService, DataSvc: DataService, dESrvc: DataEntryService, toastr: ToastrService, sharedSrvc: SharedService, dialog: MatDialog, $filter: PcdrFilterPipe, public wjH: wjHelperService, companyRules: CompanyRulesService, private datePipe: DatePipe, public appH: appHelperService) {
         super(CompanySvc, DataSvc, dESrvc, toastr, sharedSrvc, dialog, $filter, companyRules, appH);
@@ -125,6 +128,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             if (dataResponse.length > 0)
                 this.totalDrawer = dataResponse[0].fdrawer;
         });
+
+        this.flocation = this.sharedSrvc.user.flocation; // Assign user location
     }
 
     ngOnInit() {
@@ -147,7 +152,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 { name: 'Set Pending', style: 'primary', action: 'setToPending', show: this.OptSetPending },
                 { name: 'Void', style: 'danger', action: 'setToVoid' },
                 { name: 'Drawer Report', style: 'secondary', action: 'drawerReport', show: this.OptDrwRpt },
-                { name: 'Save & Pending', style: 'primary', action: 'saveonline', show: this.isOnlineso },
+                { name: 'Save & Pending', style: 'primary', action: 'saveonline', show: this.OptSaveOnPending },
             ],
             // spans: [
             // {text: 'Last Order:', property: 'lastordernumber', style: 'margin-left:45px'},
@@ -763,7 +768,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
     postSetToPending() {
         // Add as before
-        if (!this.isOnlineso) {
+        if (!this.OptSaveOnPending) {
             this.salesorderspending.push(this.soCurrent); // Append to end
             // Add all salesdetails
             for (var i = 0; i < this.salesdetails.items.length; i++) {
@@ -810,7 +815,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         let fsoid = this.wjH.getGridSelectecRow(this.salesorderspendingGrid).fsoid;
 
         // Not on-line continue as before
-        if (!this.isOnlineso) {
+        if (!this.OptSaveOnPending) {
             // find and remove it
             for (var i = 0; i < this.salesorderspending.length; i++) {
                 // if found exit
@@ -963,6 +968,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             pdatef: this.datePipe.transform(this.sodatef, 'yyyy-MM-dd'),
             pdatet: this.datePipe.transform(this.sodatet, 'yyyy-MM-dd'),
             pfstatus: this.sostatus,
+            pflocation: this.flocation
         }).subscribe((dataResponse) => {
             this.wjH.gridLoad(this.listSOGrid, dataResponse);
             this.listSOGridTotal();
