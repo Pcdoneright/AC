@@ -30,6 +30,7 @@ import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
         this.DataSvc.serverDataGet('api/ItemMaint/GetItemUnitsList', { pfitem: this.data.fitem, pfcid: this.data.fcid })
             .subscribe((results) => {
                 this.wjH.gridLoad(this.itemrelg01, results);
+                this.itemrelg01.refresh();
                 if (results.length === 0) this.toastr.info('No Rows found');
                 this.CompanySvc.ofHourGlass(false);
             });
@@ -48,17 +49,18 @@ import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
         // wj-flex-grid
         this.itemrelg01.initialize({
             isReadOnly: true,
-            formatItem: (s, e) => {
-                if (e.panel == s.cells) {
-                    var col = s.columns[e.col], row = s.rows[e.row].dataItem;
-                    switch (col.binding) {
-                        case 'cfeach':
-                            row.cfeach = row.fsaleprice / row.funits;
-                            // e.cell.style['text-align'] = 'right';
-                            break;
-                    }
-                }
-            },
+            // formatItem: (s, e) => {
+            //     if (e.panel == s.cells) {
+            //         var col = s.columns[e.col], row = s.rows[e.row].dataItem;
+            //         switch (col.binding) {
+            //             case 'cfeach':
+            //                 row.cfeach = this.CompanySvc.r2d(row.fsaleprice / row.funits); // Not happening at run time for all rows
+            //                 // e.cell.style['text-align'] = 'right';
+            //                 console.log(row.cfeach)
+            //                 break;
+            //         }
+            //     }
+            // },
             selectionChanged: (s, e) => {
                 if (this.wjH.gridSelectChanged(this.itemrelg01, e.row)) {
                     var row = this.wjH.getGridSelectecRow(this.itemrelg01);
