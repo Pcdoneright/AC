@@ -56,6 +56,8 @@ export class invwork implements OnDestroy, AfterViewInit {
     invwork:DataStore;
     companylocations: any[];
     
+    OptionNewAfterPost = true;
+    
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public dESrvc: DataEntryService, 
         public sharedSrvc: SharedService, private $filter: PcdrFilterPipe, 
         public wjH: wjHelperService, public appH: appHelperService,
@@ -297,7 +299,7 @@ export class invwork implements OnDestroy, AfterViewInit {
             this.lastordernumber = this.invworkheaders.items[0].fiwhid; // Save last order
             this.printPO();
             this.CompanySvc.ofHourGlass(false);
-            this.createOrder()
+            if (this.OptionNewAfterPost) this.createOrder()
         }, (ErrorMsg) => {
             this.lastordernumber = '';
             // this.invworkheaders.items[0].fstatus = 'O'; // Reverse status
@@ -391,6 +393,7 @@ export class invwork implements OnDestroy, AfterViewInit {
 
     onResize(event) {
         this.tH01 = window.innerHeight - 55;
+        this.gH03 = this.tH01 - 385;
     }
 
     initGrids() {

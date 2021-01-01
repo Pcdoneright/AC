@@ -24,6 +24,7 @@ export class invvaluation implements OnDestroy {
     fcategory: any[];
     companylocations: any[];
     flocation:number = 0;
+    fqtytype = "A";
 
     constructor(private CompanySvc: CompanyService, public dESrvc: DataEntryService, private DataSvc: DataService, public wjH: wjHelperService, private datePipe: DatePipe, private toastr: ToastrService, 
         private $filter: PcdrFilterPipe, public dialog: MatDialog) {
@@ -60,7 +61,8 @@ export class invvaluation implements OnDestroy {
         var mParms = 
         "pAnd=" +
         (this.flocation > 0? " AND inventories.flocation=" + this.flocation: "") +
-        (this.fctid !== 'All'? " AND itemmasters.fcategory='" + this.fctid + "'": "");
+        (this.fctid !== 'All'? " AND itemmasters.fcategory='" + this.fctid + "'": "") +
+        (this.fqtytype !== 'A'? " AND inventories.fonhand " + (this.fqtytype == 'P'? ">": "<") + " 0": "");
 
         this.CompanySvc.ofHourGlass(true);
         this.CompanySvc.ofCreateJasperReport('InventoryValuation.pdf', mParms).subscribe((pResponse) => {

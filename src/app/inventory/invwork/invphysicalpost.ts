@@ -21,6 +21,8 @@ export class invphysicalpost implements AfterViewInit {
         setTimeout(() => {
             this.allowCustomAction();
         }, 500);
+
+        this.invwork.OptionNewAfterPost = false;
     }
 
     allowCustomAction() {

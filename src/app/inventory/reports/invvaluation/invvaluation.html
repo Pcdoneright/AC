@@ -16,6 +16,14 @@
                     <option *ngFor="let x of fcategory" [value]="x.fid">{{x.fid}}</option>
                 </select>
             </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Search</label>
+                <mat-radio-group class="form-control" [(ngModel)]="fqtytype" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="A">All</mat-radio-button>
+                    <mat-radio-button value="P">Positive Only</mat-radio-button>
+                    <mat-radio-button value="N">Negative Only</mat-radio-button>
+                </mat-radio-group>
+            </div>
         </div>
     </form>
  </div>

@@ -67,7 +67,7 @@
         <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
     </pcdrBuilder>
     <div fxLayout="row" fxFlex>
-        <wj-flex-grid #invworkGrid fxFlex
+        <wj-flex-grid #invworkGrid [style.height.px] = "gH03"
             (keydown)='wjH.onGridKeyPress(invworkGrid, $event)' 
             (gotFocus)='wjH.onGridGotFocus(invworkGrid, $event)'
             (selectionChanged)='wjH.onGridSelectionChanged(invworkGrid, $event)'>
