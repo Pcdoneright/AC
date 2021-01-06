@@ -112,6 +112,7 @@ import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepanc
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
 import { invvaluation } from './inventory/reports/invvaluation/invvaluation';
+import { invonhand } from './inventory/reports/invvaluation/invonhand';
 import { dashboarditem } from './inventory/dashboarditem/dashboarditem';
 
 //PR
@@ -204,6 +205,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     sovendor,
     taxrates,
     invvaluation,
+    invonhand,
     invtransfertosaleman,
     dashboarditem
   ],
@@ -313,6 +315,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     sovendor,
     taxrates,
     invvaluation,
+    invonhand,
     invtransfertosaleman,
     dashboarditem
   ],

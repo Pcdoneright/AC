@@ -6,11 +6,7 @@ import { wjHelperService } from '../../../services/wjHelper.service';
 import { DatePipe } from '@angular/common';
 import { PcdrFilterPipe } from '../../../pipes/pcdrfilter.pipe';
 import { pcdrBuilderComponent } from '../../../services/builder/builder.component';
-import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
-import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
-import { FormControl } from "@angular/forms";
 import { ToastrService } from 'ngx-toastr';
-import { ItemList } from '../../../inventory/itemlist/itemlist.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -25,6 +21,7 @@ export class invvaluation implements OnDestroy {
     companylocations: any[];
     flocation:number = 0;
     fqtytype = "A";
+    OptionShowAmt = true;
 
     constructor(private CompanySvc: CompanyService, public dESrvc: DataEntryService, private DataSvc: DataService, public wjH: wjHelperService, private datePipe: DatePipe, private toastr: ToastrService, 
         private $filter: PcdrFilterPipe, public dialog: MatDialog) {
@@ -58,8 +55,8 @@ export class invvaluation implements OnDestroy {
     }
 
     print() {
-        var mParms = 
-        "pAnd=" +
+        var mParms = "pShowAmt=" + (this.OptionShowAmt? "Y": "N") +
+        "&pAnd=" +
         (this.flocation > 0? " AND inventories.flocation=" + this.flocation: "") +
         (this.fctid !== 'All'? " AND itemmasters.fcategory='" + this.fctid + "'": "") +
         (this.fqtytype !== 'A'? " AND inventories.fonhand " + (this.fqtytype == 'P'? ">": "<") + " 0": "");

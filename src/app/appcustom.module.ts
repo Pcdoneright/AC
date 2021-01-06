@@ -34,6 +34,7 @@ import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepanc
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
 import { invvaluation } from './inventory/reports/invvaluation/invvaluation';
+import { invonhand } from './inventory/reports/invvaluation/invonhand';
 import { inventorysalesmovementComponent } from './inventory/reports/inventorysalesmovement/inventorysalesmovement.component';
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { invadjustment } from './inventory/invwork/invadjustment';
@@ -137,6 +138,8 @@ export class CustomModule {
                 return taxrates;
             case 'invvaluation':
                 return invvaluation;
+            case 'invonhand':
+                return invonhand;
             case 'dashboarditem':
                 return dashboarditem;
             case 'sovendor':

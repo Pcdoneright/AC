@@ -35,7 +35,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
     listVendorGridSearch = new FormControl();
     selectedTab:number = 0;
     factive:boolean = true;
-    vtype = 'V';
+    vtype = 'N';
     potype = 'V';
     postatus = 'O';
     searchId = '';
