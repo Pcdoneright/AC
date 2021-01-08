@@ -30,6 +30,7 @@ import { EmpMaintComponent } from './pr/empmaint/empmaint.component';
 import { itemmaintComponent } from './inventory/itemmaint/itemmaint.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
+import { invtrxbyitemrpt } from './inventory/reports/invtrxbyitemrpt/invtrxbyitemrpt';
 import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
@@ -148,6 +149,8 @@ export class CustomModule {
                 return invtransfertosaleman;
             case 'pricediscrepancyrpt':
                 return pricediscrepancyrpt;
+            case 'invtrxbyitemrpt':
+                return invtrxbyitemrpt;
         }
         return '';
     }

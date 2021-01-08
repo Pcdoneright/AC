@@ -9,19 +9,25 @@ import { ItemList } from '../../../inventory/itemlist/itemlist.component';
 import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'itemsalesrpt',
-    templateUrl: './itemsalesrpt.html'
+    selector: 'invtrxbyitemrpt',
+    templateUrl: './invtrxbyitemrpt.html'
 })
-export class itemsalesrpt implements OnDestroy {
+export class invtrxbyitemrpt implements OnDestroy {
     @ViewChild('bar01', {static: true}) bar01: pcdrBuilderComponent;
     fdatef = new Date();
     fdatet = new Date();
     fitem:string;
     fimid:number;
     fdescription = '';
-    fshowrelated:boolean = false;
+    flocation:number = 0;
+    companylocations: any[];
 
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public dialog: MatDialog, private toastr: ToastrService, public wjH: wjHelperService, private datePipe: DatePipe) {
+        // Get Company Locations for DropDown
+        this.DataSvc.serverDataGet('api/CompanyMaint/GetLocationsDD').subscribe((dataResponse) => {
+            this.companylocations = dataResponse;
+            this.companylocations.unshift({fcmpid: 1, fcmplid: 0, fname: "All"}); // Add first item
+        });
     }
 
     ngOnInit() {
@@ -70,17 +76,16 @@ export class itemsalesrpt implements OnDestroy {
             return;
         }
         
-        this.CompanySvc.ofHourGlass(true);
+        var mParms = 
+        "pfdatef=" + this.datePipe.transform(this.fdatef, 'yyyy-MM-dd 00:00:00') + 
+        "&pfdatet=" + this.datePipe.transform(this.fdatet, 'yyyy-MM-dd 23:59:59') + 
+        "&pfitem=" + this.fitem + 
+        "&pAnd=" +
+        (this.flocation > 0? " AND inventorytrx.flocation=" + this.flocation: "");
 
-        let mParms = [
-            { fline: 1, fdate: this.fdatef },
-            { fline: 2, fdate: this.fdatet },
-            { fline: 3, fstring: this.fshowrelated.toString() },
-            { fline: 4, fnumber: this.fimid },
-            { fline: 5, fstring: this.fitem }
-        ];
-        this.CompanySvc.ofCreateReport('d_item_sales_report_rpt', mParms, 3).subscribe((pResponse) => {
-            // Open PDF file
+        this.CompanySvc.ofHourGlass(true);
+        this.CompanySvc.ofCreateJasperReport('invtrxbyitem.pdf', mParms).subscribe((pResponse) => {
+            // Open PDF or XLXS file
             setTimeout(() => {
                 this.CompanySvc.ofOpenServerFile(pResponse.data);
             }, 1000);

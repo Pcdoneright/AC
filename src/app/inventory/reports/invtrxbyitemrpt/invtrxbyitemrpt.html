@@ -1,0 +1,27 @@
+<div layout="column" class="widget-grid panel-nobox">
+    <pcdrBuilder #bar01>
+        <input type="text" class="form-control lmargin" placeholder="Item Number" style="width: 250px" [(ngModel)]="fitem" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fitemOnChange()">
+        <button type="button" class="btn btn-primary" (click)="lookupitem()">Lookup List</button>
+        <div class="lmargin">{{fdescription}}</div>
+    </pcdrBuilder>
+    <form>
+        <div fxLayout="row" class="rmargin">
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatef">Date From</label>
+                <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatet">Date To</label>
+                <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Location</label>
+                <select [(ngModel)]="flocation" [ngModelOptions]="{standalone: true}" class="form-control">
+                    <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                        {{opt.fname}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </form>
+ </div>

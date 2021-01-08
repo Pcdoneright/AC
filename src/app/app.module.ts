@@ -108,6 +108,7 @@ import { Itemvendorcost } from './inventory/itemlist/itemvendorcost.component';
 import { Itempurchasehist } from './ap/list/itempurchasehist.component';
 import { itemmovement } from './inventory/reports/itemmovement/itemmovement';
 import { itemsalesrpt } from './inventory/reports/itemsalesrpt/itemsalesrpt';
+import { invtrxbyitemrpt } from './inventory/reports/invtrxbyitemrpt/invtrxbyitemrpt';
 import { invdiscrepancy } from './inventory/reports/invdiscrepancy/invdiscrepancy';
 import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
@@ -185,6 +186,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     soProperties,
     itemmovement,
     itemsalesrpt,
+    invtrxbyitemrpt,
     companymaint,
     itemreassign,
     pricecheckmain,
@@ -296,6 +298,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     cashregistersales,
     itemmovement,
     itemsalesrpt,
+    invtrxbyitemrpt,
     companymaint,
     itemreassign,
     pricecheckmain,

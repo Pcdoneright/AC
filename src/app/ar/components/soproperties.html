@@ -69,7 +69,8 @@
             </div>
             <div class="form-group lmargin" fxFlex="flex">
                 <label>Location</label>
-                <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control" [attr.disabled]="parent.soCurrent.fdocnumber !== -1" >
+                <!-- <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control" [attr.disabled]="parent.soCurrent.fdocnumber !== -1" > -->
+                <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control">
                     <option *ngFor="let opt of parent.companylocations" [value]="opt.fcmplid">
                         {{opt.fname}}
                     </option>
