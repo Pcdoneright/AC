@@ -75,10 +75,15 @@ export class invtrxbyitemrpt implements OnDestroy {
             this.toastr.warning('Must Specify Item Number!');
             return;
         }
+
+        var nextday = new Date();
+        nextday.setDate(this.fdatet.getDate() + 1);
         
         var mParms = 
-        "pfdatef=" + this.datePipe.transform(this.fdatef, 'yyyy-MM-dd 00:00:00') + 
-        "&pfdatet=" + this.datePipe.transform(this.fdatet, 'yyyy-MM-dd 23:59:59') + 
+        // "pfdatef=" + this.datePipe.transform(this.fdatef, 'yyyy-MM-dd 00:00:00') + 
+        // "&pfdatet=" + this.datePipe.transform(this.fdatet, 'yyyy-MM-dd 23:59:59') + 
+        "pfdatef=" + this.datePipe.transform(this.fdatef, 'yyyy-MM-dd') + 
+        "&pfdatet=" + this.datePipe.transform(nextday, 'yyyy-MM-dd') + 
         "&pfitem=" + this.fitem + 
         "&pAnd=" +
         (this.flocation > 0? " AND inventorytrx.flocation=" + this.flocation: "");
