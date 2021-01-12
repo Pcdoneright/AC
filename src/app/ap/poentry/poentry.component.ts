@@ -20,6 +20,9 @@ import { VendItemList } from '../../ap/list/vendoritemlist.component';
 import { Itempurchasehist } from '../../ap/list/itempurchasehist.component';
 import { PoPayment } from '../../ap/poentry/popayment.component';
 import { itemmaintComponent } from '../../inventory/itemmaint/itemmaint.component';
+import { Observable } from 'rxjs/Observable';
+import { appHelperService } from '../../services/appHelper.service';
+import { ItemRelatedList } from '../../inventory/itemlist/itemrelatedlist.component';
 
 @Component({
     selector: 'poentry',
@@ -46,7 +49,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
     voidFlag = false;
     receiveFlag = false;
     paymentFlag = false;
-    showMoreEdit = true;
+    showMoreEdit = false;
 
     purchaseorders:DataStore;
     purchasedetails:DataStore;
@@ -57,11 +60,14 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
     @ViewChild('poeG01') listVendorGrid: WjFlexGrid;
     @ViewChild('poeG02') listPOGrid: WjFlexGrid;
     @ViewChild('poeG03') purchasedetailsGrid: WjFlexGrid;
+
+    fitem:string;
+    @ViewChild('fitemE') fitemE: ElementRef;
     
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public dESrvc: DataEntryService, 
         private toastr: ToastrService, public sharedSrvc: SharedService, private dialog: MatDialog, 
         private $filter: PcdrFilterPipe, private OrderByPipe: OrderByPipe, public wjH: wjHelperService, 
-        private companyRules: CompanyRulesService) {
+        private companyRules: CompanyRulesService, public appH: appHelperService) {
         
         this.sharedSrvc.setProgramRights(this, 'poentry'); // sets fupdate, fadmin
         window.onresize = (e) => this.onResize(e); // Capture resize event
@@ -181,6 +187,76 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
 
             this.CompanySvc.ofHourGlass(false);
         });
+    }
+
+    // Add scanned item
+    fitemOnChange() {
+        if (!this.validEntry()) return;
+        if (!this.fitem) return;
+        if (this.fitem.length < 3) return false;
+
+        this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItemWithPrice', {pfitem: this.fitem, pfcid:0}).subscribe((dataResponse) => {
+            var mitem = this.fitem;
+            this.fitem = ''; // Clear value
+            if (dataResponse.length == 0) {
+                this.appH.toastr('Item ' + mitem + ' not found!','error', '', true);
+                return;
+            }
+            dataResponse[0].fcost = 0; // Force non-existing value
+            this.purchasedetailsAddItem(dataResponse[0], true, true);
+        });
+    }
+
+    itemOptions() {
+        if (!this.validEntry()) return;
+        var row = this.wjH.getGridSelectecRow(this.purchasedetailsGrid);
+        if (!row) return; // No selected row
+
+        this.showItemOptions(row).subscribe(() => this.purchasedetailsGrid.refresh());
+    }
+
+    showItemOptions(cRow) {
+        return Observable.create((observer) => {
+            if (!cRow) {
+                observer.complete();
+                return;
+            }
+            
+            let pData = { fitem: cRow.fitem, fcid: 0 };
+            this.dialog.open(ItemRelatedList, {data: pData}).afterClosed().subscribe(selected => {
+            if (!selected) {
+                observer.complete();
+                return;
+            }
+            
+            var row = cRow;
+            // Make sure is different
+            if (row.fitem !== selected.fitem) {
+
+                if (!this.purchasedetails.isNew(row)) {
+                    this.toastr.info('Existing items cannot be replaced. Add an Item instead.');
+                    observer.complete();
+                    return;
+                }
+
+                row.fitem = selected.fitem;
+                row.fdescription = selected.fdescription + ' ' + selected.fuomdescription;
+                row.cfitem = selected.fuomdescription;
+                row.fprice = selected.fsaleprice;
+                row.imfistaxable = selected.fistaxable;
+                row.imfnonresaleable = selected.fnonresaleable;
+                row.imfallowtfoodstamp = selected.fallowtfoodstamp;
+                row.funits = selected.funits;
+                row.fweight = selected.fweight;
+                row.fcost = 0;
+                // Re-Calculate
+                this.purchasedetailsComputed(row, row.fprice, row.fqty, row.freceivedqty);
+                this.purchaseordersTotals();
+            }
+            observer.next(row);
+            observer.complete();
+        });
+    })
     }
 
     listGridCreate() {
@@ -490,7 +566,6 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
         // Prevent Adding existing item
         if (this.$filter.transform(this.purchasedetails.items, {fitem: pitem.fitem}, true).length > 0) return;
 
-        //console.log(pitem);
         var rowIndex = this.purchasedetails.addRow({
             fpoid: this.purchaseorders.items[0].fpoid,
             fpodid: this.dESrvc.getMaxValue(this.purchasedetails.items, 'fpodid') + 1,
@@ -508,7 +583,9 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
 
         if (pLoadGrid) this.wjH.gridLoad(this.purchasedetailsGrid, this.purchasedetails.items);
         // Scroll to new row (always last)
-        if (pfocus) this.wjH.gridScrollToLastRow(this.purchasedetailsGrid, 1);
+        if (pfocus) setTimeout(() => {
+            this.wjH.gridScrollToLastRow(this.purchasedetailsGrid, 1);
+        }, 10); 
     }
 
     // Remove Rows

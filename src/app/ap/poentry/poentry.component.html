@@ -191,6 +191,7 @@
             <span class="text-nowrap">Details</span>
             <button type="button" class="btn btn-success lmargin" (click)="purchasedetailsAdd()"><i class="fa fa-plus"></i> Add</button>
             <button type="button" class="btn btn-danger" (click)="purchasedetailsRemove()"><i class="fa fa-minus"></i> Remove</button>
+            <button type="button" class="btn btn-primary" (click)="itemOptions()">Item Options</button>
             <button type="button" class="btn btn-light" (click)="addVendorItems()" matTooltip="Add Vendor's Favorites Items"><i class="fa fa-star"></i> Add From Favorites</button>
             <button type="button" class="btn btn-light" (click)="compareCost()" matTooltip="Show Other Vendor's Prices">Compare Cost</button>
             <button type="button" class="btn btn-light" (click)="viewHistory()" matTooltip="View Purchase History">History</button>
@@ -198,6 +199,10 @@
             <div fxFlex="flex"></div>
             <span class="text-nowrap">Rows: {{wjH.rowCount(poeG03)}}</span>
         </nav>
+        <div class="subnavbar" fxLayout="row" fxLayoutAlign=" center">
+            <input type="text" class="form-control lmargin" placeholder="Scan Item To Add" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+            <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+        </div>
         <wj-flex-grid #poeG03 fxFlex
             (keydown)='wjH.onGridKeyPress(poeG03, $event)' 
             (gotFocus)='wjH.onGridGotFocus(poeG03, $event)'
