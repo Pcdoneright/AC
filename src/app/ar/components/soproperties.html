@@ -2,16 +2,25 @@
     <!-- Form -->
     <form fxFlex #formsop01>
         <div fxLayout="row" class="rmargin">
-            <div fxFlex>
-                <div class="form-group" fxFlex>
+            <div fxFlex="flex">
+                <div class="form-group" fxFlex="flex">
                     <label>Name</label>
                     <input type="text" class="form-control" value="{{parent.soCurrent.cfcid}}" disabled>
                 </div>
                 <button type="button" (click)="parent.assignCustomer()" style='height:38px;margin-top:30px'matTooltip="Change Customer" class="btn btn-primary"><i class="fa fa-user"></i></button>
             </div>
-            <div class="form-group lmargin" fxFlex>
+            <div class="form-group lmargin" fxFlex="flex">
                 <label>Ship Date</label>
                 <wj-input-date #fshipdate class="mwj-form-control form-control" [(value)]="parent.soCurrent.fshipdate" (gotFocus)="parent.wjH.inputGotFocus(fshipdate)" (lostFocus)="parent.wjH.inputLostFocus(fshipdate)" [isRequired]="false"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label>Location From</label>
+                <!-- <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control" [attr.disabled]="parent.soCurrent.fdocnumber !== -1" > -->
+                <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control">
+                    <option *ngFor="let opt of parent.companylocations" [value]="opt.fcmplid">
+                        {{opt.fname}}
+                    </option>
+                </select>
             </div>
         </div>
         <div fxLayout="row" class="rmargin">
@@ -63,15 +72,6 @@
                 <label>Department</label>
                 <select name="frid" [(ngModel)]="parent.soCurrent.frid" class="form-control">
                     <option *ngFor="let opt of parent.representatives" [value]="opt.frid">
-                        {{opt.fname}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group lmargin" fxFlex="flex">
-                <label>Location</label>
-                <!-- <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control" [attr.disabled]="parent.soCurrent.fdocnumber !== -1" > -->
-                <select name="flocation" [(ngModel)]="parent.soCurrent.flocation" class="form-control">
-                    <option *ngFor="let opt of parent.companylocations" [value]="opt.fcmplid">
                         {{opt.fname}}
                     </option>
                 </select>

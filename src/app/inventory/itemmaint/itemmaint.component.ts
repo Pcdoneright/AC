@@ -40,7 +40,7 @@ export class itemmaintComponent implements AfterViewInit {
     listSubcategory:any[];
     listType:any[];
     showMoreEdit:boolean = false;
-    showInventoryGrid:boolean = false;
+    showInventoryGrid:boolean = true;
     itemnumberid:string = 'I';
     searchId:string = '';
     minMarkup = 0;
