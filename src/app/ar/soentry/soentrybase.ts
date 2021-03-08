@@ -340,7 +340,8 @@ export class soentrybaseClass {
         }
 
         // Set forigin always to processing program
-        this.salesorders.items[0].fcustom1 = this.orderOrigin;
+        // this.salesorders.items[0].fcustom1 = this.orderOrigin;
+        if (this.salesorders.items[0].fcustom1 == null) this.salesorders.items[0].fcustom1 = this.orderOrigin;
         // Last Update
         this.salesorders.items[0].ts = new Date();
         this.salesorders.items[0].fusername = this.sharedSrvc.user.fname;
