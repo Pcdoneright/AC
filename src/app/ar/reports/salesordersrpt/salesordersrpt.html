@@ -1,9 +1,9 @@
 <pcdrBuilder #bar01></pcdrBuilder>
 
-<form>
+<form class="lmargin rmargin">
     <div fxLayout="row">
         <div class="form-group" fxFlex="flex">
-            <div class="form-group lmargin" xstyle="width: 350px;">
+            <div class="form-group" xstyle="width: 350px;">
                 <label>Customer ID</label>
                 <input type="text" class="form-control" style="width: 150px;" placeholder="All Customers" [(ngModel)]="fcid" [ngModelOptions]="{standalone: true, updateOn: 'blur'}" (ngModelChange)="fcidOnChange()">
             </div>
@@ -14,20 +14,30 @@
             </div>
         </div>
         
-        
         <div class="form-group lmargin" fxFlex="flex">
-            <label for="hrfdatef">Date From</label>
-            <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+            <div class="form-group" fxFlex="flex">
+                <label for="hrfdatef">Date From</label>
+                <wj-input-date #hrfdatef [(value)]="fdatef" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatef)" (lostFocus)="wjH.inputLostFocus(hrfdatef)"></wj-input-date>
+            </div>
+            <div class="form-group lmargin" fxFlex="flex">
+                <label for="hrfdatet">Date To</label>
+                <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+            </div>
         </div>
+
         <div class="form-group lmargin" fxFlex="flex">
-            <label for="hrfdatet">Date To</label>
-            <wj-input-date #hrfdatet [(value)]="fdatet" class="mwj-form-control form-control" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(hrfdatet)" (lostFocus)="wjH.inputLostFocus(hrfdatet)"></wj-input-date>
+            <label>Location</label>
+            <select [(ngModel)]="flocation" [ngModelOptions]="{standalone: true}" class="form-control">
+                <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                    {{opt.fname}}
+                </option>
+            </select>
         </div>
     </div> 
     <div fxLayout="row">
-        <div class="form-group lmargin" fxFlex="flex">
+        <div class="form-group" fxFlex="flex">
             <label>Department</label>
-            <select name="frid" [(ngModel)]="frid" class="form-control">
+            <select name="frid" [(ngModel)]="frid" [ngModelOptions]="{standalone: true}" class="form-control">
                 <option *ngFor="let opt of representatives" [value]="opt.frid">
                     {{opt.fname}}
                 </option>

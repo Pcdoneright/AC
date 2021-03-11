@@ -20,13 +20,20 @@ export class salesordersrpt implements OnDestroy, AfterViewInit {
     fdescription:string = '';
     fdatef = new Date();
     fdatet = new Date();
+    flocation = -1;
     representatives:any[];
+    companylocations: any[];
 
     constructor(private CompanySvc: CompanyService, private DataSvc: DataService, public dialog: MatDialog, private toastr: ToastrService, public wjH: wjHelperService) {
         // Get Representative for DropDown
         DataSvc.serverDataGet('api/RepresentativeMaint/GetRepresentativeDD').subscribe((dataResponse) => {
             this.representatives = dataResponse;
             this.representatives.unshift({ frid: -1, fname: 'All' }); // Add ALL
+        });
+        
+        DataSvc.serverDataGet('api/CompanyMaint/GetLocationsDD').subscribe((dataResponse) => {
+                this.companylocations = dataResponse;
+                this.companylocations.unshift({ fcmplid: -1, fname: 'All' }); // Add ALL
         });
     }
 
@@ -85,7 +92,8 @@ export class salesordersrpt implements OnDestroy, AfterViewInit {
             { fline: 2, fdate: this.fdatet },
             { fline: 3, fstring: this.fdetails.toString() },
             { fline: 4, fnumber: this.frid },
-            { fline: 5, fnumber: this.fcid || -1 }
+            { fline: 5, fnumber: this.fcid || -1 },
+            { fline: 6, fnumber: this.flocation || -1 }
         ];
         let rpt:string;
         switch (this.rtype) {
