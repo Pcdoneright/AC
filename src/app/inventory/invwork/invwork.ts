@@ -45,6 +45,7 @@ export class invwork implements OnDestroy, AfterViewInit {
     @Input() customActionButton = '';
     @Input() customActionIcon = '';
     @Input() addincrementScanItem = true;
+    @Input() completebutton: string = 'Complete';
     allowNegativeQty = false;
     validateTransaction = false;
     afterRetrieveTrx = false;
@@ -95,7 +96,7 @@ export class invwork implements OnDestroy, AfterViewInit {
             title: 'Inventory Properties', 
             buttons: [
                 {name: 'New Transaction', style: 'success', action: 'createOrder', show: this.allowNewTransaction},
-                {name: 'Complete', style: 'primary', action: 'update'},
+                {name: this.completebutton, style: 'primary', action: 'update'},
                 {name: ' Receipt', style: 'light', icon: 'fa fa-print', action: 'printPO'}
             ],
             validEntry: true,
