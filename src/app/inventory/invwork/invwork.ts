@@ -46,6 +46,7 @@ export class invwork implements OnDestroy, AfterViewInit {
     @Input() customActionIcon = '';
     @Input() addincrementScanItem = true;
     @Input() completebutton: string = 'Complete';
+    @Input() locationname: string = 'Location';
     allowNegativeQty = false;
     validateTransaction = false;
     afterRetrieveTrx = false;

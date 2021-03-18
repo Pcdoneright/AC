@@ -574,7 +574,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
             fqty: pitem.cqty || 1,
             freceivedqty: 0,
             fprice: pitem.fcost,
-            fvitem: pitem.fvitem,
+            fvitem: (pitem.fvitem || pitem.fitem),
             fweight: pitem.fweight,
             fexpirationdate: null
         });
@@ -729,7 +729,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
         }, 100);
     }
 
-    initGrids() {
+        initGrids() {
         // wj-flex-grid
         this.listVendorGrid.initialize({
             isReadOnly: true,

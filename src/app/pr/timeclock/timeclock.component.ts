@@ -141,8 +141,8 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
                                             this.employeehours.addRow({
                                                 empid: row.empid,
                                                 ehid: dRSeq.data,
-                                                postedflag: 0,
-                                                punchin: this.datePipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss')
+                                                postedflag: 0
+                                                //punchin: this.datePipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss')
                                             });
                                             this.update(row.empid); // Save Changes
                                             this.toastr.info(' Just Clocked-In', row.firstname + ' ' + row.lastname, {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
@@ -166,9 +166,8 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
                             this.employeehours.addRow({
                                 empid: row.empid,
                                 ehid: dRSeq.data,
-                                postedflag: 0,
-                                punchin: this.datePipe.transform(this.serverDate, 'MM/dd/yyyy HH:mm:ss')
-                                // punchin: this.datePipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss')
+                                postedflag: 0
+                                //punchin: this.datePipe.transform(this.serverDate, 'MM/dd/yyyy HH:mm:ss')
                             });
                             this.update(row.empid); // Save Changes
                             this.toastr.info(' Just Clocked-In', row.firstname + ' ' + row.lastname, {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
@@ -177,12 +176,18 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
                 });
             }
             else {
-                // Clock OUT
-                this.employeehours.items[0].punchin = this.datePipe.transform(this.employeehours.items[0].punchin, 'MM/dd/yyyy HH:mm:ss'); // Transform
-                this.employeehours.items[0].punchout = this.datePipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss');
-                this.companyRules.hoursCalculate(this.employeehours.items[0]);
-                this.update(row.empid); // Save Changes
-                this.toastr.info('Just Clocked-Out. Hours: ' + this.employeehours.items[0].totaltime, row.firstname + ' ' + row.lastname, {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
+                // Get server date first
+                this.DataSvc.serverDataGet('api/EmployeeMaint/GetServerDate').subscribe((dataResponse) => {
+                    this.serverDate = new Date(this.appH.rawdatestrTruncatetz(dataResponse));
+                
+                    // Clock OUT
+                    this.employeehours.items[0].punchin = this.datePipe.transform(this.employeehours.items[0].punchin, 'MM/dd/yyyy HH:mm:ss'); // Transform
+                    // this.employeehours.items[0].punchout = this.datePipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss');
+                    this.employeehours.items[0].punchout = this.datePipe.transform(this.serverDate, 'MM/dd/yyyy HH:mm:ss');
+                    this.companyRules.hoursCalculate(this.employeehours.items[0]);
+                    this.update(row.empid); // Save Changes
+                    this.toastr.info('Just Clocked-Out. Hours: ' + this.employeehours.items[0].totaltime, row.firstname + ' ' + row.lastname, {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
+                });
             }
         })
     }

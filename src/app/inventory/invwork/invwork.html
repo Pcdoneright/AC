@@ -21,7 +21,7 @@
             </div>
             <div fxLayout="row" class="rmargin">
                 <div class="form-group" fxFlex="flex">
-                    <label>Location</label>
+                    <label>{{locationname}}</label>
                     <select *ngIf="!showQty2" [(ngModel)]="poCurrent.flocation" [ngModelOptions]="{standalone: true}" class="form-control">
                         <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
                             {{opt.fname}}
