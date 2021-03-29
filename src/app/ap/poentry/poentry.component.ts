@@ -249,6 +249,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
                 row.funits = selected.funits;
                 row.fweight = selected.fweight;
                 row.fcost = 0;
+                row.fvitem =  (selected.fvitem || selected.fitem),
                 // Re-Calculate
                 this.purchasedetailsComputed(row, row.fprice, row.fqty, row.freceivedqty);
                 this.purchaseordersTotals();

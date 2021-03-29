@@ -362,7 +362,8 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
                 this.fitem = ''; // Clear value
                 this.wjH.gridLoad(this.salesdetailsGrid, this.salesdetails.items);
                 // this.wjH.gridScrollToRow(this.salesdetailsGrid, -1, 0); // No-focus only scroll
-                this.wjH.gridScrollToLastRow(this.salesdetailsGrid, 2); // No-focus only scroll
+                // this.wjH.gridScrollToLastRow(this.salesdetailsGrid, 2); // No-focus only scroll
+                this.wjH.gridScrollToRow( this.salesdetailsGrid, -1, 0, 'fsodid', row.fsodid); // No-focus only scroll
                 setTimeout(()=> { this.fitemE.nativeElement.focus();});
             }
         });
@@ -408,9 +409,11 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
         this.dialog.open(ItemList, {data: pData}).afterClosed().subscribe(dataResponse => {
             if (!dataResponse) return;
             //-->dataResponse.fcost = 0; // Force non-existing value
-            this.salesdetailsAddItem(dataResponse, true, false); //  Add selection to salesdetails
+            let row = this.salesdetailsAddItem(dataResponse, true, false); //  Add selection to salesdetails
             this.wjH.gridLoad(this.salesdetailsGrid, this.salesdetails.items);
-            this.wjH.gridScrollToLastRow(this.salesdetailsGrid, 3); // park on Price
+            // this.wjH.gridScrollToLastRow(this.salesdetailsGrid, 3); // park on Price
+            this.wjH.gridScrollToRow( this.salesdetailsGrid, -1, 0, 'fsodid', row.fsodid); // No-focus only scroll
+            setTimeout(()=> { this.fitemE.nativeElement.focus();});
         });
     }
 

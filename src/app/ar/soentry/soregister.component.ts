@@ -576,18 +576,8 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
                 this.scanBeep();
 
                 this.updateTotalQty();
-                this.wjH.gridLoad(
-                    this.salesdetailsGrid,
-                    this.salesdetails.items,
-                    false
-                );
-                this.wjH.gridScrollToRow(
-                    this.salesdetailsGrid,
-                    -1,
-                    0,
-                    'fsodid',
-                    row.fsodid
-                ); // No-focus only scroll
+                this.wjH.gridLoad( this.salesdetailsGrid, this.salesdetails.items, false );
+                this.wjH.gridScrollToRow( this.salesdetailsGrid, -1, 0, 'fsodid', row.fsodid ); // No-focus only scroll
             }
             this.fitem = ''; // Clear value
             this.focusToScan();

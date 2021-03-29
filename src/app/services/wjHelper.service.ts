@@ -139,9 +139,7 @@ export class wjHelperService {
     gridScrollToRow(s: WjFlexGrid, col:number, row:number, filterField:string = '', filterValue: any = null) {
         // instead of row, a value to compare is passed
         if (filterField) {
-            row = s.itemsSource.findIndex((row) => {
-                return (row[filterField] == filterValue);
-            });
+            row = s.itemsSource.findIndex((row) => { return (row[filterField] == filterValue); });
         }
         s.select(new wjGrid.CellRange(row, col)); // selects and focus field
     }
