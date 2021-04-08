@@ -19,13 +19,15 @@ export class invphysicalpost implements AfterViewInit {
 
         this.invwork.createOrder(); // Create by default and retrieve items
         setTimeout(() => {
-            this.allowCustomAction();
-        }, 500);
+            // Add custom buttons
+            this.invwork.bar02.navProperties['buttons'].push({name: 'Get Details', style: 'light', action: 'customAction', function: 'getDetails', icon: 'fa fa-recycle', show: true});
+            this.getDetails();
+        }, 300);
 
-        this.invwork.OptionNewAfterPost = false;
+        this.invwork.OptNewAfterPost = false;
     }
 
-    allowCustomAction() {
+    getDetails() {
         if (!this.invwork.validEntry()) return;
         if (this.invwork.invworkheaders.items[0].fstatus == 'O') {
             

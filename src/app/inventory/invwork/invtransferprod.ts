@@ -15,6 +15,7 @@ export class invtransferprod implements AfterViewInit {
         this.invwork.parent = this;
         this.invwork.allowNegativeQty = false;
         this.invwork.trxType = 'IP'; // Trasnfer to Production
+        this.invwork.OptPrintAfterPost = false;
 
         setTimeout(() => {
             this.invwork.createOrder(); // Create New Order

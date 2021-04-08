@@ -7,7 +7,7 @@ import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Injec
 })
 
 export class pcdrBuilderComponent implements AfterViewInit {
-    navProperties = {title:'', buttons:'', spans:'', rows:'', chevron:'', subnavbar:false, navButtons:''};
+    navProperties = {title:'', buttons:[], spans:'', rows:'', chevron:'', subnavbar:false, navButtons:''};
     parent: any;
 
     constructor() {

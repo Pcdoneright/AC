@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "@grapecity/wijmo.angular2.all": "^5.20203.748",
+    "@grapecity/wijmo.angular2.all": "^5.20211.781",
     "angular-split": "^1.0.4",
     "angular2-image-upload": "^1.0.0-rc.2",
     "bootstrap": "^4.1.3",

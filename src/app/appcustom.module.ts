@@ -40,6 +40,7 @@ import { inventorysalesmovementComponent } from './inventory/reports/inventorysa
 import { itemreassign } from './inventory/itemreassign/itemreassign';
 import { invadjustment } from './inventory/invwork/invadjustment';
 import { invtransferout } from './inventory/invwork/invtransferout';
+import { invtransferreq } from './inventory/invwork/invtransferreq';
 import { invtransferprod } from './inventory/invwork/invtransferprod';
 import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
 import { invtransferin } from './inventory/invwork/invtransferin';
@@ -115,6 +116,8 @@ export class CustomModule {
                 return invadjustment;
             case 'invtransferout':
                 return invtransferout;
+            case 'invtransferreq':
+                return invtransferreq;
             case 'invtransferprod':
                 return invtransferprod;
             case 'invtransfertoinv':

@@ -141,7 +141,9 @@ export class wjHelperService {
         if (filterField) {
             row = s.itemsSource.findIndex((row) => { return (row[filterField] == filterValue); });
         }
-        s.select(new wjGrid.CellRange(row, col)); // selects and focus field
+        setTimeout(() => {
+            s.select(new wjGrid.CellRange(row, col)); // selects and focus field
+        }, 50);
     }
 
     removeGridRow(s: WjFlexGrid, store: DataStore, newOnly = false, loadrows = true, disableSelect = true) {

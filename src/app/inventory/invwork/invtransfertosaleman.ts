@@ -281,7 +281,7 @@ export class invtransfertosaleman implements AfterViewInit {
             this.scanBeep();
             this.updateTotalQty();
             this.wjH.gridLoad( this.invworkGrid, this.invwork.items, false );
-            this.wjH.gridScrollToRow( this.invworkGrid, -1, 0, 'fiwid', row.fiwid ); // No-focus only scroll
+            this.wjH.gridScrollToRow( this.invworkGrid, -1, 0, 'fitem', row.fitem ); // No-focus only scroll
             
             this.fitem = ''; // Clear value
             this.focusToScan();

@@ -15,6 +15,7 @@ export class invtransfertoinv implements AfterViewInit {
         this.invwork.parent = this;
         this.invwork.allowNegativeQty = false;
         this.invwork.trxType = 'PI'; // Trasnfer Production-To-Inventory
+        this.invwork.OptPrintAfterPost = false;
 
         setTimeout(() => {
             this.invwork.createOrder(); // Create New Order

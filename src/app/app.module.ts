@@ -97,6 +97,7 @@ import { ItemRelatedList } from './inventory/itemlist/itemrelatedlist.component'
 import { invwork } from './inventory/invwork/invwork';
 import { invadjustment } from './inventory/invwork/invadjustment';
 import { invtransferout } from './inventory/invwork/invtransferout';
+import { invtransferreq } from './inventory/invwork/invtransferreq';
 import { invtransferprod } from './inventory/invwork/invtransferprod';
 import { invtransfertoinv } from './inventory/invwork/invtransfertoinv';
 import { invtransferin } from './inventory/invwork/invtransferin';
@@ -114,6 +115,7 @@ import { invworkreport } from './inventory/reports/invworkreport/invworkreport';
 import { invworkxdscrpc } from './inventory/reports/invworkxdscrpc/invworkxdscrpc';
 import { invvaluation } from './inventory/reports/invvaluation/invvaluation';
 import { invonhand } from './inventory/reports/invvaluation/invonhand';
+import { transferitemlist } from './inventory/itemlist/transferitemlist';
 import { dashboarditem } from './inventory/dashboarditem/dashboarditem';
 
 //PR
@@ -150,6 +152,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     SoRegisterComponent,
     SOEditItem,
     CustomerList,
+    transferitemlist,
     SoPayment,
     SOViewCustomer,
     KeyPadComponent,
@@ -195,6 +198,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invadjustment,
     usermaint,
     invtransferout,
+    invtransferreq,
     invtransferprod,
     invtransfertoinv,
     invtransferin,
@@ -264,6 +268,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     SoRegisterComponent,
     SOEditItem,
     CustomerList,
+    transferitemlist,
     SoPayment,
     SOViewCustomer,
     SlminvntryComponent,
@@ -306,6 +311,7 @@ import { DailybreakdownComponent } from './reports/dailybreakdown/dailybreakdown
     invadjustment,
     usermaint,
     invtransferout,
+    invtransferreq,
     invtransferprod,
     invtransfertoinv,
     invtransferin,

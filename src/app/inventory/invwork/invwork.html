@@ -1,79 +1,114 @@
-<div class="widget-grid panel-nobox" fxLayout="column" [style.height.px] = "tH01">
-    <pcdrBuilder #bar01>
-        <span style='margin-left:45px'><h4>Last Transaction: {{lastordernumber}}</h4></span>
-    </pcdrBuilder>    
-    <div fxLayout="row">
-        <!-- Form -->
-        <form fxFlex>
-            <div fxLayout="row" class="rmargin">
-                <div class="form-group" fxFlex="flex">
-                    <label>Description</label>
-                    <wj-auto-complete #fnotes class="mwj-form-control form-control" [(text)]='poCurrent.fnotes' [displayMemberPath]="'fid'" [itemsSource]="fctdescriptions" (gotFocus)="wjH.inputGotFocus(fnotes)" (lostFocus)="wjH.inputLostFocus(fnotes)"></wj-auto-complete>
-                </div>
-                <div class="form-group lmargin" fxFlex="flex">
-                    <label>Type</label>
-                    <select [(ngModel)]="poCurrent.ftype" [ngModelOptions]="{standalone: true}" disabled class="form-control">
-                        <option *ngFor="let opt of fcttypes" [value]="opt.fid">
+<mat-tab-group [selectedIndex]="selectedTab" [animationDuration]="sharedSrvc.animationDuration" class="widget-grid panel-nobox">
+    <!-- Order List -->
+    <mat-tab>
+        <div fxLayout="column" [style.height.px] = "tH01">
+            <pcdrBuilder #barList>
+                <span class="lmargin">From:</span>
+                <wj-input-date #fsodatef [(value)]="sodatef" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatef)" (lostFocus)="wjH.inputLostFocus(fsodatef)"></wj-input-date>
+                <span class="lmargin">To:</span>
+                <wj-input-date #fsodatet [(value)]="sodatet" class="mwj-form-control form-control lmargin" style="width: 160px" [isRequired]="false" (gotFocus)="wjH.inputGotFocus(fsodatet)" (lostFocus)="wjH.inputLostFocus(fsodatet)"></wj-input-date>
+                <ng-container *ngIf="OptShowListStatus">
+                <span class="lmargin">Status:</span>
+                    <select [(ngModel)]="sostatus" class="form-control lmargin" style="width: 150px;">
+                        <option *ngFor="let opt of orderstatus" [value]="opt.fid">
                             {{opt.fdescription}}
                         </option>
                     </select>
-                </div>
-            </div>
-            <div fxLayout="row" class="rmargin">
-                <div class="form-group" fxFlex="flex">
-                    <label>{{locationname}}</label>
-                    <select *ngIf="!showQty2" [(ngModel)]="poCurrent.flocation" [ngModelOptions]="{standalone: true}" class="form-control">
-                        <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
-                            {{opt.fname}}
-                        </option>
-                    </select>
-                    <select *ngIf="showQty2" [(ngModel)]="poCurrent.flocation2" [ngModelOptions]="{standalone: true}" class="form-control">
-                        <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
-                            {{opt.fname}}
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group lmargin" fxFlex="flex">
-                    <label>Last Update</label>
-                    <input type="text" class="form-control" disabled
-                        value="{{poCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{poCurrent.fuser}}"/>
-                </div>
-            </div>
-        </form>
-
-        <!-- Totals -->
-        <div class="panel" fxLayout="column" style="width: 280px">
-            <div class="mform-control-row">
-                <label class="col-form-label" fxFlex='40'>Number</label>
-                <span fxFlex class="fdocnumber">{{poCurrent.fiwhid}}</span>
-            </div>
-            <div class="mform-control-row">
-                <label class="col-form-label" fxFlex='40'>Date</label>
-                <input fxFlex type="text" class="form-control" value="{{poCurrent.fdate | date:'MM/dd/yyyy'}}" disabled>
-            </div>
-            <div class="mform-control-row">
-                <label class="col-form-label" fxFlex='40'>Status</label>
-                <select fxFlex name="fstatus" [(ngModel)]="poCurrent.fstatus" [ngModelOptions]="{standalone: true}" class="form-control" disabled>
-                    <option *ngFor="let opt of orderstatus" [value]="opt.fid">
-                        {{opt.fdescription}}
+                </ng-container>
+                <span class="lmargin">Location:</span>
+                <select [(ngModel)]="flocation" class="form-control lmargin" style="width: 350px;">
+                    <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                        {{opt.fname}}
                     </option>
                 </select>
+                <button type="button" class="btn btn-primary" (click)="listGridRefresh()"><i class="fa fa-search"></i> Search</button>
+            </pcdrBuilder>
+            <wj-flex-grid #listGrid fxFlex></wj-flex-grid>
+        </div>
+    </mat-tab>
+    <mat-tab>
+        <div fxLayout="column">
+            <!-- Upper Form -->
+            <pcdrBuilder #bar01>
+                <span *ngIf="OptShowLastTransaction" style='margin-left:45px'><h4>Last Transaction: {{lastordernumber}}</h4></span>
+            </pcdrBuilder>    
+            <div fxLayout="row">
+                <!-- Form -->
+                <form fxFlex>
+                    <div fxLayout="row" class="rmargin">
+                        <div class="form-group" fxFlex="flex">
+                            <label>Description</label>
+                            <wj-auto-complete #fnotes class="mwj-form-control form-control" [(text)]='poCurrent.fnotes' [displayMemberPath]="'fid'" [itemsSource]="fctdescriptions" (gotFocus)="wjH.inputGotFocus(fnotes)" (lostFocus)="wjH.inputLostFocus(fnotes)"></wj-auto-complete>
+                        </div>
+                        <div class="form-group lmargin" fxFlex="flex">
+                            <label>Type</label>
+                            <select [(ngModel)]="poCurrent.ftype" [ngModelOptions]="{standalone: true}" disabled class="form-control">
+                                <option *ngFor="let opt of fcttypes" [value]="opt.fid">
+                                    {{opt.fdescription}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div fxLayout="row" class="rmargin">
+                        <div class="form-group" fxFlex="flex">
+                            <label>Location From</label>
+                            <select [(ngModel)]="poCurrent.flocation" [ngModelOptions]="{standalone: true}" class="form-control" [disabled]="OptLocationDisabled">
+                                <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                                    {{opt.fname}}
+                                </option>
+                            </select>
+                        </div>
+                        <div *ngIf="location2" class="form-group lmargin" fxFlex="flex">
+                            <label>Location To</label>
+                            <select [(ngModel)]="poCurrent.flocation2" [ngModelOptions]="{standalone: true}" class="form-control" [disabled]="OptLocationDisabled">
+                                <option *ngFor="let opt of companylocations" [value]="opt.fcmplid">
+                                    {{opt.fname}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group lmargin" fxFlex="flex">
+                            <label>Last Update</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{poCurrent.ts | date:'yyyy/MM/dd h:mm a'}} {{poCurrent.fuser}}"/>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Totals -->
+                <div class="panel" fxLayout="column" style="width: 280px">
+                    <div class="mform-control-row">
+                        <label class="col-form-label" fxFlex='40'>Number</label>
+                        <span fxFlex class="fdocnumber">{{poCurrent.fiwhid}}</span>
+                    </div>
+                    <div class="mform-control-row">
+                        <label class="col-form-label" fxFlex='40'>Date</label>
+                        <input fxFlex type="text" class="form-control" value="{{poCurrent.fdate | date:'MM/dd/yyyy'}}" disabled>
+                    </div>
+                    <div class="mform-control-row">
+                        <label class="col-form-label" fxFlex='40'>Status</label>
+                        <select fxFlex name="fstatus" [(ngModel)]="poCurrent.fstatus" [ngModelOptions]="{standalone: true}" class="form-control" disabled>
+                            <option *ngFor="let opt of orderstatus" [value]="opt.fid">
+                                {{opt.fdescription}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Grid -->
+            <pcdrBuilder #bar02>
+                <input type="text" class="form-control lmargin" placeholder="Scan Item" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
+                <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
+            </pcdrBuilder>
+            <div fxLayout="row" [style.height.px]="tH02">
+                <wj-flex-grid #invworkGrid fxFlex
+                    (keydown)='wjH.onGridKeyPress(invworkGrid, $event)' 
+                    (gotFocus)='wjH.onGridGotFocus(invworkGrid, $event)'
+                    (selectionChanged)='wjH.onGridSelectionChanged(invworkGrid, $event)'>
+                </wj-flex-grid>
+                <div style="height:250px; width:250px; margin:5px 0 0 5px">
+                    <img [src]="itemunitsImgCurrent" onError="this.src='./images/250x250.png';" style="width:100%;">
+                </div>
             </div>
         </div>
-    </div>
-
-    <pcdrBuilder #bar02>
-        <input type="text" class="form-control lmargin" placeholder="Scan Item" style="width: 250px" #fitemE [(ngModel)]="fitem" (blur)='fitemOnChange()'>
-        <a href="javascrip:;"></a> <!-- Prevents from leaving page since is last input-->
-    </pcdrBuilder>
-    <div fxLayout="row" fxFlex>
-        <wj-flex-grid #invworkGrid [style.height.px] = "gH03"
-            (keydown)='wjH.onGridKeyPress(invworkGrid, $event)' 
-            (gotFocus)='wjH.onGridGotFocus(invworkGrid, $event)'
-            (selectionChanged)='wjH.onGridSelectionChanged(invworkGrid, $event)'>
-        </wj-flex-grid>
-        <div style="height:250px; width:250px; margin:5px 0 0 5px">
-            <img [src]="itemunitsImgCurrent" onError="this.src='./images/250x250.png';" style="width:100%;">
-        </div>
-    </div>
-</div>
+    </mat-tab>
+</mat-tab-group>

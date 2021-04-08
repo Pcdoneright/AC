@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../services/shared.service';
 import { CompanyService } from '../services/company.service';
 import { DataService } from '../services/data.service';
@@ -19,7 +18,7 @@ import { BreakPointRegistry } from '@angular/flex-layout';
 @Injectable()
 export class appHelperService {
 
-    constructor(private CompanySvc: CompanyService, private tstr: ToastrService, private sharedSrvc: SharedService, 
+    constructor(private CompanySvc: CompanyService, private sharedSrvc: SharedService, 
         private DataSvc: DataService, public dialog: MatDialog) {}
 
     // sharedSrvc
@@ -31,41 +30,8 @@ export class appHelperService {
         return this.sharedSrvc.user.flocation;
     }
 
-    toastr(message:string, type:string = 'info', title:string = '',  bottom:boolean = false) {
-        let pos = 'toast-bottom-full-width';
-
-        switch(type) {
-            case 'error':
-                if (bottom)
-                    this.tstr.error(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
-                else
-                    this.tstr.error(message, title);
-                break;
-            case 'success':
-                if (bottom)
-                    this.tstr.success(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
-                else
-                    this.tstr.success(message, title);
-                break;
-            case 'warning':
-                if (bottom)
-                    this.tstr.warning(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
-                else
-                    this.tstr.warning(message, title);
-                break;
-            case 'warning':
-                if (bottom)
-                    this.tstr.warning(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
-                else
-                    this.tstr.warning(message, title);
-                break;
-            default:
-                if (bottom)
-                    this.tstr.info(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
-                else
-                    this.tstr.info(message, title);
-                break;
-        }
+    toastr(message:string, type:string = 'info', title:string = '',  bottom:boolean = false, center:boolean = false) {
+        this.DataSvc.toastr(message, type, title,  bottom, center);
     }
 
     // 

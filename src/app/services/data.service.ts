@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpEventType, HttpClient, HttpParams } from '@angular/common/http';
-// import 'rxjs/add/operator/map';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/Observable';
 import { SharedService } from '../services/shared.service';
@@ -12,10 +11,7 @@ import 'rxjs/add/operator/retryWhen';
 //--------------------------------
 @Injectable()
 export class DataService {
-	constructor(private http: HttpClient, private datePipe: DatePipe, private toastr: ToastrService, private sharedSrvc: SharedService) {
-	    // console.log('DataService -> constructor()');
-    }
-
+	constructor(private http: HttpClient, private datePipe: DatePipe, private tstr: ToastrService, private sharedSrvc: SharedService) {}
 
 	// async serverDataGetAsync(pUrl, pParms?, pConvert = true) {
 	// 	// Create proper parameters
@@ -83,16 +79,16 @@ export class DataService {
 						case 0:
 							retryCounter ++;
 							if (retryCounter < 16) {
-								this.toastr.info('Reconnecting to server...');
+								this.tstr.info('Reconnecting to server...');
 							} else {
-								this.toastr.error('Unable to connect to server using: ' + pUrl + '. Please try again');
+								this.tstr.error('Unable to connect to server using: ' + pUrl + '. Please try again');
 								this.sharedSrvc.ofHourGlass(false);
 								observer.complete(); // This will trigger finally()
 							}
 							// console.log(retryCounter);
 							break;
 						default:
-							this.toastr.error('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText);
+							this.tstr.error('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText);
 							this.sharedSrvc.ofHourGlass(false);
 							observer.complete(); // This will trigger finally()
 							break;
@@ -100,6 +96,51 @@ export class DataService {
 					observer.error(err); // 2018/10/13 forward error
 				})
 		}).retryWhen(errors => errors.delay(500).take(15))
+	}
+
+	// httpclient as promise
+	async serverDataGetAsync(pUrl, pParms?, pConvert = true) {
+		// Create proper parameters
+		let params = new HttpParams();
+		if (pParms) {
+			// Before sending to server convert date(only not datetime) to string to have current values instead of zulu
+			this.convertDateDatesToString(pParms);
+
+			for (var key in pParms) {
+				if (!pParms.hasOwnProperty(key)) continue;
+				params = params.set(key, pParms[key]);
+			}
+		}
+
+		const ret = await this.http.get(pUrl, { params: params }).toPromise()
+        	.then(res => {
+				if (res) {
+					// Before receiving date from server convert string to date
+					if (pConvert) this.convertStringToDate(res, pConvert);
+				}
+				return res;
+			})
+        	.catch(err => { 
+				this.toastr('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText, 'error', '', true);
+				this.sharedSrvc.ofHourGlass(false);
+				return null;
+        	});
+
+		return ret;
+
+		// try {
+		// 	const data = await this.http.get(pUrl, { params: params }).toPromise();
+		// 	if (data) {
+		// 		// Before receiving date from server convert string to date
+		// 		if (pConvert) this.convertStringToDate(data, pConvert);
+		// 	}
+		// 	return data;
+		// }
+		// catch(err) {
+		// 	this.toastr('error from [serverDataPost] using: ' + err.url + ', Status: ' + err.statusText, 'error', '', true);
+		// 	this.sharedSrvc.ofHourGlass(false);
+		// 	return null;
+		// }
 	}
 
 	// Return a promise
@@ -125,10 +166,10 @@ export class DataService {
 					httpError = err.status; // Assign status
 					switch(err.status) {
 						case 0:
-							this.toastr.info('Reconnecting to server...');
+							this.tstr.info('Reconnecting to server...');
 							break;
 						default:
-							this.toastr.error('Error from [Post] using: ' + pUrl + ', Status: ' + err.error.ExceptionMessage,'', {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
+							this.tstr.error('Error from [Post] using: ' + pUrl + ', Status: ' + err.error.ExceptionMessage,'', {positionClass: 'toast-bottom-full-width', progressBar: true, progressAnimation: 'increasing'});
 							this.sharedSrvc.ofHourGlass(false);
 							break;
 					}
@@ -209,7 +250,7 @@ export class DataService {
 						}
 				},
 				err => {
-					this.toastr.error('error from [serverFileUpload] using: ' + err.url + ', Status: ' + err.statusText);
+					this.tstr.error('error from [serverFileUpload] using: ' + err.url + ', Status: ' + err.statusText);
 					console.log('error', err);
 					
 					this.sharedSrvc.ofHourGlass(false);
@@ -285,6 +326,38 @@ export class DataService {
 			}
 		}
 	}
+
+	toastr(message:string, type:string = 'info', title:string = '',  bottom:boolean = false, center:boolean = false) {
+        let pos = (center) ? 'toast-bottom-center': 'toast-bottom-full-width';
+
+        switch(type) {
+            case 'error':
+                if (bottom)
+                    this.tstr.error(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
+                else
+                    this.tstr.error(message, title);
+                break;
+            case 'success':
+                if (bottom)
+                    this.tstr.success(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
+                else
+                    this.tstr.success(message, title);
+                break;
+            case 'warning':
+                if (bottom)
+                    this.tstr.warning(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
+                else
+                    this.tstr.warning(message, title);
+                break;
+            default:
+                if (bottom)
+                    this.tstr.info(message, title, {positionClass: pos, progressBar: true, progressAnimation: 'increasing'});
+                else
+                    // this.tstr.info(message, title);
+                    this.tstr.info(message, title, {positionClass: 'toast-bottom-center'});
+                break;
+        }
+    }
 
 	// // Upload a File with progress counter
 	// fileUpload(pUrl, pfiles, pCounter, pParams?) {
