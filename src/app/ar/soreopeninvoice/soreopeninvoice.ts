@@ -172,11 +172,11 @@ export class soreopeninvoice extends soentrybaseClass implements AfterViewInit {
                     this.toastr.warning('Invoiced Orders Only Allowed!'); // Make sure is Invoice
                 }
                 else {
-                    this.dESrvc.pendingChangesContinue().subscribe(() => {
+                    this.dESrvc.pendingChangesContinue().then(() => {
                         this.retrieveSO(dataResponse[0].fsoid);
                         this.searchId = '';
                         this.CompanySvc.ofHourGlass(false)
-                    })
+                    }).catch(()=>{});
                 }
             }
             else

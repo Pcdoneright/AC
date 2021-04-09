@@ -205,11 +205,11 @@ export class PoreceiveComponent implements OnDestroy, AfterViewInit {
         let row = this.wjH.getGridSelectecRow(this.listPOGrid);
         if (!row) return;
 
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.retrievePO(row.fpoid);
             this.selectedTab = 1;
             this.focusToScan();
-        });
+        }).catch(()=>{});
     };
 
     searchPONumber() {
@@ -223,10 +223,10 @@ export class PoreceiveComponent implements OnDestroy, AfterViewInit {
                 if (dataResponse[0].fstatus !== 'O') {
                     this.toastr.info('Only OPEN orders can be modified.');
                 }
-                this.dESrvc.pendingChangesContinue().subscribe(() => {
+                this.dESrvc.pendingChangesContinue().then(() => {
                     this.retrievePO(dataResponse[0].fpoid);
                     this.searchId = '';
-                });
+                }).catch(()=>{});
             }
             else
                 this.toastr.info('P.O. Number Not Found');

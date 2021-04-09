@@ -147,7 +147,7 @@ export class itemmaintComponent implements AfterViewInit {
     // Get Item for EDIT
     retrieveItem(afimid) {
         if (!afimid) return;
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
 
             this.DataSvc.serverDataGet('api/ItemMaint/GetItem', { pfimid: afimid }).subscribe((dataResponse) => {
@@ -169,7 +169,7 @@ export class itemmaintComponent implements AfterViewInit {
                 this.wjH.gridLoad(this.itmmg04, []); // Will be filtered
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
     listGridDoubleClick() {
@@ -182,7 +182,7 @@ export class itemmaintComponent implements AfterViewInit {
 
     // New Item
     newItem() {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.DataSvc.serverDataGet('api/Company/Getnextsequence', { seq: 'itemmasters' }).subscribe((dataResponse) => {
                 var fimid = dataResponse.data;
 
@@ -210,7 +210,7 @@ export class itemmaintComponent implements AfterViewInit {
 
                 this.itmCurrent = this.itemmasters.items[0];
             });
-        });
+        }).catch(()=>{});
     }
 
     // Save the item

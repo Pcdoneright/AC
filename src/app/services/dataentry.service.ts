@@ -45,19 +45,33 @@ export class DataEntryService {
     }
 
     // Check if changes are pending and prompt to continue
-    pendingChangesContinue() : Observable<any> {
-        return Observable.create(observer => {
+    //Changed to Promise to use Async
+    pendingChangesContinue() {
+        return new Promise((resolve, reject) => {
             if (this.checkForChanges()) {
                 this.CompanySvc.confirm("Lose Current Changes?").subscribe(
                     response => {
-                        if (response) observer.next(true);
-                        else observer.complete();
+                        if (response) resolve(true);
+                        else reject();
                     }
                 );
             }
-            else observer.next(true);
+            else resolve(true);
         });
     }
+    // pendingChangesContinue() : Observable<any> {
+    //     return Observable.create(observer => {
+    //         if (this.checkForChanges()) {
+    //             this.CompanySvc.confirm("Lose Current Changes?").subscribe(
+    //                 response => {
+    //                     if (response) observer.next(true);
+    //                     else observer.complete();
+    //                 }
+    //             );
+    //         }
+    //         else observer.next(true);
+    //     });
+    // }
 
     // Check for changes, returns true on the 1st occurrance of changes
     checkForChanges() {

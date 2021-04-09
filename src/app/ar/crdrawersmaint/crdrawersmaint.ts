@@ -98,7 +98,7 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
     }
 
     refresh() {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
             
             let datef = new Date(this.sodatef);
@@ -115,7 +115,7 @@ export class crdrawersmaint implements OnDestroy, AfterViewInit {
                 this.getTotal();
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
 	crdrawersFilter(pfuserid) :any[] {

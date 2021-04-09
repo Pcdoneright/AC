@@ -12,9 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class invtransferreq implements AfterViewInit {
     @ViewChild('invwork', {static: true}) invwork: invwork;
     currAction = '';
-    pRows = [];
-    prevTrx = [];
-    
+        
     constructor(public appH: appHelperService, private DataSvc: DataService, private dialog: MatDialog) {}
     
     async ngAfterViewInit() {
@@ -48,8 +46,8 @@ export class invtransferreq implements AfterViewInit {
     }
 
     async fillOrder() {
-        this.pRows = [];
-        this.prevTrx = [];
+        let pRows = [];
+        let prevTrx = [];
 
         if (!this.invwork.validEntry()) return;
         if (this.invwork.invworkheaders.items[0].fstatus !== 'C') {
@@ -57,40 +55,37 @@ export class invtransferreq implements AfterViewInit {
             return
         }
 
-        if (this.invwork.dESrvc.checkForChanges()) {
-            this.appH.toastr('Pending changes detected.');
-            return;
-        }
-        
         this.invwork.invwork.items.forEach(row => {
             if (row.fqty - row.fqty3 > 0) {
-                this.pRows.push({fitem: row.fitem, fqty: row.fqty - row.fqty3});
+                pRows.push({fitem: row.fitem, fqty: row.fqty - row.fqty3});
             }
         });
 
-        if (this.pRows.length < 1) {
+        if (pRows.length < 1) {
             this.appH.toastr('All rows where fullfiled.');
             return
         }
 
-        this.prevTrx.push(this.invwork.invworkheaders.items[0]); // Save last trx
-        this.invwork.createOrder();
+        prevTrx.push(this.invwork.invworkheaders.items[0]); // Save last trx
+        await this.invwork.createOrder();
+        // Check if Order was not created
+        if (prevTrx[0].fiwhid == this.invwork.invworkheaders.items[0].fiwhid) {
+            return;
+        } 
         
         this.invwork.CompanySvc.ofHourGlass(true);
-        setTimeout(async () => {
-            this.invwork.invworkheaders.items[0].fnotes = 'Trx # ' + this.prevTrx[0].fiwhid + ' Fulfillment';
-            this.invwork.invworkheaders.items[0].flocation = this.prevTrx[0].flocation;
-            this.invwork.invworkheaders.items[0].flocation2 = this.prevTrx[0].flocation2;
+        this.invwork.invworkheaders.items[0].fnotes = 'Trx # ' + prevTrx[0].fiwhid + ' Fulfillment';
+        this.invwork.invworkheaders.items[0].flocation = prevTrx[0].flocation;
+        this.invwork.invworkheaders.items[0].flocation2 = prevTrx[0].flocation2;
 
-            for (var i = 0; i < this.pRows.length; i++) {
-                let nrow = await this.invwork.addinvwork(this.pRows[i].fitem, false);
-                nrow.fqty = this.pRows[i].fqty;
-            }
-            
-            this.invwork.wjH.gridLoad(this.invwork.invworkGrid, this.invwork.invwork.items);
-            this.invwork.focusToScan();    
-            this.invwork.CompanySvc.ofHourGlass(false);
-        }, 50);
+        for (var i = 0; i < pRows.length; i++) {
+            let nrow = await this.invwork.addinvwork(pRows[i].fitem, false);
+            nrow.fqty = pRows[i].fqty;
+        }
+        
+        this.invwork.wjH.gridLoad(this.invwork.invworkGrid, this.invwork.invwork.items);
+        this.invwork.focusToScan();    
+        this.invwork.CompanySvc.ofHourGlass(false);
     }
 
     async ShowFavorites() {

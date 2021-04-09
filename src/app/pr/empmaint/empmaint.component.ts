@@ -144,7 +144,7 @@ export class EmpMaintComponent implements AfterViewInit {
     };
 
     createEmp() {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
             this.employees.clearData();
             this.employeehours.clearData();
@@ -165,7 +165,7 @@ export class EmpMaintComponent implements AfterViewInit {
                 this.empCurrent = this.employees.items[0]; // Load current row
                 this.CompanySvc.ofHourGlass(false)
             });
-        });
+        }).catch(()=>{});
     }
 
     listEdit() {
@@ -178,7 +178,7 @@ export class EmpMaintComponent implements AfterViewInit {
         if (!empid) return;
         this.selectedTab = 1;
 
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
             this.DataSvc.serverDataGet('api/EmployeeMaint/GetEmployee', {pempid: empid, plimit: this.hrslimit}, false).subscribe((dataResponse) => {
                 // Transform Data Before Use
@@ -198,7 +198,7 @@ export class EmpMaintComponent implements AfterViewInit {
                 this.wjH.gridLoad(this.empmntg02, this.employeehours.items);
                 this.CompanySvc.ofHourGlass(false)
             });
-        });
+        }).catch(()=>{});
     }
 
     hoursCalculate() {

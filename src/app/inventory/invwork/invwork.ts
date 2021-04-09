@@ -183,10 +183,10 @@ export class invwork implements OnDestroy, AfterViewInit {
         if (!row) return;
 
         if (this.invwork.items.length > 0) {
-            this.dESrvc.pendingChangesContinue().subscribe(() => {
+            this.dESrvc.pendingChangesContinue().then(() => {
                 this.retrieveTrx(row.fiwhid);
                 this.selectedTab = 1;
-            });
+            }).catch(()=>{});
         } else {
             this.retrieveTrx(row.fiwhid);
             this.selectedTab = 1;
@@ -196,18 +196,18 @@ export class invwork implements OnDestroy, AfterViewInit {
     // Create PO for particular vendor
     async createOrder() {
         // Check for changes
-        this.dESrvc.pendingChangesContinue().subscribe(async () => {
+        await this.dESrvc.pendingChangesContinue().then(async () => {
             this.CompanySvc.ofHourGlass(true);
             this.invwork.loadData([]);
             this.invworkheaders.loadData([]);
             this.setImage(null);
-            let dataResponse = await this.DataSvc.serverDataGetAsync('api/Company/Getnextsequence', {seq: 'invworkheader'});
-            if (dataResponse) {
+            let res = await this.DataSvc.serverDataGetAsync('api/Company/Getnextsequence', {seq: 'invworkheader'});
+            if (res) {
                 var dt = new Date();
                 dt.setHours(12, 0, 0);// Remove time
 
                 this.invworkheaders.addRow({
-                    fiwhid: dataResponse.data,
+                    fiwhid: res.data,
                     fdate: dt,
                     fstatus: 'O',
                     ftype: this.trxType,
@@ -220,11 +220,11 @@ export class invwork implements OnDestroy, AfterViewInit {
                 this.CompanySvc.ofHourGlass(false);
                 this.focusToScan();
             };
-        });
+        }).catch(()=>{});
     }
     // createOrder() {
     //     // Check for changes
-    //     this.dESrvc.pendingChangesContinue().subscribe(() => {
+    //     this.dESrvc.pendingChangesContinue().then(() => {
     //         this.CompanySvc.ofHourGlass(true);
     //         this.invwork.loadData([]);
     //         this.invworkheaders.loadData([]);
@@ -456,10 +456,10 @@ export class invwork implements OnDestroy, AfterViewInit {
                 // if (!this.parent['allowToUpdate'](dataResponse[0])) {
                 //     this.appH.toastr('Only OPEN transactions can be modified.');
                 // }
-                this.dESrvc.pendingChangesContinue().subscribe(() => {
+                this.dESrvc.pendingChangesContinue().then(() => {
                     this.retrieveTrx(dataResponse[0].fiwhid);
                     this.searchId = '';
-                });
+                }).catch(()=>{});
             }
             else
                 this.appH.toastr('Transaction Number Not Found');

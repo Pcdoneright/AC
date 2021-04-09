@@ -273,7 +273,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
     createPO(pVendor) {
         if (!pVendor) return;
         // Check for changes
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
 
             this.CompanySvc.ofHourGlass(true);
             this.purchaseorders.loadData([]);
@@ -309,7 +309,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
                 this.wjH.gridLoad(this.purchasedetailsGrid, []);
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
     // Open Payment Interface
@@ -492,11 +492,11 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
         let row = this.wjH.getGridSelectecRow(this.listPOGrid);
         if (!row) return;
 
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.retrievePO(row.fpoid);
             this.selectedTab = 1;
             this.gridRepaint();
-        });
+        }).catch(()=>{});
     }
 
     searchPONumber(checkPending = false) {
@@ -508,11 +508,11 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
         this.DataSvc.serverDataGet('api/PO/GetValidatePonumber', {pfponumber: this.searchId}).subscribe((dataResponse)=> {
             if (dataResponse.length > 0) {
                 if (checkPending) {
-                    this.dESrvc.pendingChangesContinue().subscribe(() => {
+                    this.dESrvc.pendingChangesContinue().then(() => {
                         this.retrievePO(dataResponse[0].fpoid);
                         this.searchId = '';
                         this.CompanySvc.ofHourGlass(false)
-                    });
+                    }).catch(()=>{});
                 }
                 else {
                     this.retrievePO(dataResponse[0].fpoid);

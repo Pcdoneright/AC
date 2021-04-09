@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
 @Injectable()
 export class CompanyVersion {
-    public companyVersion = 'V3.8.00';
+    public companyVersion = 'V3.8.01';
 }

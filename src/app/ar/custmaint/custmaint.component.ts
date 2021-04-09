@@ -263,7 +263,7 @@ export class CustmaintComponent implements AfterViewInit {
     // Get Item for EDIT
     retrieveRecord(afid) {
         if (!afid) return;
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
 
             this.DataSvc.serverDataGet('api/CustomerMaint/GetCustomer', { pfcid: afid }).subscribe((dataResponse) => {
@@ -285,7 +285,7 @@ export class CustmaintComponent implements AfterViewInit {
                 this.wjH.gridLoad(this.gcustomershiptos, this.customershiptos.items);
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
     listGridDoubleClick() {
@@ -298,7 +298,7 @@ export class CustmaintComponent implements AfterViewInit {
 
     // New Item
     newCustomer() {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
             this.DataSvc.serverDataGet('api/Company/Getnextsequence', { seq: 'customers' }).subscribe((dataResponse) => {
                 var fseq = dataResponse.data;
@@ -333,7 +333,7 @@ export class CustmaintComponent implements AfterViewInit {
                     this.CompanySvc.ofHourGlass(false);
                 });
             });
-        });
+        }).catch(()=>{});
     }
 
     // Save the item

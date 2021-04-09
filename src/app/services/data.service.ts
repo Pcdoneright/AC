@@ -112,7 +112,7 @@ export class DataService {
 			}
 		}
 
-		const ret = await this.http.get(pUrl, { params: params }).toPromise()
+		return await this.http.get(pUrl, { params: params }).toPromise()
         	.then(res => {
 				if (res) {
 					// Before receiving date from server convert string to date
@@ -125,8 +125,6 @@ export class DataService {
 				this.sharedSrvc.ofHourGlass(false);
 				return null;
         	});
-
-		return ret;
 
 		// try {
 		// 	const data = await this.http.get(pUrl, { params: params }).toPromise();

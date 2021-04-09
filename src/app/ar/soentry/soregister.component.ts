@@ -365,9 +365,9 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
     // Override to check if changes are pending
     createSO(customer, department) {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             super.createSO(customer, department);
-        });
+        }).catch(()=>{});
     }
 
     // Extend to Clear grid with data
@@ -987,11 +987,11 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         if (!row) return;
 
         if (this.salesdetails.items.length > 0) {
-            this.dESrvc.pendingChangesContinue().subscribe(() => {
+            this.dESrvc.pendingChangesContinue().then(() => {
                 this.retrieveSO(row.fsoid);
                 this.selectedTab = 1;
                 this.gridRepaint();
-            });
+            }).catch(()=>{});
         } else {
             this.retrieveSO(row.fsoid);
             this.selectedTab = 1;

@@ -298,11 +298,11 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
         let row = this.wjH.getGridSelectecRow(this.listSOGrid);
         if (!row) return;
 
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.retrieveSO(row.fsoid);
             this.selectedTab = 1;
             this.gridRepaint();
-        });
+        }).catch(()=>{});
     };
 
     // Extend to Fill grid with data
@@ -314,9 +314,9 @@ export class SoentryComponent extends soentrybaseClass implements OnDestroy, Aft
 
     // Override to check if changes are pending
     createSO(customer, department) {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
            super.createSO(customer, department);
-        });
+        }).catch(()=>{});
     }
 
     // Extend to Clear grid with data

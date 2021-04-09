@@ -129,11 +129,11 @@ export class soentrybaseClass {
         this.DataSvc.serverDataGet('api/SO/GetValidateSonumber', {pfsonumber: this.searchId}).subscribe((dataResponse)=> {
             if (dataResponse.length > 0) {
                 if (checkPending) {
-                    this.dESrvc.pendingChangesContinue().subscribe(() => {
+                    this.dESrvc.pendingChangesContinue().then(() => {
                         this.retrieveSO(dataResponse[0].fsoid);
                         this.searchId = '';
                         this.CompanySvc.ofHourGlass(false)
-                    });
+                    }).catch(()=>{});
                 }
                 else {
                     this.retrieveSO(dataResponse[0].fsoid);

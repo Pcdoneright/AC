@@ -172,7 +172,7 @@ export class invtransfertosaleman implements AfterViewInit {
     // Create PO for particular vendor
     createSO() {
         // Check for changes
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
             this.invwork.loadData([]);
             this.invworkheaders.loadData([]);
@@ -198,7 +198,7 @@ export class invtransfertosaleman implements AfterViewInit {
                 this.focusToScan();
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
     // Calculate totals for salesorders
@@ -244,11 +244,11 @@ export class invtransfertosaleman implements AfterViewInit {
         this.DataSvc.serverDataGet('api/invwork/GetValidateInvworkheader', {pfid: this.searchId}).subscribe((dataResponse)=> {
             if (dataResponse.length > 0 && dataResponse[0].ftype == 'SX') {
                 if (checkPending) {
-                    this.dESrvc.pendingChangesContinue().subscribe(() => {
+                    this.dESrvc.pendingChangesContinue().then(() => {
                         this.retrieveSO(dataResponse[0].fiwhid);
                         this.searchId = '';
                         this.CompanySvc.ofHourGlass(false)
-                    });
+                    }).catch(()=>{});
                 }
                 else {
                     this.retrieveSO(dataResponse[0].fiwhid);
@@ -618,11 +618,11 @@ export class invtransfertosaleman implements AfterViewInit {
         if (!row) return;
 
         if (this.invwork.items.length > 0) {
-            this.dESrvc.pendingChangesContinue().subscribe(() => {
+            this.dESrvc.pendingChangesContinue().then(() => {
                 this.retrieveSO(row.fiwhid);
                 this.selectedTab = 1;
                 this.gridRepaint();
-            });
+            }).catch(()=>{});
         } else {
             this.retrieveSO(row.fiwhid);
             this.selectedTab = 1;

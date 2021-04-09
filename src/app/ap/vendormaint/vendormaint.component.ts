@@ -197,7 +197,7 @@ export class VendormaintComponent implements AfterViewInit {
     // Get Item for EDIT
     retrieveRecord(afid) {
         if (!afid) return;
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
 
             this.DataSvc.serverDataGet('api/VendorMaint/GetVendor', { pfvid: afid }).subscribe((dataResponse) => {
@@ -210,7 +210,7 @@ export class VendormaintComponent implements AfterViewInit {
                 this.wjH.gridLoad(this.gvendomercontacts, this.vendorcontacts.items);
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
     // Save the item
@@ -239,7 +239,7 @@ export class VendormaintComponent implements AfterViewInit {
 
      // New Item
     newVendor() {
-        this.dESrvc.pendingChangesContinue().subscribe(() => {
+        this.dESrvc.pendingChangesContinue().then(() => {
             this.CompanySvc.ofHourGlass(true);
             this.DataSvc.serverDataGet('api/Company/Getnextsequence', { seq: 'vendors' }).subscribe((dataResponse) => {
                 var fseq = dataResponse.data;
@@ -261,7 +261,7 @@ export class VendormaintComponent implements AfterViewInit {
                 
                 this.CompanySvc.ofHourGlass(false);
             });
-        });
+        }).catch(()=>{});
     }
 
     contactsAdd() {
