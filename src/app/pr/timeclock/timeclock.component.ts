@@ -9,10 +9,9 @@ import { wjHelperService } from '../../services/wjHelper.service';
 import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import {ToastrService} from 'ngx-toastr';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
-// import * as wjGrid from "@grapecity/wijmo.grid";
-import * as wjcCore from '@grapecity/wijmo';
 import {ViewHours} from "./viewHours.component";
 import { appHelperService } from '../../services/appHelper.service';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'timeclock',
@@ -117,10 +116,9 @@ export class TimeclockComponent implements OnDestroy, AfterViewInit {
         this.pinnumber = ''; // Clear Value
 
         this.DataSvc.serverDataGet('api/EmployeeMaint/GetEmpInOut', {pempid: row.empid}, false)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.CompanySvc.ofHourGlass(false);
-                // console.log('finally');
-            })
+            }))
             .subscribe((dataResponse) => {
             this.employeehours.loadData(dataResponse.employeehours);
 

@@ -5,7 +5,7 @@ import { DataService } from '../services/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemList } from '../inventory/itemlist/itemlist.component';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjCore from '@grapecity/wijmo';
 import * as wjGrid from '@grapecity/wijmo.grid';

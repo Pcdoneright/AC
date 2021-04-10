@@ -1,5 +1,5 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { PcdrFilterPipe} from '../pipes/pcdrfilter.pipe';
 import {MainMenuComponent} from '../mainmenu/mainmenu.component';
 import {CompanyVersion} from './companyversion';

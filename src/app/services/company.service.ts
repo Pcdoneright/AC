@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatePipe, CurrencyPipe } from '@angular/common';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from './confirm-dialog.component';
 import { InputDialog } from './dialog-input.component';
@@ -135,7 +135,7 @@ export class CompanyService {
     }
 
     // Create Report Request and send to sender
-    ofCreateReport(pDwName, pParameters, pfpriority?:number) {
+    ofCreateReport(pDwName, pParameters, pfpriority?:number): any {
         var mData = [], mRptH = [], mRptP = [];
 
         // Create reportheaders
@@ -148,7 +148,7 @@ export class CompanyService {
         mData.push(['reportheaders', mRptH]);
         mData.push(['reportparameters', mRptP]);
 
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             // Send data to server and response will be the filename
             this.DataSvc.serverDataPost('api/Company/PostCreateReport', mData).subscribe((dataResponse) => {
                 observer.next(dataResponse);
@@ -156,8 +156,8 @@ export class CompanyService {
         });
     }
 
-    ofCreateJasperReport(pDwName, pParameters) {
-        return Observable.create((observer) => {
+    ofCreateJasperReport(pDwName, pParameters) :any {
+        return new Observable((observer) => {
             // Send data to server and response wich will be the filename
             this.DataSvc.serverDataPost('api/Company/PostCreateJasperReport', [{
                 rptname: pDwName,

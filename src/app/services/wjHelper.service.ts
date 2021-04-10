@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjCore from '@grapecity/wijmo';
 import * as wjGrid from '@grapecity/wijmo.grid';
@@ -151,7 +151,7 @@ export class wjHelperService {
         if (!row) return; // No selected row
         
         if (newOnly && store.isNew(row) || newOnly == false) {
-            return Observable.create(observer => {
+            return new Observable((observer) => {
                 store.removeRow(row).subscribe(() => {
                     if (loadrows) this.gridLoad(s, store.items, disableSelect); // Load Data
                     observer.next();

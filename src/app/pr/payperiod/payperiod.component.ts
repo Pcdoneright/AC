@@ -5,7 +5,7 @@ import { CompanyService } from '../../services/company.service';
 import { DatePipe } from '@angular/common';
 import { wjHelperService } from '../../services/wjHelper.service';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
-import * as wjGrid from "@grapecity/wijmo.grid";
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'app-payperiod',
@@ -51,9 +51,9 @@ export class PayperiodComponent implements OnDestroy, AfterViewInit {
 
         this.CompanySvc.ofHourGlass(true);
         // Send to Server
-        this.dESrvc.update('api/EmployeeMaint/PostupdatePayperiod').finally(() => {
+        this.dESrvc.update('api/EmployeeMaint/PostupdatePayperiod').pipe(finalize(() => {
             this.CompanySvc.ofHourGlass(false);
-        }).subscribe();
+        })).subscribe();
     }
 
     payperiodAdd() {

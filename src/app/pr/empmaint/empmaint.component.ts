@@ -14,7 +14,8 @@ import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjGrid from "@grapecity/wijmo.grid";
 import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
 import * as wjCore from "@grapecity/wijmo";
-declare var $: any;
+import { finalize } from "rxjs/operators";
+// declare var $: any;
 
 @Component({
     selector: 'empmaint',
@@ -96,8 +97,8 @@ export class EmpMaintComponent implements AfterViewInit {
         this.initGrids();
         this.wjH.fixWM();
         
-        $(document).ready(() => {
-        });
+        // $(document).ready(() => {
+        // });
     }
 
     // Valid Entry
@@ -118,9 +119,9 @@ export class EmpMaintComponent implements AfterViewInit {
 
         this.CompanySvc.ofHourGlass(true);
         // Send to Server
-        this.dESrvc.update('api/EmployeeMaint/Postupdate', true, '', this.prepareUpdate).finally(() => {
+        this.dESrvc.update('api/EmployeeMaint/Postupdate', true, '', this.prepareUpdate).pipe(finalize(() => {
             this.CompanySvc.ofHourGlass(false)
-        }).subscribe();
+        })).subscribe();
     }
 
     // Callback

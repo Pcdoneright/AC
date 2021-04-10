@@ -9,7 +9,7 @@ import { wjHelperService } from '../../services/wjHelper.service';
 import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import * as wjGrid from "@grapecity/wijmo.grid";
-declare var $: any;
+// declare var $: any;
 
 @Component({
     selector: 'view-hours',
@@ -27,8 +27,8 @@ export class ViewHours implements AfterViewInit {
         this.initGrids();
         this.viewHoursGetHours()
         
-        $(document).ready(() => {
-        });
+        // $(document).ready(() => {
+        // });
     }
 
     onYes() {

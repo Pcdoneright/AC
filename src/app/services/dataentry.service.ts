@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PcdrFilterPipe } from '../pipes/pcdrfilter.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../services/company.service';
@@ -18,7 +18,7 @@ export class DataEntryService {
 
     // Populate Code Detail
     initCodeTable() : Observable<any> {
-        return Observable.create(observer => {
+        return new Observable((observer) => {
             this.DataSvc.serverDataGet('api/Company/Getcodedetail').subscribe((dataResponse) => {
                 this.codeTable = dataResponse; // Save for further reference
                 observer.next(dataResponse);
@@ -139,7 +139,7 @@ export class DataEntryService {
                 if (this.updateStores[i]._deleted.length > 0) mData.push([this.updateStores[i].tableName + 'delete', this.updateStores[i]._deleted]);
             }
         }
-        return Observable.create(observer => {
+        return new Observable(observer => {
             // Send Array
             if (mData.length > 0) {
                 if (fprepareUpdateCallback) fprepareUpdateCallback(mData); // Custom data prepare function

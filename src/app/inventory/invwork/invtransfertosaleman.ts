@@ -1,7 +1,7 @@
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material/dialog';
 import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Inject, ViewEncapsulation, ElementRef, Input, } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../services/data.service';
 import { DataEntryService, DataStore } from '../../services/dataentry.service';
@@ -18,6 +18,7 @@ import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { appHelperService } from '../../services/appHelper.service';
 import { ItemRelatedList } from '../../inventory/itemlist/itemrelatedlist.component';
 import {SOEditItem} from '../../ar/soentry/soregister.component'
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'invtransfertosaleman',
@@ -359,7 +360,7 @@ export class invtransfertosaleman implements AfterViewInit {
     }
 
     overrideAdmin() {
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             this.CompanySvc.inputDialog(
                 'Enter Code',
                 '',
@@ -398,9 +399,9 @@ export class invtransfertosaleman implements AfterViewInit {
         this.setImage(row);
 
         this.showItemOptions(row)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.focusToScan();
-            })
+            }))
             .subscribe(() => {
                 this.invworkGrid.refresh();
                 this.updateTotalQty();
@@ -410,7 +411,7 @@ export class invtransfertosaleman implements AfterViewInit {
 
     // Show related items and replace if not isNew()
     showItemOptions(cRow) {
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             if (!cRow) {
                 observer.complete();
                 return;
@@ -573,9 +574,9 @@ export class invtransfertosaleman implements AfterViewInit {
         let row = this.wjH.getGridSelectecRow(this.invworkGrid);
         if (!row) return;
 
-        this.invwork .removeRow(row) .finally(() => {
+        this.invwork .removeRow(row) .pipe(finalize(() => {
                 this.focusToScan();
-            })
+            }))
             .subscribe(() => {
                 this.wjH.gridLoad( this.invworkGrid, this.invwork.items, false );
                 this.salesordersTotals();

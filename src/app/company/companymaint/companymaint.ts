@@ -10,6 +10,7 @@ import { wjHelperService } from '../../services/wjHelper.service';
 import { PcdrFilterPipe } from '../../pipes/pcdrfilter.pipe';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'companymaint',
@@ -129,9 +130,9 @@ export class companymaint implements AfterViewInit {
         this.companies.items[0].fusername = this.sharedSrvc.user.fname;
 
         // Send to Server
-        this.dESrvc.update('api/CompanyMaint/Postupdate').finally(() => {
+        this.dESrvc.update('api/CompanyMaint/Postupdate').pipe(finalize(() => {
             this.CompanySvc.ofHourGlass(false)
-        }).subscribe();
+        })).subscribe();
     }
 
     // Valid Entry

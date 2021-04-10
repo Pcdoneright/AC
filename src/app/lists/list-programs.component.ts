@@ -2,7 +2,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { wjHelperService } from '../services/wjHelper.service';
 import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
-declare var $: any;
+// declare var $: any;
 
 @Component({
     selector: 'list-programs',
@@ -31,9 +31,9 @@ export class ListPrograms implements AfterViewInit{
 
     ngAfterViewInit() {
         this.initGrids();
-        $(document).ready(() => {
+        // $(document).ready(() => {
             this.wjH.gridLoad(this.lprogrid01, this.programsGridData);
-        });
+        // });
     }
 
     onYes() {

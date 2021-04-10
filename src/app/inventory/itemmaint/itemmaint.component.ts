@@ -15,6 +15,7 @@ import * as wjGrid from "@grapecity/wijmo.grid";
 import * as wjGridX from "@grapecity/wijmo.grid.xlsx";
 import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
 import * as wjcCore from '@grapecity/wijmo';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'itemmaint',
@@ -226,9 +227,9 @@ export class itemmaintComponent implements AfterViewInit {
         this.itemmasters.items[0].fusername = this.sharedSrvc.user.fname;
 
         // Send to Server
-        this.dESrvc.update('api/ItemMaint/Postupdate').finally(() => {
+        this.dESrvc.update('api/ItemMaint/Postupdate').pipe(finalize(() => {
             this.CompanySvc.ofHourGlass(false)
-        }).subscribe();
+        })).subscribe();
     }
 
     // Valid Entry

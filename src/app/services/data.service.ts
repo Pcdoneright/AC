@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpEventType, HttpClient, HttpParams } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { SharedService } from '../services/shared.service';
 import 'rxjs/add/operator/retryWhen';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/scan';
 
 //--------------------------------
 // SINGLE INSTANCE
@@ -60,7 +63,7 @@ export class DataService {
 			}
 		}
 
-		return Observable.create(observer => {
+		return new Observable(observer => {
 			// console.log('params->', params);
 			// this.http.get(pUrl, { search: params })
 			this.http.get(pUrl, { params: params })
@@ -148,7 +151,7 @@ export class DataService {
 		// Before sending to server convert date(only not datetime) to string to have current values instead of zulu
 		this.convertDateDatesToString(pData);
 
-		return Observable.create(observer => {
+		return new Observable((observer) => {
 			// Create parameters
 			let httpParams = new HttpParams();
 			Object.keys(pParms).forEach(function (key) {
@@ -225,8 +228,8 @@ export class DataService {
 	// 		}).retry(15); // 2018/10/16 Retry
 	// }
 
-	serverFileUpload(pfile, pfolder, pfilename, pProgress, poverride = true) {
-		return Observable.create(observer => {
+	serverFileUpload(pfile, pfolder, pfilename, pProgress, poverride = true): any {
+		return new Observable((observer) => {
 			// Create parameters
 			let httpParams = new HttpParams();
             httpParams = httpParams.append('folder', pfolder);

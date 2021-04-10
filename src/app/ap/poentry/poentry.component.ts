@@ -20,7 +20,7 @@ import { VendItemList } from '../../ap/list/vendoritemlist.component';
 import { Itempurchasehist } from '../../ap/list/itempurchasehist.component';
 import { PoPayment } from '../../ap/poentry/popayment.component';
 import { itemmaintComponent } from '../../inventory/itemmaint/itemmaint.component';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { appHelperService } from '../../services/appHelper.service';
 import { ItemRelatedList } from '../../inventory/itemlist/itemrelatedlist.component';
 
@@ -216,7 +216,7 @@ export class PoentryComponent implements OnDestroy, AfterViewInit {
     }
 
     showItemOptions(cRow) {
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             if (!cRow) {
                 observer.complete();
                 return;

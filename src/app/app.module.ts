@@ -26,6 +26,11 @@ import { AngularSplitModule } from 'angular-split';
 import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
 import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 
+// RxJs
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/distinctUntilChanged';
+
 // Application
 import { SharedService } from './services/shared.service';
 import { CustomModule } from './appcustom.module';

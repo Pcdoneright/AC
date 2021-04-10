@@ -13,6 +13,7 @@ import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { ItemList } from '../../inventory/itemlist/itemlist.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'invwork',
@@ -257,9 +258,9 @@ export class invwork implements OnDestroy, AfterViewInit {
         let row = this.wjH.getGridSelectecRow(this.invworkGrid);
         if (!row) return;
 
-        this.invwork.removeRow(row).finally(()=> {
+        this.invwork.removeRow(row).pipe(finalize(()=> {
             this.focusToScan();
-        }).subscribe(() => {
+        })).subscribe(() => {
             this.wjH.gridLoad(this.invworkGrid, this.invwork.items, false);
             if (this.invwork.items.length == 0) this.setImage(null);
         });

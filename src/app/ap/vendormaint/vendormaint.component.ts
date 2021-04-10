@@ -14,6 +14,7 @@ import * as wjGrid from "@grapecity/wijmo.grid";
 import * as wjGridX from "@grapecity/wijmo.grid.xlsx";
 import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'vendormaint',
@@ -232,9 +233,9 @@ export class VendormaintComponent implements AfterViewInit {
         this.vendors.items[0].fusername = this.sharedSrvc.user.fname;
 
         // Send to Server
-        this.dESrvc.update('api/VendorMaint/Postupdate').finally(() => {
+        this.dESrvc.update('api/VendorMaint/Postupdate').pipe(finalize(() => {
             this.CompanySvc.ofHourGlass(false)
-        }).subscribe();
+        })).subscribe();
     }
 
      // New Item

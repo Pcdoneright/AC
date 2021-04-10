@@ -1,7 +1,7 @@
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material/dialog';
 import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Inject, ViewEncapsulation, ElementRef, Input, } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../services/data.service';
 import { DataEntryService, DataStore } from '../../services/dataentry.service';
@@ -19,6 +19,7 @@ import { SoPayment } from './sopayment.component';
 import { SOViewCustomer } from './soregisterorder.component';
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { appHelperService } from '../../services/appHelper.service';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'soregister',
@@ -613,7 +614,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
     }
 
     overrideAdmin() {
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             this.CompanySvc.inputDialog(
                 'Enter Code',
                 '',
@@ -652,9 +653,9 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
         this.setImage(row);
 
         this.showItemOptions(row)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.focusToScan();
-            })
+            }))
             .subscribe(() => {
                 this.salesdetailsGrid.refresh();
                 this.updateTotalQty();
@@ -914,9 +915,9 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
 
         this.salesdetails
             .removeRow(row)
-            .finally(() => {
+            .pipe(finalize(() => {
                 this.focusToScan();
-            })
+            }))
             .subscribe(() => {
                 this.wjH.gridLoad( this.salesdetailsGrid, this.salesdetails.items, false );
                 this.salesordersTotals();
@@ -1046,6 +1047,7 @@ export class SoRegisterComponent extends soentrybaseClass implements AfterViewIn
             switch (this.selectedTab) {
                 case 0:
                     this.wjH.gridRedraw(this.salesdetailsGrid);
+                    break;
                 case 1:
                     this.wjH.gridRedraw(this.salesorderspendingGrid);
                     break;

@@ -2,7 +2,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialo
 import { Component, OnDestroy, AfterViewInit, AfterContentInit, ViewChild, Inject, ViewEncapsulation, ElementRef, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl } from "@angular/forms";
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../services/data.service';
 import { DataEntryService, DataStore } from '../../services/dataentry.service';

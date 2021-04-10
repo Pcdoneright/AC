@@ -17,8 +17,7 @@ import * as wjGridFilter from "@grapecity/wijmo.grid.filter";
 import * as wjcCore from '@grapecity/wijmo';
 import { pcdrBuilderComponent } from '../../services/builder/builder.component';
 import { ItemList } from '../../inventory/itemlist/itemlist.component';
-import { FunctionCall } from '@angular/compiler';
-import { BreakPoint } from '@angular/flex-layout';
+import { finalize } from "rxjs/operators";
 
 @Component({
     selector: 'custmaint',
@@ -363,9 +362,9 @@ export class CustmaintComponent implements AfterViewInit {
         this.customers.items[0].fusername = this.sharedSrvc.user.fname;
 
         // Send to Server
-        this.dESrvc.update('api/CustomerMaint/Postupdate').finally(() => {
+        this.dESrvc.update('api/CustomerMaint/Postupdate').pipe(finalize(() => {
             this.CompanySvc.ofHourGlass(false)
-        }).subscribe();
+        })).subscribe();
     }
 
     // Valid Entry

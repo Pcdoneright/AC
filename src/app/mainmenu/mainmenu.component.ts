@@ -5,7 +5,7 @@ import { CustomModule } from '../appcustom.module';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
 import { trigger, transition, query, style, animate, group, state } from '@angular/animations';
-declare var $: any;
+// declare var $: any;
 
 @Component({
 	selector: 'main-menu',
@@ -118,7 +118,7 @@ export class MainMenuComponent implements OnInit {
 
     onSideNavToggle() {
         this.sideNavClassToggled = !this.sideNavClassToggled;
-        setTimeout(()=> $(window).trigger('resize'), 100); // Trigger event registered on the components in tabs TODO: find a way to work without Jquery
+        // setTimeout(()=> $(window).trigger('resize'), 100); // Trigger event registered on the components in tabs TODO: find a way to work without Jquery
     }
 
     // Implementation of new tabs

@@ -1,6 +1,6 @@
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Component, AfterViewInit, ViewChild, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FormControl, FormGroup, FormBuilder } from "@angular/forms";
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../../services/data.service';
@@ -488,7 +488,7 @@ export class soentrybaseClass {
 
     // Check if item is valid and add it --> Check if make sense return observ
     salesdetailsAddItemByFitem(pfitem, pAddTop = true) : Observable<any> {
-        return Observable.create(observer => {
+        return new Observable((observer) => {
             this.DataSvc.serverDataGet('api/ItemMaint/GetValidateItemWithPrice', {pfitem: pfitem, pfcid: this.salesorders.items[0].fcid}).subscribe((dataResponse) => {
                 if (dataResponse.length == 0) {
                     this.appH.toastr('Item ' + pfitem + ' not found!','error', '', true);
@@ -593,7 +593,7 @@ export class soentrybaseClass {
     // Get customer contacts, shipto, billto
     getCustomerRelated(fcid:number, assign = true) {
         // Get for DropDown
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             this.DataSvc.serverDataGet('api/CustomerMaint/GetCustomerRelatedDD', {pfcid: fcid})
             .subscribe((dataResponse) => {
                 this.customercontacts = dataResponse.customercontacts;
@@ -630,7 +630,7 @@ export class soentrybaseClass {
 
     // Show related items and replace if not isNew()
     showItemOptions(cRow) {
-        return Observable.create((observer) => {
+        return new Observable((observer) => {
             if (!cRow) {
                 observer.complete();
                 return;
